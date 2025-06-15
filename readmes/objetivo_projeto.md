@@ -162,7 +162,7 @@ ft_IRC-42sp/
 ├── Makefile                       # Compilação
 ├── README.md                      # Instruções
 └── .gitignore
-````
+```
 
 ---
 
