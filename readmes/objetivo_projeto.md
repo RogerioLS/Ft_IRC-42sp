@@ -125,80 +125,123 @@ Clientes reais: WeeChat, irssi, HexChat, etc.
 🧩 Organização dos Arquivos
 ```bash
 ft_IRC-42sp/
-├── includes/              # Arquivos .hpp (cabeçalhos)
-│   ├── Server.hpp
-│   ├── Client.hpp
-│   ├── Channel.hpp
-│   ├── Parser.hpp
-│   ├── CommandHandler.hpp
-│   └── Utils.hpp          
-│                
-├── sorces/                # Arquivos .cpp (código fonte principal)
-│   ├── main.cpp
-│   ├── Server.cpp
-│   ├── Client.cpp
-│   ├── Channel.cpp
-│   ├── Parser.cpp
-│   ├── CommandHandler.cpp
-│   └── Utils.cpp
-│   └── main.cpp
-├── Makefile               # Compilador e regras
-├── README.md              # Instruções do projeto
-├── tests/                 # Testes manuais e automáticos
+├── includes/                      # Arquivos .hpp (cabeçalhos)
+│   ├── server/                    # Cabeçalhos relacionados ao servidor
+│   │   ├── Server.hpp
+│   │   ├── Client.hpp
+│   │   ├── Channel.hpp
+│   │
+│   ├── parser/                    # Cabeçalhos do parser
+│   │   └── Parser.hpp
+│   │
+│   ├── command/                   # Cabeçalhos dos comandos IRC
+│   │   └── CommandHandler.hpp
+│   │
+│   └── utils/                     # Cabeçalhos utilitários
+│       └── Utils.hpp
+├── sources/                       # Implementações .cpp
+│   ├── server/                    # Implementações do servidor
+│   │   ├── Server.cpp
+│   │   ├── Client.cpp
+│   │   ├── Channel.cpp
+│   │
+│   ├── parser/                    # Implementação do parser
+│   │   └── Parser.cpp
+│   │
+│   ├── command/                   # Comandos como PASS, NICK, USER, JOIN etc.
+│   │   └── CommandHandler.cpp
+│   │
+│   ├── utils/                     # Implementações auxiliares
+│   │   └── Utils.cpp
+│   │
+│   └── main.cpp                   # Função main
+├── config/                        # Arquivo opcional de configuração
+│   └── irc.conf                   # Exemplo: MOTD, parâmetros extras
+├── tests/                         # Testes manuais e automáticos
 │   └── test_clients/
+├── Makefile                       # Compilação
+├── README.md                      # Instruções
 └── .gitignore
+````
+
+---
+
+✅ Teste básico sugerido (from subject)
+```bash
+# terminal 1
+./ircserv 6667 senha123
+
+# terminal 2
+nc -C 127.0.0.1 6667
+PASS senha123
+NICK user1
+USER user1 0 * :User One
+JOIN #teste
+PRIVMSG #teste :Olá mundo!
 ```
+
 ---
 
 📋 Sugestão de Cards no GitHub Projects
 Você pode montar os seguintes cards iniciais no GitHub Projects:
-`🔧 Infraestrutura e Inicialização:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] Criação do Makefile padrão        | Criar Makefile com regras NAME, all, clean, fclean, re.                   | infra, compilation  |
-| [ ] Parse dos argumentos `<port> <password>` | Garantir que o programa só inicie com os dois argumentos corretos e válidos. | infra, parser       |
-| [ ] Criação da classe Server com socket não bloqueante | Classe Server para iniciar o socket, configurar O_NONBLOCK, e escutar na porta. | infra, socket       |
-| [ ] Configuração do `poll()`          | Implementar estrutura de `poll()` com `vector<pollfd>` para todos os FDs. | infra, poll         |
 
-`👥 Gerenciamento de Conexões:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] Aceitar múltiplos clientes via `poll()` | Usar `poll()` para detectar conexões e adicionar ao vetor de fds.         | networking, poll    |
-| [ ] Criação da classe Client          | Armazenar info de um cliente (fd, nickname, hostname, auth, etc.).        | networking, client  |
-| [ ] Desconectar clientes com erro     | Detectar desconexão ou erro e liberar recursos do Client.                 | networking, error   |
+🔧 Infraestrutura e Inicialização:
+| Título                                        | Descrição                                                                                      | Labels              |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Criação do Makefile padrão                | Criar Makefile com regras NAME, all, clean, fclean, re.                                        | infra, compilation  |
+| [ ] Parse dos argumentos `<port> <password>`  | Garantir que o programa só inicie com os dois argumentos corretos e válidos.                  | infra, parser       |
+| [ ] Criação da classe Server com socket não bloqueante | Classe Server para iniciar o socket, configurar O_NONBLOCK, e escutar na porta.           | infra, socket       |
+| [ ] Configuração do `poll()`                  | Implementar estrutura de `poll()` com `vector<pollfd>` para todos os FDs.                     | infra, poll         |
 
-`🔐 Autenticação e Identidade:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] Implementar comando PASS          | Validar a senha enviada pelo cliente.                                     | auth, command       |
-| [ ] Implementar comando NICK          | Permitir definição e validação de nicknames únicos.                       | auth, command       |
-| [ ] Implementar comando USER          | Armazenar username e realname do cliente.                                 | auth, command       |
+👥 Gerenciamento de Conexões:
+| Título                                        | Descrição                                                                                      | Labels              |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Aceitar múltiplos clientes via `poll()`   | Usar `poll()` para detectar conexões e adicionar ao vetor de fds.                              | networking, poll    |
+| [ ] Criação da classe Client                  | Armazenar info de um cliente (fd, nickname, hostname, auth, etc.).                             | networking, client  |
+| [ ] Desconectar clientes com erro             | Detectar desconexão ou erro e liberar recursos do Client.                                      | networking, error   |
 
-`💬 Comandos IRC Essenciais:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] JOIN - Entrar ou criar canal      | Criar canal se não existir, adicionar cliente à lista de membros.         | command, channel    |
-| [ ] PRIVMSG - Enviar mensagem         | Enviar mensagem privada a um usuário ou a todos de um canal.             | command, messaging  |
-| [ ] TOPIC - Definir ou ver tópico do canal | Comando com permissões dependendo do modo `t`.                           | command, channel    |
+🔐 Autenticação e Identidade:
+| Título                                        | Descrição                                                                                      | Labels              |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Implementar comando PASS                  | Validar a senha enviada pelo cliente.                                                          | auth, command       |
+| [ ] Implementar comando NICK                  | Permitir definição e validação de nicknames únicos.                                            | auth, command       |
+| [ ] Implementar comando USER                  | Armazenar username e realname do cliente.                                                      | auth, command       |
 
-`👮‍♂️ Comandos de Operador:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] KICK - Expulsar cliente do canal  | Só operadores podem usar. Atualizar lista de membros.                     | command, op, channel|
-| [ ] INVITE - Convidar cliente         | Adiciona cliente à lista de convidados de um canal com modo `i`.          | command, op, channel|
-| [ ] MODE - Modificar modos do canal   | Implementar modos `i`, `t`, `k`, `l`, `o` com regras.                     | command, op, channel|
+💬 Comandos IRC Essenciais:
+| Título                                        | Descrição                                                                                      | Labels              |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] JOIN - Entrar ou criar canal              | Criar canal se não existir, adicionar cliente à lista de membros.                              | command, channel    |
+| [ ] PRIVMSG - Enviar mensagem                 | Enviar mensagem privada a um usuário ou a todos de um canal.                                   | command, messaging  |
+| [ ] TOPIC - Definir ou ver tópico do canal    | Comando com permissões dependendo do modo `t`.                                                 | command, channel    |
 
-`🧪 Testes e Robustez:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] Testar recebimento parcial de comandos (split) | Simular envio de comandos por partes como `com`, `man`, `d\n`.            | test, robustness    |
-| [ ] Testar múltiplos clientes simultâneos | Validar comportamento com vários clientes conectados e comandos em paralelo. | test, scalability |
-| [ ] Conectar cliente IRC real (HexChat / WeeChat) | Verificar se cliente consegue autenticar, mandar mensagens, etc.          | test, integration   |
-| [ ] Testar canais privados e modos    | Criar canais com senha, limite e modos para verificar regras.             | test, mode          |
+👮‍♂️ Comandos de Operador:
+| Título                                        | Descrição                                                                                      | Labels              |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] KICK - Expulsar cliente do canal          | Só operadores podem usar. Atualizar lista de membros.                                          | command, op, channel|
+| [ ] INVITE - Convidar cliente                 | Adiciona cliente à lista de convidados de um canal com modo `i`.                               | command, op, channel|
+| [ ] MODE - Modificar modos do canal           | Implementar modos `i`, `t`, `k`, `l`, `o` com regras.                                          | command, op, channel|
 
-`📎 Auxiliares e Organização:`
-| Título                                | Descrição                                                                 | Labels              |
-|---------------------------------------|---------------------------------------------------------------------------|---------------------|
-| [ ] Parser - Dividir input em comandos IRC | Separar buffer recebido em comandos completos usando `\r\n`.              | utils, parser       |
-| [ ] Logger ou debug printer opcional  | Ferramenta de log para debug em tempo real (usado só durante dev).         | utils, debug        |
-| [ ] Documentação das funções e classes | Comentários do tipo Doxygen e organização do `.hpp` vs `.cpp`.            | doc, refactor       |
+🧪 Testes e Robustez:
+| Título                                              | Descrição                                                                                      | Labels              |
+|-----------------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Testar recebimento parcial de comandos (split)  | Simular envio de comandos por partes como `com`, `man`, `d\n`.                                 | test, robustness    |
+| [ ] Testar múltiplos clientes simultâneos           | Validar comportamento com vários clientes conectados e comandos em paralelo.                  | test, scalability   |
+| [ ] Conectar cliente IRC real (HexChat / WeeChat)   | Verificar se cliente consegue autenticar, mandar mensagens, etc.                               | test, integration   |
+| [ ] Testar canais privados e modos                  | Criar canais com senha, limite e modos para verificar regras.                                  | test, mode          |
+| [ ] Testar desconexão súbita de cliente             | Fechar cliente abruptamente e validar liberação correta de recursos.                          | test, robustness    |
+| [ ] Testar comandos inválidos ou sem `\r\n`         | Enviar dados malformados para validar segurança e parsing robusto.                            | test, robustness    |
+
+📎 Auxiliares e Organização:
+| Título                                              | Descrição                                                                                      | Labels              |
+|-----------------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Parser - Dividir input em comandos IRC          | Separar buffer recebido em comandos completos usando `\r\n` e tratar argumentos.              | utils, parser       |
+| [ ] Logger ou debug printer opcional                | Ferramenta de log para debug em tempo real (usado só durante dev).                            | utils, debug        |
+| [ ] Documentação das funções e classes              | Comentários do tipo Doxygen e organização do `.hpp` vs `.cpp`.                                | doc, refactor       |
+| [ ] Enum para códigos de resposta IRC               | Usar constantes/enum para códigos como `001`, `433`, etc.                                     | utils, protocol     |
+| [ ] Helpers para envio de respostas formatadas      | Função utilitária para encapsular replies padronizadas para o cliente.                        | utils, protocol     |
+
+💡 (Extras Futuramente):
+| Título                                              | Descrição                                                                                      | Labels              |
+|-----------------------------------------------------|------------------------------------------------------------------------------------------------|---------------------|
+| [ ] Suporte opcional a MotD                         | Implementar mensagem de boas-vindas via arquivo externo.                                      | optional, motd      |
+| [ ] Comandos adicionais (QUIT, WHO, NAMES, LIST)    | Não obrigatórios, mas úteis para melhorar experiência de cliente.                             | optional, extras    |
