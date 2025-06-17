@@ -10,16 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-
-// filepath: /workspaces/Ft_IRC-42sp/sources/main.cpp
-#include <iostream>
+#include "../includes/server/Server.hpp"
 
 int main(int argc, char **argv) {
-    if (argc != 3) {
-        std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
-        return 1;
-    }
-    std::cout << "Server starting on port " << argv[1] << " with password " << argv[2] << std::endl;
-    return 0;
+
+  if (argc != 3) {
+    std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
+     return 1;
+  }
+
+  Server server(argv);
+  try {
+		server.setupServerSocket();
+		server.setupEpoll();
+		server.startEpoolLoop();
+		
+  } catch (const std::runtime_error& e) {
+		std::cerr << "[Runtime Error] " << e.what() << std::endl;
+		return 4;
+	}
+
+  return 0;
 }
