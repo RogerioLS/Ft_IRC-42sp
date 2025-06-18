@@ -17,7 +17,9 @@ Server::Server(char **argv)
 
 Server::~Server() {
 
-  close(getServerFd());
+  if (getServerFd() != -1) {
+    close(getServerFd());
+  }
 
 }
 
