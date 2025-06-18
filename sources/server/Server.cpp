@@ -12,35 +12,44 @@
 
 #include "../includes/server/Server.hpp"
 
-Server::Server(char **argv) :
-	_port(std::atoi(argv[1])), _password(argv[2]), _parsedCommand("") {}
+Server::Server(char **argv)
+ : _port(std::atoi(argv[1])), _password(argv[2]), _parsedCommand(""), _serverFd(-1) {}
 
 Server::~Server() {
 
-  // close(getServerFd());
-  // close(getEpollFd());
+  close(getServerFd());
 
 }
 
-// Epoll management
 void Server::setupServerSocket() {
-	// throw std::runtime_error("Erro ao criar socket");
-}
 
-void Server::setupEpoll() {
-	// throw std::runtime_error("Erro ao criar socket");
-}
+	sockaddr_in server_addr;
+  memset(&server_addr, 0, sizeof(server_addr));
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_addr.s_addr = INADDR_ANY; 
+  server_addr.sin_port = htons(getPort()); 
 
-void Server::startEpoolLoop() {
-	// throw std::runtime_error("Erro ao criar socket");
+	setServerFd(socket(AF_INET, SOCK_STREAM, 0));
+  if (getServerFd() < 0) 
+		throw std::runtime_error("Error creating socket");
+
+	if (fcntl(getServerFd(), F_SETFL, O_NONBLOCK) < 0)
+		throw std::runtime_error("Error setting socket option O_NONBLOCK");
+
+	if (bind(getServerFd(), (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+		throw std::runtime_error("Error at binding.");
+
+	if (listen(getServerFd(), SOMAXCONN) < 0) 
+    throw std::runtime_error("Error at listening.");
+
 }
 
 // Getters
 int		Server::getPort() const { return _port; }
 const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
-int		Server::getEpollFd() const { return _epollFd; }
 const std::string& Server::getParsedCommand() const { return _parsedCommand; }
 
 // Setters
 void Server::setParsedCommand(const std::string& cmd) { _parsedCommand = cmd; }
+void Server::setServerFd(int serverFd) { _serverFd = serverFd; }

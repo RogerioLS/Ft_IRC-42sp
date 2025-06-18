@@ -22,9 +22,6 @@ int main(int argc, char **argv) {
   Server server(argv);
   try {
 		server.setupServerSocket();
-		server.setupEpoll();
-		server.startEpoolLoop();
-		
   } catch (const std::runtime_error& e) {
 		std::cerr << "[Runtime Error] " << e.what() << std::endl;
 		return 4;
