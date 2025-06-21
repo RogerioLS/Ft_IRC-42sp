@@ -31,8 +31,8 @@ class Server {
 		~Server();
 
 		void setupServerSocket();
-		void setupEpoolEvent();
-		void setupEpoolLoop();
+		void setupEpollEvent();
+		void setupEpollLoop();
 
 		// Getters
 		int getPort() const;

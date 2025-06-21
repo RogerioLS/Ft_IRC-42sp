@@ -50,7 +50,7 @@ void Server::setupServerSocket() {
 
 }
 
-void Server::setupEpoolEvent() {
+void Server::setupEpollEvent() {
 
 	setEpollFd(epoll_create(1));
 	if (getEpollFd() < 0)
@@ -67,7 +67,7 @@ void Server::setupEpoolEvent() {
 	_eventsVector.resize(4);
 }
 
-void Server::setupEpoolLoop() {
+void Server::setupEpollLoop() {
 	
 	while (true) {
 
