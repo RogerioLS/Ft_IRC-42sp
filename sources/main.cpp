@@ -10,16 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-
-// filepath: /workspaces/Ft_IRC-42sp/sources/main.cpp
-#include <iostream>
+#include "../includes/server/utils/ServerInputValidation.hpp"
 
 int main(int argc, char **argv) {
+
     if (argc != 3) {
-        std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
-        return 1;
+      std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
+      return 1;
     }
+
+    int status = checkPortAndPassword(argv);
+    if (status != VALIDATION_OK)
+      return status;
+			
     std::cout << "Server starting on port " << argv[1] << " with password " << argv[2] << std::endl;
     return 0;
 }
