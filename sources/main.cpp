@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../includes/server/Server.hpp"
+#include "../includes/server/utils/ServerInputValidation.hpp"
 
 int main(int argc, char **argv) {
 
@@ -18,6 +20,10 @@ int main(int argc, char **argv) {
     std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
      return 1;
   }
+  
+  int status = checkPortAndPassword(argv);
+    if (status != VALIDATION_OK)
+      return status;
 
   Server server(argv);
   try {
@@ -27,5 +33,6 @@ int main(int argc, char **argv) {
 		return 4;
 	}
 
+  std::cout << "Server starting on port " << argv[1] << " with password " << argv[2] << std::endl;
   return 0;
 }
