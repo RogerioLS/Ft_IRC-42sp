@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: pmelo <pmelo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:54 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/15 22:05:27 by codespace        ###   ########.fr       */
+/*   Updated: 2025/06/24 11:59:12 by pmelo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
      return 1;
   }
-  
+
   int status = checkPortAndPassword(argv);
     if (status != VALIDATION_OK)
       return status;
@@ -35,6 +35,5 @@ int main(int argc, char **argv) {
 		return 4;
 	}
 
-  std::cout << "Server starting on port " << argv[1] << " with password " << argv[2] << std::endl;
   return 0;
 }
