@@ -3,36 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo <pmelo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/24 12:21:20 by pmelo            ###   ########.fr       */
+/*   Updated: 2025/06/26 11:42:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#define INITIAL_EVENT_VECTOR_SIZE 16
+#define INITIAL_CLIENT_VECTOR_SIZE 4
+
 #include "../utils/IRC.hpp"
+
+// class Client;
 
 class Server {
 
 	private:
-		int								_port;
-		std::string						_password;
-		std::string 					_parsedCommand;
-		int 							_serverFd;
-		int								_epollFd;
-		bool							_running;
+		int									_port;
+		std::string					_password;
+		std::string 				_parsedCommand;
+		int 								_serverFd;
+		int									_epollFd;
+		bool								_running;
+		// std::vector<Client> _clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
 
 	public:
 		Server(char **argv);
 		~Server();
 
+		void setupServer();
 		void setupServerSocket();
 		void setupEpollEvent();
 		void setupEpollLoop();
+		// void setupClientVector();
 
 		// Getters
 		int getPort() const;
@@ -48,6 +56,10 @@ class Server {
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(bool running);
+
+		template<typename T>
+		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+
 };
 
 #endif

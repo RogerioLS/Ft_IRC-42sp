@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/07 19:21:01 by codespace         #+#    #+#              #
-#    Updated: 2025/06/15 22:03:07 by codespace        ###   ########.fr        #
+#    Updated: 2025/06/26 11:14:18 by pmelo-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        = ircserv
 
 CXX         = c++
-CXXFLAGS    = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS    = -Wall -Wextra -Werror -std=c++98 -g
 
 SRC_DIR     = sources
 OBJ_DIR     = build
