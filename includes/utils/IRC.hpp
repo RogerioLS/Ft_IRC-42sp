@@ -10,6 +10,9 @@
 #define CYAN    "\033[36m"
 #define BOLD    "\033[1m"
 
+#define INITIAL_EVENT_VECTOR_SIZE 16
+#define INITIAL_CLIENT_VECTOR_SIZE 8
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

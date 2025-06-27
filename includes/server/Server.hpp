@@ -6,19 +6,14 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/26 11:42:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:14:45 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#define INITIAL_EVENT_VECTOR_SIZE 16
-#define INITIAL_CLIENT_VECTOR_SIZE 4
-
-#include "../utils/IRC.hpp"
-
-// class Client;
+#include "./Client.hpp"
 
 class Server {
 
@@ -29,7 +24,7 @@ class Server {
 		int 								_serverFd;
 		int									_epollFd;
 		bool								_running;
-		// std::vector<Client> _clientsVector;
+		std::vector<Client> _clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
 
 	public:
@@ -40,7 +35,7 @@ class Server {
 		void setupServerSocket();
 		void setupEpollEvent();
 		void setupEpollLoop();
-		// void setupClientVector();
+		void setupClientVector();
 
 		// Getters
 		int getPort() const;

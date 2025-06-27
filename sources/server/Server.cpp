@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/26 11:40:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/27 12:12:21 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Server::setupServer() {
 	setupServerSocket();
   setupEpollEvent();
   setupEpollLoop();
-	// setupClientVector();
+	setupClientVector();
 }
 
 void Server::setupServerSocket() {
@@ -105,19 +105,19 @@ void Server::setupEpollLoop() {
 					}
 					std::cout << GREEN << "Client connected." << RESET << std::endl;
 				}
-				
+
 			} else
-				std::cout << MAGENTA << "Client iteracted." << RESET << std::endl;
+				std::cout << MAGENTA << "Client iteracted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
 			resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
-			// resizeVector(_clientsVector.size(), _clientsVector);
+			resizeVector(_clientsVector.size(), _clientsVector);
 		}
 	}
 }
 
-// void Server::setupClientVector() {
-// 	if (_clientsVector.empty())
-// 		_clientsVector.resize(INITIAL_CLIENT_VECTOR_SIZE);
-// }
+void Server::setupClientVector() {
+	if (_clientsVector.empty())
+		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
+}
 
 // Getters
 int		Server::getPort() const { return _port; }
@@ -137,5 +137,5 @@ void Server::setServerRunning(bool running) { _running = running; }
 template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
 	if (vectorToResize.size() <= currSize)
-		vectorToResize.resize(vectorToResize.size() * 2);
+		vectorToResize.reserve(vectorToResize.size() * 2);
 }
