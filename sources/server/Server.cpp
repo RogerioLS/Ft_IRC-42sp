@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 15:12:49 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 15:32:02 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,10 @@ void Server::setupEpollLoop() {
 				handleNewClient();
 			else
 				handleClientRequest(n);
-		}
+
 		resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
 		resizeVector(_clientsVector.size(), _clientsVector);
+		}
 	}
 }
 
