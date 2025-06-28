@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 13:10:52 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 15:12:49 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void Server::setupEpollEvent() {
 	if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, getServerFd(), &ev) < 0)
 		throw std::runtime_error("Error epoll listen server fd");
 
-	_eventsVector.resize(INITIAL_EVENT_VECTOR_SIZE);
+	_eventsVector.reserve(INITIAL_EVENT_VECTOR_SIZE);
 	_eventsVector.push_back(ev);
 }
 
@@ -86,9 +86,9 @@ void Server::setupEpollLoop() {
 				handleNewClient();
 			else
 				handleClientRequest(n);
-			resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
-			resizeVector(_clientsVector.size(), _clientsVector);
 		}
+		resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
+		resizeVector(_clientsVector.size(), _clientsVector);
 	}
 }
 
@@ -126,7 +126,7 @@ void Server::handleNewClient() {
 }
 
 void Server::handleClientRequest(int n) {
-	std::cout << MAGENTA << "Client iteracted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
+	std::cout << MAGENTA << "Client interacted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
 }
 
 // Getters
