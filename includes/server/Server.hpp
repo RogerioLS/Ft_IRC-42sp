@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/27 12:14:45 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 12:41:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class Server {
 		std::string 				_parsedCommand;
 		int 								_serverFd;
 		int									_epollFd;
+		int									_clientCount;
 		bool								_running;
 		std::vector<Client> _clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
@@ -37,12 +38,16 @@ class Server {
 		void setupEpollLoop();
 		void setupClientVector();
 
+		void handleNewClient();
+		void handleClientRequest(int n);
+
 		// Getters
 		int getPort() const;
 		const std::string& getPassword() const;
 		int getServerFd() const;
 		const std::string& getParsedCommand() const;
 		int getEpollFd() const;
+		int getClientCount() const;
 		bool getServerRunning() const;
 		const std::vector<struct epoll_event>& getEvents() const;
 
@@ -50,6 +55,7 @@ class Server {
 		void setParsedCommand(const std::string& cmd);
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
+		void setClientCount(int clientCount);
 		void setServerRunning(bool running);
 
 		template<typename T>

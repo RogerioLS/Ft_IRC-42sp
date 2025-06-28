@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/27 12:02:26 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 13:12:39 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ class Client {
 	private:
 		int									_fd;
 		int									_id;
-		bool								_isConnected;
+		bool								_isAuthenticated;
+		std::string					_password;
 		std::string					_nickName;
 		std::string					_realName;
 		std::string					_userName;
@@ -28,14 +29,14 @@ class Client {
 		// std::vector<Channel> _clientChannelsVector;
 
 	public:
-		Client(int fd, int id, std::string nickName, std::string realName,
-			std::string userName, std::string hostName);
+		Client(int fd, int id);
 		~Client();
 
 		// Getters
 		int getClientFd() const;
 		int getClientId() const;
-		bool getClientIsConnected() const;
+		bool getClientIsAuthenticated() const;
+		std::string getClientPassword() const;
 		std::string getClientNickName() const;
 		std::string getClientRealName() const;
 		std::string getClientUserName() const;
@@ -45,7 +46,8 @@ class Client {
 		// Setters
 		void setClientFd(int fd);
 		void setClientId(int id);
-		void setClientIsConnected(bool isConnected);
+		void setClientIsAuthenticated(bool isAuthenticated);
+		void setClientPassword(std::string password);
 		void setClientNickName(std::string nickName);
 		void setClientRealName(std::string realName);
 		void setClientUserName(std::string userName);

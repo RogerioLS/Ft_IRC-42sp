@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/27 12:12:21 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 13:10:52 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _parsedCommand(""),
- _serverFd(-1), _epollFd(-1), _running(true) {}
+ _serverFd(-1), _epollFd(-1), _clientCount(0), _running(true) {}
 
 Server::~Server() {
 
@@ -29,8 +29,8 @@ Server::~Server() {
 
 void Server::setupServer() {
 	setupServerSocket();
-  setupEpollEvent();
-  setupEpollLoop();
+	setupEpollEvent();
+	setupEpollLoop();
 	setupClientVector();
 }
 
@@ -82,32 +82,10 @@ void Server::setupEpollLoop() {
 			throw std::runtime_error("Error epoll_wait");
 
 		for (int n = 0; n < nfds; ++n) {
-			if (_eventsVector[n].data.fd == getServerFd()) {
-
-				sockaddr_in client_addr;
-				socklen_t client_len = sizeof(client_addr);
-				int conn_socket = accept(getServerFd(),(struct sockaddr *) &client_addr, &client_len);
-				if (conn_socket == -1)
-					std::cerr << YELLOW << "Failed to accept client connection. Retrying..." << RESET << std::endl;
-				else {
-					if (fcntl(conn_socket, F_SETFL, O_NONBLOCK) < 0) {
-						std::cerr << YELLOW << "Failed to set client connection to non block. Retrying..." << RESET << std::endl;
-						continue;
-					}
-
-					epoll_event client_event;
-					client_event.events = EPOLLIN | EPOLLET;
-					client_event.data.fd = conn_socket;
-
-					if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
-						std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
-						continue;
-					}
-					std::cout << GREEN << "Client connected." << RESET << std::endl;
-				}
-
-			} else
-				std::cout << MAGENTA << "Client iteracted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
+			if (_eventsVector[n].data.fd == getServerFd())
+				handleNewClient();
+			else
+				handleClientRequest(n);
 			resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
 			resizeVector(_clientsVector.size(), _clientsVector);
 		}
@@ -119,12 +97,45 @@ void Server::setupClientVector() {
 		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
 }
 
+void Server::handleNewClient() {
+	sockaddr_in client_addr;
+	socklen_t client_len = sizeof(client_addr);
+	int conn_socket = accept(getServerFd(),(struct sockaddr *) &client_addr, &client_len);
+	if (conn_socket == -1)
+		std::cerr << YELLOW << "Failed to accept client connection. Retrying..." << RESET << std::endl;
+	else {
+		if (fcntl(conn_socket, F_SETFL, O_NONBLOCK) < 0) {
+			std::cerr << YELLOW << "Failed to set client connection to non block. Retrying..." << RESET << std::endl;
+			return;
+		}
+
+		epoll_event client_event;
+		client_event.events = EPOLLIN | EPOLLET;
+		client_event.data.fd = conn_socket;
+
+		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
+			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
+			return;
+		}
+		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
+		int clientId = getClientCount() + 1;
+		_clientsVector.push_back(Client(conn_socket, clientId));
+		setClientCount(clientId);
+		std::cout << BOLD << "Client count: " << getClientCount() <<  RESET << std::endl;
+	}
+}
+
+void Server::handleClientRequest(int n) {
+	std::cout << MAGENTA << "Client iteracted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
+}
+
 // Getters
 int		Server::getPort() const { return _port; }
 const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
 const std::string& Server::getParsedCommand() const { return _parsedCommand; }
-int		Server:: getEpollFd() const { return _epollFd; }
+int		Server::getEpollFd() const { return _epollFd; }
+int		Server::getClientCount() const { return _clientCount; }
 bool	Server:: getServerRunning() const { return _running; }
 const std::vector<struct epoll_event>& Server::getEvents() const { return _eventsVector; }
 
@@ -132,6 +143,7 @@ const std::vector<struct epoll_event>& Server::getEvents() const { return _event
 void Server::setParsedCommand(const std::string& cmd) { _parsedCommand = cmd; }
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
+void Server::setClientCount(int clientCount) { _clientCount = clientCount; }
 void Server::setServerRunning(bool running) { _running = running; }
 
 template<typename T>
