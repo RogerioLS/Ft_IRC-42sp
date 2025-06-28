@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 12:41:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 15:38:22 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Server {
 		void setupClientVector();
 
 		void handleNewClient();
-		void handleClientRequest(int n);
+		void handleClientRequest();
 
 		// Getters
 		int getPort() const;

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 15:32:02 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/28 15:50:49 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,7 @@ void Server::setupEpollLoop() {
 			if (_eventsVector[n].data.fd == getServerFd())
 				handleNewClient();
 			else
-				handleClientRequest(n);
-
+				handleClientRequest();
 		resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
 		resizeVector(_clientsVector.size(), _clientsVector);
 		}
@@ -126,8 +125,8 @@ void Server::handleNewClient() {
 	}
 }
 
-void Server::handleClientRequest(int n) {
-	std::cout << MAGENTA << "Client interacted." << " fd: " << _eventsVector[n].data.fd << RESET << std::endl;
+void Server::handleClientRequest() {
+	std::cout << MAGENTA << "Client interacted." << " fd: " << _eventsVector[0].data.fd << RESET << std::endl;
 }
 
 // Getters
