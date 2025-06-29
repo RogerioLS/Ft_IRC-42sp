@@ -15,11 +15,7 @@
 
 #define MAX_PASSWORD_LENGTH 32
 
-#include <iostream>
-#include <string>
-#include <exception>
-#include <cstdlib>
-#include <sstream>
+#include "../../utils/IRC.hpp"
 
 int   checkPortAndPassword(char **argv);
 bool  checkValidPassword(std::string password);
