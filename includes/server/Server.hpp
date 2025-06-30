@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 15:38:22 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:05:43 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Server {
 		void setupClientVector();
 
 		void handleNewClient();
-		void handleClientRequest();
+		void handleClientRequest(int fd);
 
 		// Getters
 		int getPort() const;
@@ -50,7 +50,6 @@ class Server {
 		int getClientCount() const;
 		bool getServerRunning() const;
 		const std::vector<struct epoll_event>& getEvents() const;
-
 		// Setters
 		void setParsedCommand(const std::string& cmd);
 		void setServerFd(int serverFd);
@@ -58,6 +57,7 @@ class Server {
 		void setClientCount(int clientCount);
 		void setServerRunning(bool running);
 
+		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
 

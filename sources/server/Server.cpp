@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 15:50:49 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:05:54 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,11 @@ void Server::setupEpollLoop() {
 			throw std::runtime_error("Error epoll_wait");
 
 		for (int n = 0; n < nfds; ++n) {
-			if (_eventsVector[n].data.fd == getServerFd())
+			int clientFd = _eventsVector[n].data.fd;
+			if (clientFd == getServerFd())
 				handleNewClient();
 			else
-				handleClientRequest();
+				handleClientRequest(clientFd);
 		resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
 		resizeVector(_clientsVector.size(), _clientsVector);
 		}
@@ -98,6 +99,7 @@ void Server::setupClientVector() {
 }
 
 void Server::handleNewClient() {
+
 	sockaddr_in client_addr;
 	socklen_t client_len = sizeof(client_addr);
 	int conn_socket = accept(getServerFd(),(struct sockaddr *) &client_addr, &client_len);
@@ -113,20 +115,33 @@ void Server::handleNewClient() {
 		client_event.events = EPOLLIN | EPOLLET;
 		client_event.data.fd = conn_socket;
 
+		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
+		int clientId = getClientCount();
+		_clientsVector.push_back(Client(conn_socket, clientId));
+		setClientCount(clientId + 1);
+
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
 			return;
 		}
-		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-		int clientId = getClientCount() + 1;
-		_clientsVector.push_back(Client(conn_socket, clientId));
-		setClientCount(clientId);
 		std::cout << BOLD << "Client count: " << getClientCount() <<  RESET << std::endl;
 	}
 }
 
-void Server::handleClientRequest() {
-	std::cout << MAGENTA << "Client interacted." << " fd: " << _eventsVector[0].data.fd << RESET << std::endl;
+void Server::handleClientRequest(int clientFd) {
+
+	std::vector<Client>::iterator it = clientItFromFd(clientFd);
+	if (it != _clientsVector.end()) {
+		std::cout << MAGENTA << "Client interacted." << " fd: " << clientFd << RESET << std::endl;
+		char buffer[1024];
+		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
+
+		if (bytesRead <= 0) {
+			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
+			_clientsVector.erase(it);
+			setClientCount(getClientCount() - 1);
+		}
+	}
 }
 
 // Getters
@@ -150,4 +165,12 @@ template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
 	if (vectorToResize.size() <= currSize)
 		vectorToResize.reserve(vectorToResize.size() * 2);
+}
+
+std::vector<Client>::iterator Server::clientItFromFd(int fd) {
+	for (std::vector<Client>::iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+		if (it->getClientFd() == fd)
+			return it;
+	}
+	return _clientsVector.end();
 }
