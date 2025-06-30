@@ -6,15 +6,15 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/30 12:05:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/30 12:13:12 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
 
 Server::Server(char **argv)
- : _port(std::atoi(argv[1])), _password(argv[2]), _parsedCommand(""),
- _serverFd(-1), _epollFd(-1), _clientCount(0), _running(true) {}
+ : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
+ 	_epollFd(-1), _clientCount(0), _running(true) {}
 
 Server::~Server() {
 
@@ -148,14 +148,11 @@ void Server::handleClientRequest(int clientFd) {
 int		Server::getPort() const { return _port; }
 const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
-const std::string& Server::getParsedCommand() const { return _parsedCommand; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientCount; }
 bool	Server:: getServerRunning() const { return _running; }
-const std::vector<struct epoll_event>& Server::getEvents() const { return _eventsVector; }
 
 // Setters
-void Server::setParsedCommand(const std::string& cmd) { _parsedCommand = cmd; }
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
 void Server::setClientCount(int clientCount) { _clientCount = clientCount; }
