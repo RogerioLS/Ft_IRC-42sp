@@ -6,14 +6,14 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/28 13:12:39 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 11:16:59 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "../utils/IRC.hpp"
+#include "./Channel.hpp"
 
 class Client {
 
@@ -26,7 +26,7 @@ class Client {
 		std::string					_realName;
 		std::string					_userName;
 		std::string					_hostName;
-		// std::vector<Channel> _clientChannelsVector;
+		std::set<int>				_clientChannels;
 
 	public:
 		Client(int fd, int id);
@@ -36,12 +36,12 @@ class Client {
 		int getClientFd() const;
 		int getClientId() const;
 		bool getClientIsAuthenticated() const;
-		std::string getClientPassword() const;
-		std::string getClientNickName() const;
-		std::string getClientRealName() const;
-		std::string getClientUserName() const;
-		std::string getClientHostName() const;
-		// std::vector<Channel> _getClientChannels () const;
+		const std::string & getClientPassword() const;
+		const std::string & getClientNickName() const;
+		const std::string & getClientRealName() const;
+		const std::string & getClientUserName() const;
+		const std::string & getClientHostName() const;
+		const std::set<int> & getClientChannels () const;
 
 		// Setters
 		void setClientFd(int fd);
@@ -52,7 +52,7 @@ class Client {
 		void setClientRealName(std::string realName);
 		void setClientUserName(std::string userName);
 		void setClientHostName(std::string hostName);
-		// void addChannelToClient(std::vector<Channel>);
+		void setChannelToClient(int id);
 };
 
 #endif

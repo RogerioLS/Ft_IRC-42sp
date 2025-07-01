@@ -15,17 +15,17 @@
 
 #define MAX_PASSWORD_LENGTH 32
 
-#include "../../utils/IRC.hpp"
+#include "./IRC.hpp"
 
 int   checkPortAndPassword(char **argv);
 bool  checkValidPassword(std::string password);
 bool  checkValidPort(std::string port);
 
 enum ValidationStatus {
-  VALIDATION_OK,
-  INVALID_PORT=2,
-  INVALID_PASSWORD=3,
-  INVALID_BOTH=4
+	VALIDATION_OK,
+	INVALID_PORT=2,
+	INVALID_PASSWORD=3,
+	INVALID_BOTH=4
 };
 
 #endif

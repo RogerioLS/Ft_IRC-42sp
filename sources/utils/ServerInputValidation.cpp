@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/server/utils/ServerInputValidation.hpp"
+#include "../includes/utils/ServerInputValidation.hpp"
 
 int  checkPortAndPassword(char **argv) {
 

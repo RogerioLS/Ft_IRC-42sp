@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/30 11:38:31 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 11:17:51 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ Client::~Client() {}
 int Client::getClientFd() const { return _fd; }
 int Client::getClientId() const { return _id; }
 bool Client::getClientIsAuthenticated() const { return _isAuthenticated; }
-std::string Client::getClientPassword() const { return _password; }
-std::string Client::getClientNickName() const { return _nickName; }
-std::string Client::getClientRealName() const { return _realName; }
-std::string Client::getClientUserName() const { return _userName; }
-std::string Client::getClientHostName() const { return _hostName; }
+const std::string & Client::getClientPassword() const { return _password; }
+const std::string & Client::getClientNickName() const { return _nickName; }
+const std::string & Client::getClientRealName() const { return _realName; }
+const std::string & Client::getClientUserName() const { return _userName; }
+const std::string & Client::getClientHostName() const { return _hostName; }
 
 // Setters
 void Client::setClientFd(int fd) { _fd = fd ;}

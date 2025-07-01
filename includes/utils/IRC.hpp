@@ -1,5 +1,5 @@
 #ifndef IRC_HPP
-#define IRC_HPP
+#define IRC_HP
 
 #define RESET   "\033[0m"
 #define RED     "\033[31m"
@@ -12,6 +12,7 @@
 
 #define INITIAL_EVENT_VECTOR_SIZE 16
 #define INITIAL_CLIENT_VECTOR_SIZE 8
+#define CHANNEL_USER_LIMIT 128
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -21,6 +22,7 @@
 #include <cstring>
 #include <sys/epoll.h>
 #include <vector>
+#include <set>
 #include <cstdlib>
 #include <fcntl.h>
 #include <sstream>

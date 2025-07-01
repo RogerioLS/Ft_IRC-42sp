@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/30 12:13:12 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 10:34:15 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
- 	_epollFd(-1), _clientCount(0), _running(true) {}
+	 _epollFd(-1), _clientCount(0), _running(true) {}
 
 Server::~Server() {
 
