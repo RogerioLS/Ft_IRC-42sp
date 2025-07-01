@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 10:34:15 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 11:58:55 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
-	 _epollFd(-1), _clientCount(0), _running(true) {}
+	 _epollFd(-1), _running(true) {}
 
 Server::~Server() {
 
@@ -118,7 +118,6 @@ void Server::handleNewClient() {
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
 		int clientId = getClientCount();
 		_clientsVector.push_back(Client(conn_socket, clientId));
-		setClientCount(clientId + 1);
 
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
@@ -139,7 +138,6 @@ void Server::handleClientRequest(int clientFd) {
 		if (bytesRead <= 0) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
 			_clientsVector.erase(it);
-			setClientCount(getClientCount() - 1);
 		}
 	}
 }
@@ -149,13 +147,12 @@ int		Server::getPort() const { return _port; }
 const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
-int		Server::getClientCount() const { return _clientCount; }
+int		Server::getClientCount() const { return _clientsVector.size(); }
 bool	Server:: getServerRunning() const { return _running; }
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
-void Server::setClientCount(int clientCount) { _clientCount = clientCount; }
 void Server::setServerRunning(bool running) { _running = running; }
 
 template<typename T>

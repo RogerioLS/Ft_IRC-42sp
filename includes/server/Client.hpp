@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 11:16:59 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 11:53:19 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ class Client {
 		const std::string & getClientRealName() const;
 		const std::string & getClientUserName() const;
 		const std::string & getClientHostName() const;
-		const std::set<int> & getClientChannels () const;
 
 		// Setters
 		void setClientFd(int fd);
@@ -52,7 +51,6 @@ class Client {
 		void setClientRealName(std::string realName);
 		void setClientUserName(std::string userName);
 		void setClientHostName(std::string hostName);
-		void setChannelToClient(int id);
 };
 
 #endif

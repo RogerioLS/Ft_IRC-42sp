@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 10:57:00 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/01 11:57:52 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ class Server {
 		std::string							_password;
 		int 										_serverFd;
 		int											_epollFd;
-		int											_clientCount;
 		bool										_running;
 		std::vector<std::string> _parsedCommand;
 		std::vector<struct epoll_event> _eventsVector;
@@ -55,7 +54,6 @@ class Server {
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
-		void setClientCount(int clientCount);
 		void setServerRunning(bool running);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
