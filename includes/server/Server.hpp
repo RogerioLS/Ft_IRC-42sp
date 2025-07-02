@@ -6,14 +6,12 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 11:43:55 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:24:45 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
-
-#include "./Client.hpp"
 
 class Server {
 

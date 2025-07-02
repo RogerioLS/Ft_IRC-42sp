@@ -6,11 +6,12 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 11:58:33 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:28:26 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
+#include "../includes/server/Client.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
@@ -142,6 +143,11 @@ void Server::handleClientRequest(int clientFd) {
 			close(it->getClientFd());
 			_clientsVector.erase(it);
 		}
+
+		buffer[bytesRead] = '\0';
+		it->setClientBuffer(buffer);
+		Parser::parseBuffer(*it);
+		//execute;
 	}
 }
 
