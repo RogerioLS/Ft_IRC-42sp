@@ -6,12 +6,16 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:24:45 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:39:34 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
+
+#include "../utils/IRC.hpp"
+
+class Client;
 
 class Server {
 

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:25:00 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:38:43 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,5 @@
 Parser::Parser() {}
 
 void Parser::parseBuffer(Client & client) {
-	
+	std::cout << client.getClientBuffer() << std::endl;
 }
