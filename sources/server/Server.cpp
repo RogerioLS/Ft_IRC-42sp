@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 11:58:55 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 09:55:50 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
-	 _epollFd(-1), _running(true) {}
+	 _epollFd(-1), _running(false) {}
 
 Server::~Server() {
 
@@ -25,6 +25,8 @@ Server::~Server() {
 	if (getEpollFd() != -1) {
 		close(getEpollFd());
 	}
+
+	//cleanup channels and client vectors
 }
 
 void Server::setupServer() {
@@ -71,6 +73,7 @@ void Server::setupEpollEvent() {
 
 	_eventsVector.reserve(INITIAL_EVENT_VECTOR_SIZE);
 	_eventsVector.push_back(ev);
+	setServerRunning(true);
 }
 
 void Server::setupEpollLoop() {
