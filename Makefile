@@ -3,7 +3,7 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
+#    By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/07 19:21:01 by codespace         #+#    #+#              #
 #    Updated: 2025/06/29 19:16:34 by codespace        ###   ########.fr        #
@@ -15,7 +15,7 @@ NAME        = ircserv
 
 # Compilador e flags
 CXX         = c++
-CXXFLAGS    = -Wall -Wextra -Werror -std=c++11
+CXXFLAGS    = -Wall -Wextra -Werror -std=c++98 -g
 
 # Diretórios
 SRC_DIR     = sources

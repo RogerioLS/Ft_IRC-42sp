@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:54 by codespace         #+#    #+#             */
 /*   Updated: 2025/06/22 19:45:46 by codespace        ###   ########.fr       */
@@ -30,16 +30,12 @@ int main(int argc, char **argv) {
         return (3);
     }
 
-    /*Server server(argv);
-    debug.debugPrint("✔️ Server instance created", GREEN);
-    try {
-        server.setupServerSocket();
-        server.setupEpollEvent();
-        server.setupEpollLoop();
-    } catch (const std::runtime_error& e) {
-        Debug::printError(debug, "Runtime error during server setup", e);
-        return (4);
-    }
-    std::cout << "Server starting on port " << argv[1] << " with password " << argv[2] << std::endl;*/
+    Server server(argv);
+	try {
+		server.setupServer();
+	} catch (const std::runtime_error& e) {
+		std::cerr << RED << "[Runtime Error] " << e.what() << RESET << std::endl;
+		return 4;
+	}
     return (0);
 }
