@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:38:43 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/02 12:46:33 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,19 @@
 Parser::Parser() {}
 
 void Parser::parseBuffer(Client & client) {
-	std::cout << client.getClientBuffer() << std::endl;
+	const std::string &buffer = client.getClientBuffer();
+
+	std::cout << "Raw buffer: ";
+
+	for (std::size_t i = 0; i < buffer.size(); ++i) {
+		unsigned char c = buffer[i];
+		if (c == '\r')
+			std::cout << "\\r";
+		else if (c == '\n')
+			std::cout << "\\n";
+		else
+			std::cout << c;
+}
+
+	std::cout << std::endl;
 }
