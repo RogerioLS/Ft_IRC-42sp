@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:18:16 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:27:29 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ class Client {
 		std::string					_realName;
 		std::string					_userName;
 		std::string					_ipAddress;
-		std::string					_buffer;
+		std::string					_bufferStr;
+		char								_bufferChar[BUFFER_SIZE];
 		std::vector<std::string> _parsedCommand;
 
 	public:
@@ -45,7 +46,8 @@ class Client {
 		const std::string getClientRealName() const;
 		const std::string getClientUserName() const;
 		const std::string getClientipAddress() const;
-		const std::string getClientBuffer() const;
+		char * getClientBufferChar();
+		const std::string getClientBufferStr() const;
 		const std::vector<std::string> getClientParsedCommand() const;
 
 		// Setters
@@ -58,7 +60,7 @@ class Client {
 		void setClientRealName(const std::string& realName);
 		void setClientUserName(const std::string& userName);
 		void setClientIpAddress(const std::string & ipAddress);
-		void setClientBuffer(const std::string & buffer);
+		void setClientBufferStr(const std::string & bufferStr);
 		void setClientParsedCommand(const std::vector<std::string> & parsedCommand);
 };
 

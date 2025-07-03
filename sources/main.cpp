@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:54 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:22:48 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 08:41:22 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
 	}
 
 	int status = checkPortAndPassword(argv);
-		if (status != VALIDATION_OK)
-			return status;
+	if (status != VALIDATION_OK)
+		return status;
 
 	Server server(argv);
 	try {

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:48:00 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:08:25 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,18 +135,12 @@ void Server::handleClientRequest(int clientFd) {
 	std::vector<Client>::iterator it = clientItFromFd(clientFd);
 	if (it != _clientsVector.end()) {
 		std::cout << MAGENTA << "Client interacted." << " fd: " << clientFd << RESET << std::endl;
-		char buffer[1024];
-		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
-
+		ssize_t bytesRead = recv(clientFd, it->getClientBufferChar(), BUFFER_SIZE - 1, 0);
 		if (bytesRead <= 0) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
 			close(it->getClientFd());
 			_clientsVector.erase(it);
-		}
-
-		else {
-			buffer[bytesRead] = '\0';
-			it->setClientBuffer(buffer);
+		}	else {
 			Parser::parseBuffer(*it);
 			//execute;
 		}

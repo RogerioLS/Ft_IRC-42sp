@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 11:56:40 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:13:51 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ const std::string Client::getClientNickName() const { return _nickName; }
 const std::string Client::getClientRealName() const { return _realName; }
 const std::string Client::getClientUserName() const { return _userName; }
 const std::string Client::getClientipAddress() const { return _ipAddress; }
-const std::string Client::getClientBuffer() const { return _buffer; }
+char * Client::getClientBufferChar() { return _bufferChar; }
+const std::string Client::getClientBufferStr() const { return _bufferStr; }
 const std::vector<std::string> Client:: getClientParsedCommand() const { return _parsedCommand; }
 
 // Setters
@@ -40,5 +41,5 @@ void Client::setClientNickName(const std::string & nickName) { _nickName = nickN
 void Client::setClientRealName(const std::string & realName) { _realName = realName ;}
 void Client::setClientUserName(const std::string & userName) { _userName = userName ;}
 void Client::setClientIpAddress(const std::string & ipAddress) { _ipAddress = ipAddress ;}
-void Client::setClientBuffer(const std::string & buffer) { _buffer = buffer ;}
+void Client::setClientBufferStr(const std::string & bufferStr) { _bufferStr = bufferStr ;}
 void Client::setClientParsedCommand(const std::vector<std::string> & parsedCommand) { _parsedCommand = parsedCommand ;}
