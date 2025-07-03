@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:34 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:21:06 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 12:48:59 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ class Parser {
 		Parser();
 
 	public:
-		static void parseBuffer(Client & client);
+		static void appendParsedCommand(Client & client);
+		static void appendLineCommand(const std::string & messageSplitedByLine, Client & client);
 };
 
 #endif

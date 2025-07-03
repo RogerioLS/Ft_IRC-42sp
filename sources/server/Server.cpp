@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/03 12:08:25 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/03 13:05:48 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,7 @@ void Server::handleClientRequest(int clientFd) {
 			close(it->getClientFd());
 			_clientsVector.erase(it);
 		}	else {
-			Parser::parseBuffer(*it);
-			//execute;
+			Parser::appendParsedCommand(*it);
 		}
 	}
 }
