@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/server/Client.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Client::Client(int fd, int id) : _fd(fd), _id(id) {
 
