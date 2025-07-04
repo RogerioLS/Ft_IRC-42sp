@@ -6,32 +6,36 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:54 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/26 11:37:36 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/06/22 19:45:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/server/Server.hpp"
-#include "../includes/server/utils/ServerInputValidation.hpp"
+#include "../includes/parser/Parser.hpp"
+#include "../includes/utils/Debug.hpp"
+#include "../includes/utils/Colors.hpp"
 
 int main(int argc, char **argv) {
 
-	if (argc != 3) {
-		std::cerr << YELLOW << "Usage: ./ircserv <port> <password>" << RESET << std::endl;
-		return 1;
-	}
+    Debug debug;
+    debug.enableDebugMode(true);
 
-	int status = checkPortAndPassword(argv);
-		if (status != VALIDATION_OK)
-			return status;
+    try {
+        parseArguments(argc, debug);
+        int status = checkPortAndPassword(argv, debug);
+        if (status != VALIDATION_OK)
+            return status;
+    } catch (const std::exception &e) {
+        Debug::printError(debug, "Exception caught in main", e);
+        return (3);
+    }
 
-	Server server(argv);
+    Server server(argv);
 	try {
 		server.setupServer();
 	} catch (const std::runtime_error& e) {
 		std::cerr << RED << "[Runtime Error] " << e.what() << RESET << std::endl;
 		return 4;
 	}
-
-	return 0;
+    return (0);
 }

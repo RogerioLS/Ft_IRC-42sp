@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/server/Client.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Client::Client(int fd, int id, uint16_t port, std::string ipAddress)
  : _fd(fd), _id(id), _port(port), _isAuthenticated(false), _ipAddress(ipAddress) {}
