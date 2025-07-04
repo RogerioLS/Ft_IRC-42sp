@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 12:39:34 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:00:42 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Server {
 		int 										_serverFd;
 		int											_epollFd;
 		bool										_running;
+		int											_idCounter;
 		std::vector<Client>			_clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
 
@@ -48,10 +49,12 @@ class Server {
 		int getEpollFd() const;
 		int getClientCount() const;
 		bool getServerRunning() const;
+		int getServerIdCounter() const;
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(bool running);
+		void setServerIdCounter(int idCounter);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/03 13:05:48 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:26:44 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
- 	_epollFd(-1), _running(true) {}
+ 	_epollFd(-1), _running(true), _idCounter(0) {}
 
 Server::~Server() {
 
@@ -120,7 +120,8 @@ void Server::handleNewClient() {
 		uint16_t clientPort = ntohs(client_addr.sin_port);
 
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-		_clientsVector.push_back(Client(conn_socket, getClientCount(), clientPort, clientIp));
+		_clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientPort, clientIp));
+		setServerIdCounter(getServerFd() + 1);
 
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
@@ -153,11 +154,13 @@ int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientsVector.size(); }
 bool	Server:: getServerRunning() const { return _running; }
+int		Server::getServerIdCounter() const { return _idCounter; }
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
 void Server::setServerRunning(bool running) { _running = running; }
+void Server::setServerIdCounter(int idCounter) { _idCounter = idCounter; }
 
 template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
