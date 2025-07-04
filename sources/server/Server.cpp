@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/04 13:26:44 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:30:22 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ void Server::handleNewClient() {
 		std::string clientIp = inet_ntoa(client_addr.sin_addr);
 		uint16_t clientPort = ntohs(client_addr.sin_port);
 
+		//TODO getbuffer from client to validate password and connect if its right
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
 		_clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientPort, clientIp));
 		setServerIdCounter(getServerFd() + 1);
