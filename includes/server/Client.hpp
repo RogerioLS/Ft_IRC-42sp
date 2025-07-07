@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 10:30:10 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:24:55 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ class Client {
 		// Getters
 		int getClientFd() const;
 		int getClientId() const;
-		uint16_t getClientPort() const;
 		bool getClientIsAuthenticated() const;
 		const std::string & getClientPassword() const;
 		const std::string & getClientNickName() const;
@@ -47,7 +46,6 @@ class Client {
 		// Setters
 		void setClientFd(int fd);
 		void setClientId(int id);
-		void setClientPort(uint16_t port);
 		void setClientIsAuthenticated(bool isAuthenticated);
 		void setClientPassword(std::string password);
 		void setClientNickName(std::string nickName);
