@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
