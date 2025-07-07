@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 11:57:52 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:28:01 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "./Client.hpp"
 #include "./Channel.hpp"
-#include "../utils/ServerInputValidation.hpp"
 
 class Server {
 
@@ -50,7 +49,6 @@ class Server {
 		int getEpollFd() const;
 		int getClientCount() const;
 		bool getServerRunning() const;
-		const std::string& getParsedCommand() const;
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);

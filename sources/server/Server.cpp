@@ -6,11 +6,12 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 09:55:50 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:35:54 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
@@ -25,8 +26,6 @@ Server::~Server() {
 	if (getEpollFd() != -1) {
 		close(getEpollFd());
 	}
-
-	//cleanup channels and client vectors
 }
 
 void Server::setupServer() {
@@ -104,6 +103,7 @@ void Server::setupClientVector() {
 void Server::handleNewClient() {
 
 	sockaddr_in client_addr;
+	memset(&client_addr, 0, sizeof(client_addr));
 	socklen_t client_len = sizeof(client_addr);
 	int conn_socket = accept(getServerFd(),(struct sockaddr *) &client_addr, &client_len);
 	if (conn_socket == -1)
@@ -140,6 +140,7 @@ void Server::handleClientRequest(int clientFd) {
 
 		if (bytesRead <= 0) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
+			close(it->getClientFd());
 			_clientsVector.erase(it);
 		}
 	}

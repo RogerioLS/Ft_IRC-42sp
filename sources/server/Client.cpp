@@ -6,11 +6,12 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 11:17:51 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:29:47 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Client.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Client::Client(int fd, int id) : _fd(fd), _id(id), _isAuthenticated(false) {}
 
