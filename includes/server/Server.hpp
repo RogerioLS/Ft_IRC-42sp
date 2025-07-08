@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/04 13:00:42 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/08 19:47:07 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ class Server {
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+		std::vector<Client> &getClientsVector();
 
 };
 

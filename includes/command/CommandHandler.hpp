@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/07 19:21:32 by codespace        ###   ########.fr       */
+/*   Updated: 2025/07/08 20:14:52 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ class CommandHandler {
 		static void processCommand(Client &client, const std::string &command, class Server &server);
 		static void handlePass(Client &client, const std::vector<std::string> &args, class Server &server);
 		static void handleNick(Client &client, const std::vector<std::string> &args, class Server &server);
-		static void handleUser(Client &client, const std::vector<std::string> &args, class Server &server);
+		static void handleUser(Client &client, const std::vector<std::string> &args);
 		static void sendResponse(Client &client, const std::string &response);
-		static void isValidNickname(const std::string &nickname);
-		static void isNicknameInUse(const std::string &nickname, class Server &server);
+		static bool isValidNickname(const std::string &nickname);
+		static bool isNicknameInUse(const std::string &nickname, class Server &server);
 };
 
 #endif

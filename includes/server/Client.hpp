@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/03 12:56:53 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/08 20:25:54 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Client {
 		std::string					_realName;
 		std::string					_userName;
 		std::string					_ipAddress;
-		std::string					_bufferStr;
+		std::string					_buffer;
 		char								_bufferChar[BUFFER_SIZE];
 		std::vector<std::string> _parsedCommand;
 		bool	_hasValidPass;
@@ -73,6 +73,9 @@ class Client {
 		void	setHasValidPass(bool hasPass);
 		void	setHasValidNick(bool hasNick);
 		void	setHasValidUser(bool hasUser);
+
+		void appendClientBuffer(const std::string &data);
+		void clearParsedCommands();
 };
 
 #endif
