@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 13:25:12 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/08 11:22:08 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,13 @@ class Server {
 		std::vector<Channel>		_channelsVector;
 
 	public:
+		static Server*					instance;
+
 		Server(char **argv);
 		~Server();
 
+		void handleSignal();
+		static void handleSigInt(int signum);
 		void setupServer();
 		void setupServerSocket();
 		void setupEpollEvent();
@@ -40,6 +44,8 @@ class Server {
 
 		void handleNewClient();
 		void handleClientRequest(int fd);
+
+		void closeFds();
 
 		// Getters
 		int getPort() const;
