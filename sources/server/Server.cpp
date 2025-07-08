@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 11:58:33 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 10:35:54 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
- 	_epollFd(-1), _running(true) {}
+	 _epollFd(-1), _running(false) {}
 
 Server::~Server() {
 
@@ -72,6 +72,7 @@ void Server::setupEpollEvent() {
 
 	_eventsVector.reserve(INITIAL_EVENT_VECTOR_SIZE);
 	_eventsVector.push_back(ev);
+	setServerRunning(true);
 }
 
 void Server::setupEpollLoop() {
@@ -116,11 +117,10 @@ void Server::handleNewClient() {
 		epoll_event client_event;
 		client_event.events = EPOLLIN | EPOLLET;
 		client_event.data.fd = conn_socket;
-		std::string clientIp = inet_ntoa(client_addr.sin_addr);
-		uint16_t clientPort = ntohs(client_addr.sin_port);
 
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-		_clientsVector.push_back(Client(conn_socket, getClientCount(), clientPort, clientIp));
+		int clientId = getClientCount();
+		_clientsVector.push_back(Client(conn_socket, clientId));
 
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/02 11:43:55 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/07 13:25:12 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define SERVER_HPP
 
 #include "./Client.hpp"
+#include "./Channel.hpp"
 
 class Server {
 
@@ -23,8 +24,9 @@ class Server {
 		int 										_serverFd;
 		int											_epollFd;
 		bool										_running;
-		std::vector<Client>			_clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
+		std::vector<Client>			_clientsVector;
+		std::vector<Channel>		_channelsVector;
 
 	public:
 		Server(char **argv);
