@@ -13,7 +13,8 @@
 #include "../includes/server/Client.hpp"
 
 Client::Client(int fd, int id, uint16_t port, std::string ipAddress)
- : _fd(fd), _id(id), _port(port), _isAuthenticated(false), _ipAddress(ipAddress) {}
+ : _fd(fd), _id(id), _port(port), _isAuthenticated(false), _ipAddress(ipAddress),
+   _hasValidPass(false), _hasValidNick(false), _hasValidUser(false) {}
 
 Client::~Client() {}
 
@@ -44,3 +45,15 @@ void Client::setClientIpAddress(const std::string & ipAddress) { _ipAddress = ip
 void Client::setClientBufferStr(const std::string & bufferStr) { _bufferStr = bufferStr ;}
 void Client::setClientParsedCommand(const std::vector<std::string> & parsedCommand) { _parsedCommand = parsedCommand ;}
 void Client::appendParsedCommand(const std::string & line) { _parsedCommand.push_back(line); }
+
+bool	Client::hasValidPass() const { return _hasValidPass; }
+bool	Client::hasValidNick() const { return _hasValidNick; }
+bool	Client::hasValidUser() const { return _hasValidUser; }
+bool	Client::isFullyRegistered() const {
+	return _hasValidPass && _hasValidNick && _hasValidUser;
+}
+
+void Client::setHasValidPass(bool hasPass) {_hasValidPass = hasPass; };
+void Client::setHasValidNick(bool hasNick) {_hasValidNick = hasNick; };
+void Client::setHasValidUser(bool hasUser) {_hasValidUser = hasUser; };
+
