@@ -25,6 +25,7 @@ class Parser {
 	public:
 		static void appendParsedCommand(Client & client);
 		static void appendLineCommand(const std::string & messageSplitedByLine, Client & client);
+		static std::vector<std::string> splitCommand(const std::string &command);
 };
 
 #endif
