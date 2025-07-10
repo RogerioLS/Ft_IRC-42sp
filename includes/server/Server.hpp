@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 13:25:12 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/08 11:41:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,14 @@ class Server {
 		std::string							_password;
 		int 										_serverFd;
 		int											_epollFd;
-		bool										_running;
+		volatile std::sig_atomic_t _gSignalStatus;
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
 
-	public:
-		Server(char **argv);
-		~Server();
+		void handleSignal();
+		static void handleSigInt(int signum);
 
-		void setupServer();
 		void setupServerSocket();
 		void setupEpollEvent();
 		void setupEpollLoop();
@@ -41,17 +39,27 @@ class Server {
 		void handleNewClient();
 		void handleClientRequest(int fd);
 
+		void closeFds();
+
+	public:
+		static Server*					instance;
+
+		Server(char **argv);
+		~Server();
+
+		void setupServer();
+
 		// Getters
 		int getPort() const;
 		const std::string& getPassword() const;
 		int getServerFd() const;
 		int getEpollFd() const;
 		int getClientCount() const;
-		bool getServerRunning() const;
+		int getServerRunning() const;
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
-		void setServerRunning(bool running);
+		void setServerRunning(int gSignalStatus);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>

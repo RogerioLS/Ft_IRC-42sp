@@ -18,5 +18,6 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <sstream>
+#include <csignal>
 
 #endif

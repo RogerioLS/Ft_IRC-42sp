@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 10:35:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/08 11:43:42 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,29 @@
 #include "../includes/utils/Colors.hpp"
 
 Server::Server(char **argv)
- : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
-	 _epollFd(-1), _running(false) {}
+ : _port(std::atoi(argv[1])),
+  _password(argv[2]),
+  _serverFd(-1),
+	_epollFd(-1),
+	_gSignalStatus(-1) { instance = this; }
 
-Server::~Server() {
-
-	if (getServerFd() != -1) {
-		close(getServerFd());
-	}
-
-	if (getEpollFd() != -1) {
-		close(getEpollFd());
-	}
-}
+Server::~Server() { closeFds(); }
 
 void Server::setupServer() {
+	handleSignal();
 	setupServerSocket();
 	setupEpollEvent();
-	setupEpollLoop();
 	setupClientVector();
+	setupEpollLoop();
+}
+
+void Server::handleSignal() {
+	signal(SIGINT, handleSigInt);
+}
+
+void Server::handleSigInt(int signum) {
+	if (instance)
+		instance->_gSignalStatus = signum;
 }
 
 void Server::setupServerSocket() {
@@ -72,12 +76,17 @@ void Server::setupEpollEvent() {
 
 	_eventsVector.reserve(INITIAL_EVENT_VECTOR_SIZE);
 	_eventsVector.push_back(ev);
-	setServerRunning(true);
+	setServerRunning(1);
+}
+
+void Server::setupClientVector() {
+	if (_clientsVector.empty())
+		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
 }
 
 void Server::setupEpollLoop() {
 
-	while (getServerRunning() == true) {
+	while (getServerRunning() == 1) {
 
 		int nfds = epoll_wait(_epollFd, _eventsVector.data(), _eventsVector.size(), 0);
 		if (nfds < 0)
@@ -93,11 +102,7 @@ void Server::setupEpollLoop() {
 		resizeVector(_clientsVector.size(), _clientsVector);
 		}
 	}
-}
-
-void Server::setupClientVector() {
-	if (_clientsVector.empty())
-		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
+	std::cout << RED << "[SIGNAL] SIGINT recebido!" << RESET << std::endl;
 }
 
 void Server::handleNewClient() {
@@ -152,12 +157,12 @@ const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientsVector.size(); }
-bool	Server:: getServerRunning() const { return _running; }
+int	Server:: getServerRunning() const { return _gSignalStatus; }
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
-void Server::setServerRunning(bool running) { _running = running; }
+void Server::setServerRunning(int gSignalStatus) { _gSignalStatus = gSignalStatus; }
 
 template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
@@ -172,3 +177,21 @@ std::vector<Client>::iterator Server::clientItFromFd(int fd) {
 	}
 	return _clientsVector.end();
 }
+
+void Server::closeFds() {
+
+	if (getServerFd() != -1)
+		close(getServerFd());
+
+	if (getEpollFd() != -1)
+		close(getEpollFd());
+
+	std::vector<Client>::iterator it = _clientsVector.begin();
+	for(std::vector<Client>::iterator ite = _clientsVector.end(); it != ite; it++) {
+		int clientFd = it->getClientFd();
+		if (clientFd != -1)
+			close(clientFd);
+	}
+}
+
+Server* Server::instance = NULL;
