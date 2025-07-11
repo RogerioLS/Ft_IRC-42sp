@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/22 19:43:53 by codespace        ###   ########.fr       */
+/*   Updated: 2025/07/11 10:05:22 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parser/Parser.hpp"
 #include "../includes/utils/Debug.hpp"
 #include "../includes/utils/Colors.hpp"
+#include "../includes/server/Client.hpp"
 
 void parseArguments(int argc, Debug &debug) {
     if (argc != 3) {
@@ -48,9 +49,9 @@ int checkPortAndPassword(char **argv, Debug &debug) {
 }
 
 bool  checkValidPort(std::string port) {
-	
+
   for (size_t i = 0; i < port.length(); ++i) {
-		
+
     char c = port[i];
     if (!std::isdigit(c))
       throw std::invalid_argument("Port must be a number.");
@@ -70,9 +71,9 @@ bool  checkValidPassword(std::string password) {
 
   if (password.empty())
     throw std::invalid_argument("Password cannot be empty.");
-	
+
 	if(password.length() > MAX_PASSWORD_LENGTH) {
-    
+
 		std::stringstream ss;
 		ss << "Password length bigger than " << MAX_PASSWORD_LENGTH;
 		throw std::invalid_argument(ss.str());
@@ -83,4 +84,49 @@ bool  checkValidPassword(std::string password) {
       throw std::invalid_argument("Password contains invalid character.");
   }
   return true;
+}
+
+void Parser::appendParsedCommand(Client & client) {
+
+	std::string buffer = client.getClientBufferStr();
+	size_t pos ;
+
+	while (true) {
+		pos = buffer.find('\n');
+		if (pos != std::string::npos) {
+			std::cout << BOLD << "Incomming buffer: " << '"' << buffer << '"' << RESET;
+			std::string messageSplitedByLine = buffer.substr(0, pos + 1);
+			client.setClientBufferStr(buffer.erase(0, pos + 1));
+			std::cout << CYAN << "MSBL: " << '"' << messageSplitedByLine << '"' << RESET;
+			appendLineCommand(messageSplitedByLine, client);
+		} else
+			break;
+	}
+}
+
+void Parser::appendLineCommand(const std::string & messageSplitedByLine, Client & client) {
+	std::string line = messageSplitedByLine;
+
+	if (!line.empty() && line[line.length() - 1] == '\n')
+		line = line.substr(0, line.length() - 1);
+
+	if (!line.empty() && line[line.length() - 1] == '\r')
+		line = line.substr(0, line.length() - 1);
+
+	if (!line.empty()){
+		client.appendParsedCommand(line);
+		std::cout << GREEN << "Parsed Line: " << '"' << line << '"' << RESET << std:: endl;
+	}
+}
+
+std::vector<std::string> Parser::splitCommand(const std::string &command) {
+	std::vector<std::string> tokens;
+	std::istringstream iss(command);
+	std::string token;
+
+	while (iss >> token) {
+		tokens.push_back(token);
+	}
+
+	return tokens;
 }

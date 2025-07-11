@@ -6,15 +6,17 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/08 11:41:17 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/11 09:59:04 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "./Client.hpp"
 #include "./Channel.hpp"
+#include "../utils/IRC.hpp"
+
+class Client;
 
 class Server {
 
@@ -25,6 +27,7 @@ class Server {
 		int											_epollFd;
 		volatile std::sig_atomic_t _gSignalStatus;
 		std::vector<struct epoll_event> _eventsVector;
+    int											_idCounter;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
 
@@ -56,14 +59,17 @@ class Server {
 		int getEpollFd() const;
 		int getClientCount() const;
 		int getServerRunning() const;
+    int getServerIdCounter() const;
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(int gSignalStatus);
+    void setServerIdCounter(int idCounter);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+		std::vector<Client> &getClientsVector();
 
 };
 

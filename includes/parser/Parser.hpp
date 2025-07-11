@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:34 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/22 19:39:08 by codespace        ###   ########.fr       */
+/*   Updated: 2025/07/11 09:45:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,22 @@
 #include <exception>
 #include <cstdlib>
 #include <sstream>
-#include "../utils/Debug.hpp"
+#include "../utils/IRC.hpp"
+
+class Client;
+
+class Debug;
+
+class Parser {
+
+	private:
+		Parser();
+
+	public:
+		static void appendParsedCommand(Client & client);
+		static void appendLineCommand(const std::string & messageSplitedByLine, Client & client);
+		static std::vector<std::string> splitCommand(const std::string &command);
+};
 
 int   checkPortAndPassword(char **argv, Debug &debug);
 bool  checkValidPassword(std::string password);
