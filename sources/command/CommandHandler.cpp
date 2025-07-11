@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 09:57:04 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/11 11:37:11 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,14 @@ void CommandHandler::processCommand(Client &client, const std::string &command, 
 		handleNick(client, tokens, server);
 	} else if (cmd == "USER") {
 		handleUser(client, tokens);
-	}
+	} else if (cmd == "/KICK") {
+    handleOpKick(client, tokens, server);
+  } else if (cmd == "/INVITE") {
+    handleOpInvite(client, tokens, server);
+  } else if (cmd == "/MODE") {
+    handleOpMode(client, tokens, server);
+  }
 }
-
 
 void CommandHandler::handlePass(Client &client, const std::vector<std::string> &args, Server &server) {
 	if (args.size() < 2) {
@@ -107,4 +112,50 @@ void CommandHandler::handleUser(Client &client, const std::vector<std::string> &
 	client.setHasValidUser(true);
 
 	std::cout << GREEN << "Client " << client.getClientFd() << " set user info: " << username << " (" << realname << ")" RESET << std::endl;
+}
+
+void CommandHandler::handleOpKick(Client &client, const std::vector<std::string> &args, Server &server) {
+  // if (args.size() < 5) {
+	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
+	// 	return;
+	// }
+
+	std::string providedChannel = args[1];
+  std::string providedClientToKick = args[2];
+  std::string providedComment = args[3];
+
+  //check if specified channel exist: sendResponse(client, "ERR_NOSUCHCHANNEL :"<channel name> :No such channel"\r\n");
+  //check if client is on channel: sendResponse(client, "442 ERR_NOTONCHANNEL : "<channel> :You're not on that channel""\r\n");
+  //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
+  //check if providedClientToKick is connected to channel: sendResponse(client, " 441 ERR_USERNOTINCHANNEL "<nick> <channel> :They aren't on that channel"\r\n");
+  //remove it from the Channel instance:
+}
+
+void CommandHandler::handleOpInvite(Client &client, const std::vector<std::string> &args, Server &server) {
+  // if (args.size() < 2) {
+	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
+	// 	return;
+	// }
+
+  std::string providedChannel = args[1];
+  std::string providedClientToInvite = args[2];
+
+  //check if clientToinvite exists: sendResponse(client, "401 ERR_NOSUCHNICK :"<nickname> :No such nick/channel"\r\n");
+  //check if client is on channel: sendResponse(client, "442 ERR_NOTONCHANNEL : "<channel> :You're not on that channel""\r\n");
+  //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
+  //check if clientToinvite is already on provided channel : sendResponse(client, "443 ERR_USERONCHANNEL" : "<user> <channel> :is already on channel"\r\n");
+  //RPL_INVITING : Returned by the server to indicate that the attempted INVITE message was successful and is being passed onto the end client : sendResponse(client, "341 RPL_INVITING" : "<channel> <nick>"\r\n");
+}
+
+void CommandHandler::handleOpMode(Client &client, const std::vector<std::string> &args, Server &server) {
+  // if (args.size() < x) {
+	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
+	// 	return;
+	// }
+  std::string providedChannel = args[1];
+  std::string providedModes = args[2];
+
+  //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
+  //check if providedClientToKick is connected to channel: sendResponse(client, " 441 ERR_USERNOTINCHANNEL "<nick> <channel> :They aren't on that channel"\r\n");
+
 }

@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <iostream>
+#include <string>
 #include <cstring>
 #include <sys/epoll.h>
 #include <vector>
@@ -20,5 +21,6 @@
 #include <fcntl.h>
 #include <sstream>
 #include <csignal>
+#include <exception>
 
 #endif

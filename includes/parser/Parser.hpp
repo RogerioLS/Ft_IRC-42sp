@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:34 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 09:45:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/11 10:28:05 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 
 #define MAX_PASSWORD_LENGTH 32
 
-#include <iostream>
-#include <string>
-#include <exception>
-#include <cstdlib>
-#include <sstream>
 #include "../utils/IRC.hpp"
 
 class Client;
