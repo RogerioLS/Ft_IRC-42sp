@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 10:07:46 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/11 10:16:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ Server::Server(char **argv)
  : _port(std::atoi(argv[1])),
   _password(argv[2]),
   _serverFd(-1),
-	_epollFd(-1),
-	_gSignalStatus(-1) { instance = this; }
+  _epollFd(-1),
+  _gSignalStatus(-1),
+  _idCounter(0) { instance = this; }
 
 Server::~Server() { closeFds(); }
 
@@ -129,7 +130,7 @@ void Server::handleNewClient() {
 
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
 		_clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientPort, clientIp));
-		setServerIdCounter(_clientsVector.size());
+		setServerIdCounter(getServerIdCounter() + 1);
 
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
@@ -150,12 +151,11 @@ void Server::handleClientRequest(int clientFd) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
 			close(it->getClientFd());
 			_clientsVector.erase(it);
-      setServerIdCounter(_clientsVector.size());
 		}	else {
 			buffer[bytesRead] = '\0';
 			it->appendClientBuffer(std::string(buffer));
 			Parser::appendParsedCommand(*it);
-
+      
 			std::vector<std::string> commands = it->getClientParsedCommand();
 			for (size_t i = 0; i < commands.size(); ++i) {
 				CommandHandler::processCommand(*it, commands[i], *this);
@@ -171,7 +171,7 @@ const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientsVector.size(); }
-int	  Server:: getServerRunning() const { return _gSignalStatus; }
+int	  Server::getServerRunning() const { return _gSignalStatus; }
 int		Server::getServerIdCounter() const { return _idCounter; }
 
 // Setters
