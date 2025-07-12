@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 11:17:03 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/12 14:08:56 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ class CommandHandler {
 		static void handlePass(Client &client, const std::vector<std::string> &args, class Server &server);
 		static void handleNick(Client &client, const std::vector<std::string> &args, class Server &server);
 		static void handleUser(Client &client, const std::vector<std::string> &args);
-    static void handleOpKick(Client &client, const std::vector<std::string> &args, Server &server);
-    static void handleOpInvite(Client &client, const std::vector<std::string> &args, Server &server);
-    static void handleOpMode(Client &client, const std::vector<std::string> &args, Server &server);
+    static void handleOperKick(Client &client, const std::vector<std::string> &args, Server &server);
+    static void handleOperInvite(Client &client, const std::vector<std::string> &args, Server &server);
+    static void handleOperMode(Client &client, const std::vector<std::string> &args, Server &server);
 		static void sendResponse(Client &client, const std::string &response);
 		static bool isValidNickname(const std::string &nickname);
 		static bool isNicknameInUse(const std::string &nickname, class Server &server);

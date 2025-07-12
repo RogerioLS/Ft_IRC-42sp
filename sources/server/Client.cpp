@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 09:53:07 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/12 16:48:18 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ Client::~Client() {}
 // Getters
 int Client::getClientFd() const { return _fd; }
 int Client::getClientId() const { return _id; }
+int Client::getClientPort() const { return _port; }
 bool Client::getClientIsAuthenticated() const { return _isAuthenticated; }
 const std::string Client::getClientPassword() const { return _password; }
 const std::string Client::getClientNickName() const { return _nickName; }
@@ -34,6 +35,7 @@ const std::vector<std::string> Client:: getClientParsedCommand() const { return 
 // Setters
 void Client::setClientFd(int fd) { _fd = fd ;}
 void Client::setClientId(int id) { _id = id ;}
+void Client::setClientPort(int port) { _port = port; }
 void Client::setClientIsAuthenticated(bool isAuthenticated) { _isAuthenticated = isAuthenticated ;}
 void Client::setClientPassword(const std::string &password) { _password = password ;}
 void Client::setClientNickName(const std::string &nickName) { _nickName = nickName ;}

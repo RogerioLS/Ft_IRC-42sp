@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 11:37:11 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/12 16:45:22 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ void CommandHandler::processCommand(Client &client, const std::string &command, 
 	} else if (cmd == "USER") {
 		handleUser(client, tokens);
 	} else if (cmd == "/KICK") {
-    handleOpKick(client, tokens, server);
+    handleOperKick(client, tokens, server);
   } else if (cmd == "/INVITE") {
-    handleOpInvite(client, tokens, server);
+    handleOperInvite(client, tokens, server);
   } else if (cmd == "/MODE") {
-    handleOpMode(client, tokens, server);
+    handleOperMode(client, tokens, server);
   }
 }
 
@@ -114,7 +114,7 @@ void CommandHandler::handleUser(Client &client, const std::vector<std::string> &
 	std::cout << GREEN << "Client " << client.getClientFd() << " set user info: " << username << " (" << realname << ")" RESET << std::endl;
 }
 
-void CommandHandler::handleOpKick(Client &client, const std::vector<std::string> &args, Server &server) {
+void CommandHandler::handleOperKick(Client &client, const std::vector<std::string> &args, Server &server) {
   // if (args.size() < 5) {
 	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
 	// 	return;
@@ -124,6 +124,9 @@ void CommandHandler::handleOpKick(Client &client, const std::vector<std::string>
   std::string providedClientToKick = args[2];
   std::string providedComment = args[3];
 
+  (void) client;
+  (void) server;
+
   //check if specified channel exist: sendResponse(client, "ERR_NOSUCHCHANNEL :"<channel name> :No such channel"\r\n");
   //check if client is on channel: sendResponse(client, "442 ERR_NOTONCHANNEL : "<channel> :You're not on that channel""\r\n");
   //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
@@ -131,29 +134,34 @@ void CommandHandler::handleOpKick(Client &client, const std::vector<std::string>
   //remove it from the Channel instance:
 }
 
-void CommandHandler::handleOpInvite(Client &client, const std::vector<std::string> &args, Server &server) {
-  // if (args.size() < 2) {
-	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
-	// 	return;
-	// }
+void CommandHandler::handleOperInvite(Client &client, const std::vector<std::string> &args, Server &server) {
+  if (args.size() < 3)
+    return (sendResponse(client, "461: OPER :Not enough parameters\r\n"));
 
-  std::string providedChannel = args[1];
-  std::string providedClientToInvite = args[2];
+  std::string providedClientToInvite = args[1];
+  std::string providedChannel = args[2];
+  std::string clientNick = client.getClientNickName();
 
-  //check if clientToinvite exists: sendResponse(client, "401 ERR_NOSUCHNICK :"<nickname> :No such nick/channel"\r\n");
-  //check if client is on channel: sendResponse(client, "442 ERR_NOTONCHANNEL : "<channel> :You're not on that channel""\r\n");
-  //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
-  //check if clientToinvite is already on provided channel : sendResponse(client, "443 ERR_USERONCHANNEL" : "<user> <channel> :is already on channel"\r\n");
-  //RPL_INVITING : Returned by the server to indicate that the attempted INVITE message was successful and is being passed onto the end client : sendResponse(client, "341 RPL_INVITING" : "<channel> <nick>"\r\n");
+  if (!server.isClientRegistered(providedClientToInvite))
+    return(sendResponse(client, "401 : OPER :<nickname> :No such nick/channel\r\n"));
+  if (!server.isClientOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "442 : OPER : <channel> :You're not on that channel\r\n"));
+  if (!server.isClientOperOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "482 : OPER : <channel> : :You're not channel operator\r\n"));
+  if (!server.isClientOnChannel(providedClientToInvite, providedChannel))
+    return(sendResponse(client, "443: OPER : <user> <channel> :is already on channel\r\n"));
+  //RPL_INVITING : Returned by the server to indicate that the attempted INVITE message was successful and is being passed onto the end client : sendResponse(client, "341 : OPER" : "<channel> <nick>"\r\n");
 }
 
-void CommandHandler::handleOpMode(Client &client, const std::vector<std::string> &args, Server &server) {
+void CommandHandler::handleOperMode(Client &client, const std::vector<std::string> &args, Server &server) {
   // if (args.size() < x) {
 	// 	sendResponse(client, "ERR_NEEDMOREPARAMS :Not enough parameters\r\n");
 	// 	return;
 	// }
   std::string providedChannel = args[1];
   std::string providedModes = args[2];
+  (void) client;
+  (void) server;
 
   //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n");
   //check if providedClientToKick is connected to channel: sendResponse(client, " 441 ERR_USERNOTINCHANNEL "<nick> <channel> :They aren't on that channel"\r\n");

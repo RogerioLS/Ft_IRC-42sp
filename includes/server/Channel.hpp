@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:23 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/01 11:42:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/12 15:24:01 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Channel {
 		bool							_inviteOnly;
 		bool							_restrictTopic;
 		int								_userLimit;
-		int								_channelId;
+		int								_id;
 		std::string 			_name;
 		std::string 			_topic;
 		std::string 			_key;
@@ -29,7 +29,7 @@ class Channel {
 		std::set<int> 		_clientsById;
 
 	public:
-		Channel(std::string name, int channelId, int clientId);
+		Channel(std::string name, int id, int clientId);
 		~Channel();
 
 		// Getters
@@ -47,7 +47,7 @@ class Channel {
 		void setInviteOnly(bool inviteOnly);
 		void setRestrictTopic(bool restrictTopic);
 		void setUserLimit(int userLimit);
-		void setChannelId(int channelId);
+		void setChannelId(int id);
 		void setName(const std::string& name);
 		void setTopic(const std::string& topic);
 		void setKey(const std::string& key);
