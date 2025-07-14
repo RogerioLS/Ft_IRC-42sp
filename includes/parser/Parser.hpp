@@ -28,4 +28,16 @@ class Parser {
 		static std::vector<std::string> splitCommand(const std::string &command);
 };
 
+int		checkPortAndPassword(char **argv, Debug &debug);
+bool	checkValidPassword(std::string password);
+bool	checkValidPort(std::string port);
+void	parseArguments(int argc, Debug &debug);
+
+enum ValidationStatus {
+	VALIDATION_OK,
+	INVALID_PORT=2,
+	INVALID_PASSWORD=3,
+	INVALID_BOTH=4
+};
+
 #endif
