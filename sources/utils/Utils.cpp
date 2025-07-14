@@ -1,12 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Utils.cpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 19:22:05 by codespace         #+#    #+#             */
-/*   Updated: 2025/06/22 18:47:10 by codespace        ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../../includes/utils/Utils.hpp"
 
+namespace utils {
+    std::string intToString(int value) {
+        std::stringstream ss;
+        ss << value;
+        return ss.str();
+    }
+}

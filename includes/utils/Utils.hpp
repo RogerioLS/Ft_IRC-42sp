@@ -1,11 +1,11 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Utils.hpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 19:21:41 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 10:44:41 by pmelo-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#ifndef UTILS_HPP
+#define UTILS_HPP
+
+#include <string>
+#include <sstream>
+
+namespace utils {
+    std::string intToString(int value);
+}
+
+#endif

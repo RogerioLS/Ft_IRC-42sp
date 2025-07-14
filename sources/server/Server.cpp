@@ -1,26 +1,28 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/08 11:43:42 by pmelo-ca         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../includes/server/Server.hpp"
+#include "../includes/command/CommandHandler.hpp"
 #include "../includes/utils/Colors.hpp"
+#include "../includes/utils/Utils.hpp"
 
-Server::Server(char **argv)
+Server::Server(char **argv, Debug& debug)
  : _port(std::atoi(argv[1])),
   _password(argv[2]),
+  _serverName("irc.42sp"),
   _serverFd(-1),
 	_epollFd(-1),
-	_gSignalStatus(-1) { instance = this; }
+	_gSignalStatus(-1),
+	_debug(debug)
+{
+	instance = this;
+	_commandHandler = new CommandHandler(*this, _debug);
+	_debug.debugPrint("✅ Server initialized", GREEN);
+}
 
-Server::~Server() { closeFds(); }
+Server::~Server()
+{
+	delete _commandHandler;
+	closeFds();
+	_debug.debugPrint("✅ Server destroyed", RED);
+}
 
 void Server::setupServer() {
 	handleSignal();
@@ -139,14 +141,17 @@ void Server::handleClientRequest(int clientFd) {
 
 	std::vector<Client>::iterator it = clientItFromFd(clientFd);
 	if (it != _clientsVector.end()) {
-		std::cout << MAGENTA << "Client interacted." << " fd: " << clientFd << RESET << std::endl;
+		_debug.debugPrint("Client interacted. fd: " + utils::intToString(clientFd), MAGENTA);
 		char buffer[1024];
-		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
+		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
 
 		if (bytesRead <= 0) {
-			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
+			_debug.debugPrint("Client id: " + utils::intToString(it->getClientId()) + " disconnected", YELLOW);
 			close(it->getClientFd());
 			_clientsVector.erase(it);
+		} else {
+			buffer[bytesRead] = '\0';
+			_commandHandler->executeCommand(*it, std::string(buffer));
 		}
 	}
 }
@@ -154,15 +159,50 @@ void Server::handleClientRequest(int clientFd) {
 // Getters
 int		Server::getPort() const { return _port; }
 const std::string& Server::getPassword() const { return _password; }
+const std::string& Server::getServerName() const { return _serverName; }
 int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientsVector.size(); }
 int	Server:: getServerRunning() const { return _gSignalStatus; }
+Debug& Server::getDebug() { return _debug; }
+
+Channel* Server::getChannelByName(const std::string& name) {
+	for (std::vector<Channel>::iterator it = _channelsVector.begin(); it != _channelsVector.end(); ++it) {
+		if (it->getName() == name) {
+			return &(*it);
+		}
+	}
+	return NULL;
+}
+
+Client* Server::getClientByNickname(const std::string& nickname) {
+	for (std::vector<Client>::iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+		if (it->getClientNickName() == nickname) {
+			return &(*it);
+		}
+	}
+	return NULL;
+}
+
+Client* Server::getClientById(int id) {
+	for (std::vector<Client>::iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+		if (it->getClientId() == id) {
+			return &(*it);
+		}
+	}
+	return NULL;
+}
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
 void Server::setServerRunning(int gSignalStatus) { _gSignalStatus = gSignalStatus; }
+
+void Server::createChannel(const std::string& name, Client& client) {
+	int channelId = _channelsVector.size() + 1;
+	_channelsVector.push_back(Channel(name, channelId, client.getClientId()));
+	_debug.debugPrint("Channel " + name + " created by client " + client.getClientNickName(), GREEN);
+}
 
 template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
