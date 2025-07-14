@@ -16,18 +16,25 @@
 #include "./Client.hpp"
 #include "./Channel.hpp"
 #include "../parser/Parser.hpp"
+#include "../utils/Debug.hpp"
+#include "../command/CommandHandler.hpp"
+
+class CommandHandler;
 
 class Server {
 
 	private:
 		int											_port;
 		std::string							_password;
+		std::string							_serverName;
 		int 										_serverFd;
 		int											_epollFd;
 		volatile std::sig_atomic_t _gSignalStatus;
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
+		Debug&									_debug;
+		CommandHandler*					_commandHandler;
 
 		void handleSignal();
 		static void handleSigInt(int signum);
@@ -45,7 +52,7 @@ class Server {
 	public:
 		static Server*					instance;
 
-		Server(char **argv);
+		Server(char **argv, Debug& debug);
 		~Server();
 
 		void setupServer();
@@ -53,14 +60,21 @@ class Server {
 		// Getters
 		int getPort() const;
 		const std::string& getPassword() const;
+		const std::string& getServerName() const;
 		int getServerFd() const;
 		int getEpollFd() const;
 		int getClientCount() const;
-		bool getServerRunning() const;
+		int getServerRunning() const;
+		Debug& getDebug();
+		Channel* getChannelByName(const std::string& name);
+		Client* getClientByNickname(const std::string& nickname);
+		Client* getClientById(int id);
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(int gSignalStatus);
+
+		void createChannel(const std::string& name, Client& client);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
