@@ -17,8 +17,8 @@
 
 int main(int argc, char **argv) {
 
-  Debug debug;
-  debug.enableDebugMode(true);
+	Debug debug;
+	debug.enableDebugMode(true);
 
 	try {
 		parseArguments(argc, debug);
@@ -31,11 +31,11 @@ int main(int argc, char **argv) {
 	}
 
 	try {
-		Server server(argv);
+		Server server(argv, debug);
 		server.setupServer();
 	} catch (const std::runtime_error& e) {
 		std::cerr << RED << "[Runtime Error] " << e.what() << RESET << std::endl;
 		return 4;
 	}
-  return (0);
+	return (0);
 }
