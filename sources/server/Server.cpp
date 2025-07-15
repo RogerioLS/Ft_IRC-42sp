@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 16:33:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:09:01 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,7 @@ int Server::getEpollFd() const { return _epollFd; }
 int Server::getClientCount() const { return _clientsVector.size(); }
 int Server::getServerRunning() const { return _gSignalStatus; }
 int Server::getServerIdCounter() const { return _idCounter; }
+std::vector<Channel> Server::getChannelsVector() const { return _channelsVector; }
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
@@ -281,5 +282,14 @@ int Server::getClientIdFromNickname(const std::string & clientNickName) const {
   }
   return -1;
 }
+
+const Client * Server::getClientInstFromId(int clientId) const {
+  for (std::vector<Client>::const_iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+    if (it->getClientId() == clientId)
+      return &(*it);
+  }
+  return NULL;
+}
+
 
 Server* Server::instance = NULL;

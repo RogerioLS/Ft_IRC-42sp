@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:23 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 15:24:01 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 10:27:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,45 @@
 
 class Channel {
 
-	private:
-		bool							_inviteOnly;
-		bool							_restrictTopic;
-		int								_userLimit;
-		int								_id;
-		std::string 			_name;
-		std::string 			_topic;
-		std::string 			_key;
-		std::set<int> 		_operatorsById;
-		std::set<int> 		_clientsById;
+  private:
+    bool              _inviteOnly;
+    bool              _restrictTopic;
+    int               _userLimit;
+    int               _id;
+    std::string       _name;
+    std::string       _topic;
+    std::string       _key;
+    std::set<int>     _operatorsById;
+    std::set<int>     _clientsById;
+    std::set<int>     _clientsInvitedById;
 
-	public:
-		Channel(std::string name, int id, int clientId);
-		~Channel();
+  public:
+    Channel(std::string name, int id, int clientId);
+    ~Channel();
 
-		// Getters
-		bool getInviteOnly() const;
-		bool getRestrictTopic() const;
-		int getUserLimit() const;
-		int getChannelId() const;
-		const std::string & getName() const;
-		const std::string & getTopic() const;
-		const std::string & getKey() const;
-		const std::set<int> & getOperatorsById() const;
-		const std::set<int> & getClientsById() const;
+    // Getters
+    bool getInviteOnly() const;
+    bool getRestrictTopic() const;
+    int getUserLimit() const;
+    int getChannelId() const;
+    const std::string & getName() const;
+    const std::string & getTopic() const;
+    const std::string & getKey() const;
+    const std::set<int> & getOperatorsById() const;
+    const std::set<int> & getClientsById() const;
+    const std::set<int> & getInvitedById() const;
 
-		// Setters
-		void setInviteOnly(bool inviteOnly);
-		void setRestrictTopic(bool restrictTopic);
-		void setUserLimit(int userLimit);
-		void setChannelId(int id);
-		void setName(const std::string& name);
-		void setTopic(const std::string& topic);
-		void setKey(const std::string& key);
-		void setOperatorsById(int operatorId);
-		void setClientsById(int clientId);
+    // Setters
+    void setInviteOnly(bool inviteOnly);
+    void setRestrictTopic(bool restrictTopic);
+    void setUserLimit(int userLimit);
+    void setChannelId(int id);
+    void setName(const std::string& name);
+    void setTopic(const std::string& topic);
+    void setKey(const std::string& key);
+    void setOperatorsById(int operatorId);
+    void setClientsById(int clientId);
+    void setClientsInvitedById(int clientId);
 };
 
 #endif

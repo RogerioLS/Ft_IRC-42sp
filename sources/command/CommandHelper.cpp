@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/11 09:57:17 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:41:30 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,18 @@ bool CommandHandler::isNicknameInUse(const std::string &nickname, Server &server
             return true;
         }
     }
-
     return false;
+}
+
+bool CommandHandler::inviteClientToChannel(Server &server, const std::string & providedChannel, const std::string & providedClientToInvite ) {
+  std::vector<Channel>::iterator it = server.getChannelsVector().begin();
+  while(it != server.getChannelsVector().end()) {
+  if (it->getName() == providedChannel) {
+    int providedClientToInviteId = server.getClientIdFromNickname(providedClientToInvite);
+    it->setClientsInvitedById(providedClientToInviteId);
+    sendResponse(*const_cast<Client*>(server.getClientInstFromId(providedClientToInviteId)), "You have been invited to #test by pedr");
+    return true;
+    }
+  }
+  return false;
 }

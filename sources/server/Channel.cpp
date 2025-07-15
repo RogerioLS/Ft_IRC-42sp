@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:45 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 16:50:11 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 10:27:40 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ Channel::Channel(std::string name, int id, int clientId)
     _topic(""),
     _key(""),
     _operatorsById(std::set<int>()),
-    _clientsById(std::set<int>())
+    _clientsById(std::set<int>()),
+    _clientsInvitedById(std::set<int>())
     {
     setOperatorsById(clientId);
     setClientsById(clientId);
@@ -42,6 +43,7 @@ const std::string & Channel::getTopic() const { return _topic; }
 const std::string & Channel::getKey() const { return _key; }
 const std::set<int> & Channel::getOperatorsById() const { return _operatorsById; }
 const std::set<int> & Channel::getClientsById() const { return _clientsById; }
+const std::set<int> & Channel::getInvitedById() const { return _clientsInvitedById; }
 
 // Setters
 void Channel::setInviteOnly(bool inviteOnly) { _inviteOnly = inviteOnly; }
@@ -53,3 +55,4 @@ void Channel::setTopic(const std::string & topic) { _topic = topic; }
 void Channel::setKey(const std::string & key) { _key = key; }
 void Channel::setOperatorsById(int operatorId) { _operatorsById.insert(operatorId); }
 void Channel::setClientsById(int clientId) { _clientsById.insert(clientId); }
+void Channel::setClientsInvitedById(int clientId) { _clientsInvitedById.insert(clientId); }

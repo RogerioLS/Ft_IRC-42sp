@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 14:08:56 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:25:02 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class CommandHandler {
 		static void sendResponse(Client &client, const std::string &response);
 		static bool isValidNickname(const std::string &nickname);
 		static bool isNicknameInUse(const std::string &nickname, class Server &server);
+    static bool inviteClientToChannel(Server &server, const std::string & providedChannel, const std::string & providedClientToInvite);
 };
 
 #endif

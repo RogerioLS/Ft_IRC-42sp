@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 16:49:11 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:08:29 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ class Server {
     int getClientCount() const;
     int getServerRunning() const;
     int getServerIdCounter() const;
+    std::vector<Channel> getChannelsVector() const;
     // Setters
     void setServerFd(int serverFd);
     void setEpollFd(int epollFd);
@@ -80,6 +81,7 @@ class Server {
     std::set<int> getChannelClients(const std::string & channelName) const;
     std::set<int> getChannelOpers(const std::string & channelName) const;
     int getClientIdFromNickname(const std::string & clientNickName) const;
+    const Client * getClientInstFromId(int clientId) const;
 };
 
 #endif

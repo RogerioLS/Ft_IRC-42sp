@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/12 16:45:22 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:40:03 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void CommandHandler::processCommand(Client &client, const std::string &command, 
 		handleNick(client, tokens, server);
 	} else if (cmd == "USER") {
 		handleUser(client, tokens);
-	} else if (cmd == "/KICK") {
+	} else if (cmd == "KICK") {
     handleOperKick(client, tokens, server);
-  } else if (cmd == "/INVITE") {
+  } else if (cmd == "INVITE") {
     handleOperInvite(client, tokens, server);
-  } else if (cmd == "/MODE") {
+  } else if (cmd == "MODE") {
     handleOperMode(client, tokens, server);
   }
 }
@@ -58,7 +58,7 @@ void CommandHandler::handlePass(Client &client, const std::vector<std::string> &
 	if (providedPassword == server.getPassword()) {
 		client.setClientPassword(providedPassword);
 		client.setHasValidPass(true);
-		std::cout << GREEN << "Client " << client.getClientFd() << " provided correct password" << RESET << std::endl;
+		std::cout << GREEN << "Client " << client.getClientId() << " provided correct password" << RESET << std::endl;
 	}
 	else {
 		client.setHasValidPass(false);
@@ -86,7 +86,7 @@ void CommandHandler::handleNick(Client &client, const std::vector<std::string> &
 
 	client.setClientNickName(nickname);
 	client.setHasValidNick(true);
-	std::cout << GREEN << "Client " << client.getClientFd() << " set nickname to: " << nickname << RESET << std::endl;
+	std::cout << GREEN << "Client " << client.getClientId() << " set nickname to: " << nickname << RESET << std::endl;
 }
 
 void CommandHandler::handleUser(Client &client, const std::vector<std::string> &args) {
@@ -111,7 +111,7 @@ void CommandHandler::handleUser(Client &client, const std::vector<std::string> &
 	client.setClientRealName(realname);
 	client.setHasValidUser(true);
 
-	std::cout << GREEN << "Client " << client.getClientFd() << " set user info: " << username << " (" << realname << ")" RESET << std::endl;
+	std::cout << GREEN << "Client " << client.getClientId() << " set user info: " << username << " (" << realname << ")" RESET << std::endl;
 }
 
 void CommandHandler::handleOperKick(Client &client, const std::vector<std::string> &args, Server &server) {
@@ -150,7 +150,11 @@ void CommandHandler::handleOperInvite(Client &client, const std::vector<std::str
     return(sendResponse(client, "482 : OPER : <channel> : :You're not channel operator\r\n"));
   if (!server.isClientOnChannel(providedClientToInvite, providedChannel))
     return(sendResponse(client, "443: OPER : <user> <channel> :is already on channel\r\n"));
-  //RPL_INVITING : Returned by the server to indicate that the attempted INVITE message was successful and is being passed onto the end client : sendResponse(client, "341 : OPER" : "<channel> <nick>"\r\n");
+  if (!inviteClientToChannel(server, providedChannel, providedClientToInvite))
+    return(sendResponse(client, "Unknown Error while Inviting Client\r\n"));
+  sendResponse(client, "341 : OPER : <channel> <nick>\r\n");
+
+	std::cout << GREEN << "Client " << client.getClientId() << " invited " << providedClientToInvite << "to channel: (" << providedChannel << ")" << RESET << std::endl;
 }
 
 void CommandHandler::handleOperMode(Client &client, const std::vector<std::string> &args, Server &server) {
