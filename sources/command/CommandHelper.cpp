@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/15 11:41:30 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/15 12:19:10 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,26 @@ bool CommandHandler::isNicknameInUse(const std::string &nickname, Server &server
         }
     }
     return false;
+}
+
+bool CommandHandler::executeOperInvite(Client &client, const std::vector<std::string> &args, Server &server) {
+  std::string providedClientToInvite = args[1];
+  std::string providedChannel = args[2];
+  std::string clientNick = client.getClientNickName();
+
+  if (!server.isClientRegistered(providedClientToInvite))
+    return(sendResponse(client, "401 : OPER :<nickname> :No such nick/channel\r\n"), false);
+  if (!server.isClientOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "442 : OPER : <channel> :You're not on that channel\r\n"), false);
+  if (!server.isClientOperOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "482 : OPER : <channel> : :You're not channel operator\r\n"), false);
+  if (!server.isClientOnChannel(providedClientToInvite, providedChannel))
+    return(sendResponse(client, "443: OPER : <user> <channel> :is already on channel\r\n"), false);
+  if (!inviteClientToChannel(server, providedChannel, providedClientToInvite))
+    return(sendResponse(client, "Unknown Error while Inviting Client\r\n"), false);
+
+  sendResponse(client, "341 : OPER : <channel> <nick>\r\n");
+  return true;
 }
 
 bool CommandHandler::inviteClientToChannel(Server &server, const std::string & providedChannel, const std::string & providedClientToInvite ) {
