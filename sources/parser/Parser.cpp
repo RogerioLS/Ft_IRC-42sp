@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 10:05:22 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:44:15 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,23 @@ std::vector<std::string> Parser::splitCommand(const std::string &command) {
 	}
 
 	return tokens;
+}
+
+std::vector<std::string> Parser::splitCommandArg(const std::string &argsToSplit, const std::string &charsToSplit) {
+  std::vector<std::string> result;
+
+  size_t start = 0;
+  size_t end = argsToSplit.find_first_of(charsToSplit);
+
+  while (end != std::string::npos) {
+    if (end > start)
+      result.push_back(argsToSplit.substr(start, end - start));
+    start = end + 1;
+    end = argsToSplit.find_first_of(charsToSplit, start);
+  }
+
+  if (start < argsToSplit.size())
+    result.push_back(argsToSplit.substr(start));
+
+  return result;
 }

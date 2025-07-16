@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:34 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/11 10:28:05 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/16 11:15:57 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Parser {
 		static void appendParsedCommand(Client & client);
 		static void appendLineCommand(const std::string & messageSplitedByLine, Client & client);
 		static std::vector<std::string> splitCommand(const std::string &command);
+    static std::vector<std::string> splitCommandArg(const std::string &argsToSplit, const std::string &charsToSplit);
 };
 
 int   checkPortAndPassword(char **argv, Debug &debug);
