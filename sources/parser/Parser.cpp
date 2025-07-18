@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/16 11:44:15 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:31:07 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,5 +147,32 @@ std::vector<std::string> Parser::splitCommandArg(const std::string &argsToSplit,
   if (start < argsToSplit.size())
     result.push_back(argsToSplit.substr(start));
 
+  return result;
+}
+
+std::string Parser::formatOperatorModeArgs(const std::string &operArgs) {
+  std::string args = operArgs;
+  std::string charsToSplit = "itklo";
+  std::string symbols = "+-";
+  std::string result = "";
+  size_t start = 0;
+
+  while (!args.empty()) {
+    size_t symbolPos = args.find_last_of(symbols);
+    if (symbolPos == std::string::npos)
+      break;
+
+    size_t nextSymbolPos = args.find_first_of(symbols, symbolPos + 1);
+    if (nextSymbolPos == std::string::npos)
+      nextSymbolPos = args.length();
+
+    size_t charPos = args.find_last_of(charsToSplit, nextSymbolPos - 1);
+    if (charPos == std::string::npos || symbolPos > charPos)
+      break;
+
+    result += args[symbolPos];
+    result += args[charPos];
+    args.erase(start, charPos + 1);
+  }
   return result;
 }
