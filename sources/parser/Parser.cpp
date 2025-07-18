@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/18 12:31:07 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:35:47 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ std::string Parser::formatOperatorModeArgs(const std::string &operArgs) {
 
     result += args[symbolPos];
     result += args[charPos];
-    args.erase(start, charPos + 1);
+    args.substr(charPos + 1);
   }
   return result;
 }
