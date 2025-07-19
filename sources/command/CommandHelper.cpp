@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/16 13:03:43 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/19 13:19:13 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,33 @@ bool CommandHandler::inviteClientToChannel(Server &server, const std::string & p
 }
 
 bool CommandHandler::executeOperMode(Client &client, const std::vector<std::string> &args, Server &server) {
-  // if (args.size() == 1)
-  //   return (sendResponse(client, "461 USER :Not enough parameters\r\n"));
-  return false;
-    (void) client;
-  (void) server;
-  (void) args;
+  if (args.size() < 3)
+    return (sendResponse(client, "461 USER :Not enough parameters\r\n"), false);
+
+  std::string providedChannel  = args[1];
+  std::string providedModes = Parser::formatOperatorModeArgs(args[2]);
+  std::string providedModesArgs = args[3];
+  std::string clientNick = client.getClientNickName();
+
+  handleOperMode(server, providedChannel, providedModes, providedModesArgs, clientNick);
+}
+
+
+bool CommandHandler::handleOperMode(Server &server, const std::string & providedChannel, const std::string & providedModes, const std::string & providedModesArgs, const std::string & providedOper) {
+  bool atLeastOneKickSucceeded = false;
+
+  //check if provided channel exists and the provided oper is operator. return false
+
+  //iterate throught provided modes.
+  // for() {
+  //   switch ()
+  //   {
+  //   case :
+  //     break;
+
+  //   default:
+  //     break;
+  //   }
+  // }
+
 }

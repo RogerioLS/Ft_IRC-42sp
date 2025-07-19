@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/16 13:04:12 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/19 13:18:57 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ void CommandHandler::handleUser(Client &client, const std::vector<std::string> &
 }
 
 void CommandHandler::handleOperKick(Client &client, const std::vector<std::string> &args, Server &server) {
-
   if(executeOperKick(client, args, server))
     std::cout << GREEN << "At least one client was kicked from channel/channels" << RESET << std::endl;
   else
@@ -123,7 +122,6 @@ void CommandHandler::handleOperKick(Client &client, const std::vector<std::strin
 }
 
 void CommandHandler::handleOperInvite(Client &client, const std::vector<std::string> &args, Server &server) {
-
   if(executeOperInvite(client, args, server))
     std::cout << GREEN << "Client " << client.getClientId() << " invited " << args[1] << "to channel: (" << args[2] << ")" << RESET << std::endl;
   else
@@ -131,11 +129,8 @@ void CommandHandler::handleOperInvite(Client &client, const std::vector<std::str
 }
 
 void CommandHandler::handleOperMode(Client &client, const std::vector<std::string> &args, Server &server) {
-
-  //std::vector<std::string> validateOperModeArgs= getOperModeArgs();
-  //executeOperMode(operArgs);{  //check if client is OP in specified channel : sendResponse(client, "ERR_CHANOPRIVSNEEDED "<channel> : :You're not channel operator\r\n"); ...}
-
-  (void) client;
-  (void) server;
-  (void) args;
+  if(executeOperMode(client, args, server))
+    std::cout << GREEN << "Client " << client.getClientId() << " set mode to channel: (" << args[1] << ")" << RESET << std::endl;
+  else
+    std::cout << RED << "Client " << client.getClientId() << " does not set mode to channel: (" << args[1] << ")" << RESET << std::endl;
 }
