@@ -3,26 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/07/07 13:24:55 by pmelo-ca         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/02 12:18:16 by pmelo-ca         ###   ########.fr       */
->>>>>>> 1d546fe (feat: :sparkles: Implement Parser class with parseBuffer method; update includes in Server and Client classes; adjust file headers; Need to implement parseBuffer)
+/*   Updated: 2025/07/20 17:31:06 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-<<<<<<< HEAD
 #include "./Channel.hpp"
-=======
-#include "../utils/IRC.hpp"
-#include "../parser/Parser.hpp"
->>>>>>> 1d546fe (feat: :sparkles: Implement Parser class with parseBuffer method; update includes in Server and Client classes; adjust file headers; Need to implement parseBuffer)
 
 class Client {
 

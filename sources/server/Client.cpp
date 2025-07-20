@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 10:29:47 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:29:47 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ const std::string & Client::getClientHostName() const { return _hostName; }
 void Client::setClientFd(int fd) { _fd = fd ;}
 void Client::setClientId(int id) { _id = id ;}
 void Client::setClientIsAuthenticated(bool isAuthenticated) { _isAuthenticated = isAuthenticated ;}
-void Client::setClientPassword(std::string password) { _password = password ;}
-void Client::setClientNickName(std::string nickName) { _nickName = nickName ;}
-void Client::setClientRealName(std::string realName) { _realName = realName ;}
-void Client::setClientUserName(std::string userName) { _userName = userName ;}
-void Client::setClientHostName(std::string hostName) { _hostName = hostName ;}
+void Client::setClientPassword(const std::string & password) { _password = password ;}
+void Client::setClientNickName(const std::string & nickName) { _nickName = nickName ;}
+void Client::setClientRealName(const std::string & realName) { _realName = realName ;}
+void Client::setClientUserName(const std::string & userName) { _userName = userName ;}
+void Client::setClientIpAddress(const std::string & ipAddress) { _ipAddress = ipAddress ;}
+void Client::setClientBufferStr(const std::string & bufferStr) { _bufferStr = bufferStr ;}
+void Client::setClientParsedCommand(const std::vector<std::string> & parsedCommand) { _parsedCommand = parsedCommand ;}

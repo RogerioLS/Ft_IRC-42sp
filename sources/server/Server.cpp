@@ -6,7 +6,11 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/07/20 17:27:57 by ecoelho-         ###   ########.fr       */
+=======
+/*   Updated: 2025/07/03 12:08:25 by pmelo-ca         ###   ########.fr       */
+>>>>>>> b39bcee (fix: :bug: Refactor Client class buffer handling; rename buffer variables for clarity and update buffer management in Server class.)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,9 +144,7 @@ void Server::handleClientRequest(int clientFd) {
 	std::vector<Client>::iterator it = clientItFromFd(clientFd);
 	if (it != _clientsVector.end()) {
 		std::cout << MAGENTA << "Client interacted." << " fd: " << clientFd << RESET << std::endl;
-		char buffer[1024];
-		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
-
+		ssize_t bytesRead = recv(clientFd, it->getClientBufferChar(), BUFFER_SIZE - 1, 0);
 		if (bytesRead <= 0) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
 			close(it->getClientFd());
