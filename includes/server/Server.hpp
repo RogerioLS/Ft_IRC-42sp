@@ -6,15 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2025/07/20 17:28:39 by ecoelho-         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/04 13:00:42 by pmelo-ca         ###   ########.fr       */
->>>>>>> cf65712 (fix: :bug: Update .gitignore to include build directory and ircserv; update timestamps in Server.hpp, Parser.cpp, and Server.cpp for consistency.)
-=======
-/*   Updated: 2025/07/08 19:47:07 by ecoelho-         ###   ########.fr       */
->>>>>>> 24726f5 (Finish the register commands handles)
+/*   Updated: 2025/07/20 17:43:45 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +23,9 @@ class Server {
 		std::string							_password;
 		int 										_serverFd;
 		int											_epollFd;
-<<<<<<< HEAD
-		volatile std::sig_atomic_t _gSignalStatus;
-=======
 		bool										_running;
 		int											_idCounter;
 		std::vector<Client>			_clientsVector;
->>>>>>> cf65712 (fix: :bug: Update .gitignore to include build directory and ircserv; update timestamps in Server.hpp, Parser.cpp, and Server.cpp for consistency.)
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;

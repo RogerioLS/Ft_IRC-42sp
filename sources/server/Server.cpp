@@ -6,15 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2025/07/20 17:33:30 by ecoelho-         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/08 20:14:56 by ecoelho-         ###   ########.fr       */
->>>>>>> 24726f5 (Finish the register commands handles)
-=======
-/*   Updated: 2025/07/20 16:21:13 by ecoelho-         ###   ########.fr       */
->>>>>>> 40a9355 (send just to rog test)
+/*   Updated: 2025/07/20 17:44:23 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

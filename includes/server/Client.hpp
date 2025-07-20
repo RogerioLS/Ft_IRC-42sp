@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 17:41:01 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:42:31 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ class Client {
 		bool	_hasValidPass;
 		bool	_hasValidNick;
 		bool	_hasValidUser;
+		std::string					_hostName;
+		std::set<int>				_clientChannels;
 
 	public:
 		Client(int fd, int id);

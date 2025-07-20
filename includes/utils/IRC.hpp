@@ -1,5 +1,5 @@
 #ifndef IRC_HPP
-#define IRC_HPP
+#define IRC_HP
 
 #define INITIAL_EVENT_VECTOR_SIZE 16
 #define INITIAL_CLIENT_VECTOR_SIZE 8
