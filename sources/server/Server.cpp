@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 18:05:36 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/20 18:08:45 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:09:06 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,11 @@ void Server::handleClientRequest(int clientFd) {
 			}
 			it->clearParsedCommands();
 		}
+
+		buffer[bytesRead] = '\0';
+		it->setClientBuffer(buffer);
+		Parser::parseBuffer(*it);
+		//execute;
 	}
 }
 // Getters
