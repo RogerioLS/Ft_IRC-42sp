@@ -3,7 +3,7 @@
 
 #define INITIAL_EVENT_VECTOR_SIZE 16
 #define INITIAL_CLIENT_VECTOR_SIZE 8
-#define CHANNEL_USER_LIMIT 128
+#define BUFFER_SIZE 1024
 
 #include <sys/types.h>
 #include <sys/socket.h>

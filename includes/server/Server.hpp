@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/08 11:41:17 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:43:03 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "./Client.hpp"
 #include "./Channel.hpp"
+#include "../parser/Parser.hpp"
 
 class Server {
 
@@ -55,7 +56,7 @@ class Server {
 		int getServerFd() const;
 		int getEpollFd() const;
 		int getClientCount() const;
-		int getServerRunning() const;
+		bool getServerRunning() const;
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
@@ -64,6 +65,7 @@ class Server {
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+		std::vector<Client> &getClientsVector();
 
 };
 
