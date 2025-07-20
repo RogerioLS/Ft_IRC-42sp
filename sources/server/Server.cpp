@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 18:05:36 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/20 18:14:19 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:19:44 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,14 +118,6 @@ void Server::handleClientRequest(int clientFd) {
 			close(it->getClientFd());
 			_clientsVector.erase(it);
 		}	else {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> e0e0ac7 (wip)
-=======
->>>>>>> 8467302 (send)
 			buffer[bytesRead] = '\0';
 			it->appendClientBuffer(std::string(buffer));
 			Parser::appendParsedCommand(*it);
@@ -136,19 +128,6 @@ void Server::handleClientRequest(int clientFd) {
 			}
 			it->clearParsedCommands();
 		}
-<<<<<<< HEAD
-
-		else {
-			buffer[bytesRead] = '\0';
-			it->setClientBuffer(buffer);
-			Parser::parseBuffer(*it);
-			//execute;
-=======
-			Parser::appendParsedCommand(*it);
->>>>>>> d2f4b95 (rebase ..)
-		}
-=======
->>>>>>> 8467302 (send)
 	}
 }
 // Getters
@@ -181,3 +160,20 @@ std::vector<Client>::iterator Server::clientItFromFd(int fd) {
 std::vector<Client> &Server::getClientsVector() {
 	return _clientsVector;
 }
+void Server::closeFds() {
+
+	if (getServerFd() != -1)
+		close(getServerFd());
+
+	if (getEpollFd() != -1)
+		close(getEpollFd());
+
+	std::vector<Client>::iterator it = _clientsVector.begin();
+	for(std::vector<Client>::iterator ite = _clientsVector.end(); it != ite; it++) {
+		int clientFd = it->getClientFd();
+		if (clientFd != -1)
+			close(clientFd);
+	}
+}
+
+Server* Server::instance = NULL;
