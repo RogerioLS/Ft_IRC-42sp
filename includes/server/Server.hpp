@@ -7,10 +7,14 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*   Updated: 2025/07/20 17:28:39 by ecoelho-         ###   ########.fr       */
 =======
 /*   Updated: 2025/07/04 13:00:42 by pmelo-ca         ###   ########.fr       */
 >>>>>>> cf65712 (fix: :bug: Update .gitignore to include build directory and ircserv; update timestamps in Server.hpp, Parser.cpp, and Server.cpp for consistency.)
+=======
+/*   Updated: 2025/07/08 19:47:07 by ecoelho-         ###   ########.fr       */
+>>>>>>> 24726f5 (Finish the register commands handles)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +88,7 @@ class Server {
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+		std::vector<Client> &getClientsVector();
 
 };
 

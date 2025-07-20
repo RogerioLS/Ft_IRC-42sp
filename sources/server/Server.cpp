@@ -6,12 +6,17 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/07/20 17:33:30 by ecoelho-         ###   ########.fr       */
+=======
+/*   Updated: 2025/07/08 20:14:56 by ecoelho-         ###   ########.fr       */
+>>>>>>> 24726f5 (Finish the register commands handles)
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
 #include "../includes/server/Client.hpp"
+#include "../includes/command/CommandHandler.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])),
@@ -140,11 +145,22 @@ void Server::handleClientRequest(int clientFd) {
 	std::vector<Client>::iterator it = clientItFromFd(clientFd);
 	if (it != _clientsVector.end()) {
 		std::cout << MAGENTA << "Client interacted." << " fd: " << clientFd << RESET << std::endl;
-		ssize_t bytesRead = recv(clientFd, it->getClientBufferChar(), BUFFER_SIZE - 1, 0);
+		char buffer[BUFFER_SIZE];
+		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer), 0);
 		if (bytesRead <= 0) {
 			std::cerr << YELLOW << "Client id: " << it->getClientId() << " disconnected" << RESET << std::endl;
 			close(it->getClientFd());
 			_clientsVector.erase(it);
+		}	else {
+			buffer[bytesRead] = '\0';
+			it->appendClientBuffer(std::string(buffer));
+			Parser::appendParsedCommand(*it);
+
+			std::vector<std::string> commands = it->getClientParsedCommand();
+			for (size_t i = 0; i < commands.size(); ++i) {
+				CommandHandler::processCommand(*it, commands[i], *this);
+			}
+			it->clearParsedCommands();
 		}
 
 		buffer[bytesRead] = '\0';
@@ -198,3 +214,7 @@ void Server::closeFds() {
 }
 
 Server* Server::instance = NULL;
+
+std::vector<Client> &Server::getClientsVector() {
+	return _clientsVector;
+}
