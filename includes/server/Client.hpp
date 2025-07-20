@@ -26,8 +26,18 @@ class Client {
 		std::string					_nickName;
 		std::string					_realName;
 		std::string					_userName;
+<<<<<<< HEAD
 		std::string					_hostName;
 		std::set<int>				_clientChannels;
+=======
+		std::string					_ipAddress;
+		std::string					_bufferStr;
+		char								_bufferChar[BUFFER_SIZE];
+		std::vector<std::string> _parsedCommand;
+		bool	_hasValidPass;
+		bool	_hasValidNick;
+		bool	_hasValidUser;
+>>>>>>> af39712 (commands pass, nick, user)
 
 	public:
 		Client(int fd, int id);
@@ -37,21 +47,50 @@ class Client {
 		int getClientFd() const;
 		int getClientId() const;
 		bool getClientIsAuthenticated() const;
+<<<<<<< HEAD
 		const std::string & getClientPassword() const;
 		const std::string & getClientNickName() const;
 		const std::string & getClientRealName() const;
 		const std::string & getClientUserName() const;
 		const std::string & getClientHostName() const;
+=======
+		const std::string getClientPassword() const;
+		const std::string getClientNickName() const;
+		const std::string getClientRealName() const;
+		const std::string getClientUserName() const;
+		const std::string getClientipAddress() const;
+		char * getClientBufferChar();
+		const std::string getClientBufferStr() const;
+		const std::vector<std::string> getClientParsedCommand() const;
+		bool	hasValidPass()	const;
+		bool	hasValidNick()	const;
+		bool	hasValidUser()	const;
+		bool	isFullyRegistered()	const;
+>>>>>>> af39712 (commands pass, nick, user)
 
 		// Setters
 		void setClientFd(int fd);
 		void setClientId(int id);
 		void setClientIsAuthenticated(bool isAuthenticated);
+<<<<<<< HEAD
 		void setClientPassword(std::string password);
 		void setClientNickName(std::string nickName);
 		void setClientRealName(std::string realName);
 		void setClientUserName(std::string userName);
 		void setClientHostName(std::string hostName);
+=======
+		void setClientPassword(const std::string& password);
+		void setClientNickName(const std::string& nickName);
+		void setClientRealName(const std::string& realName);
+		void setClientUserName(const std::string& userName);
+		void setClientIpAddress(const std::string & ipAddress);
+		void setClientBufferStr(const std::string & bufferStr);
+		void setClientParsedCommand(const std::vector<std::string> & parsedCommand);
+		void appendParsedCommand(const std::string & line);
+		void	setHasValidPass(bool hasPass);
+		void	setHasValidNick(bool hasNick);
+		void	setHasValidUser(bool hasUser);
+>>>>>>> af39712 (commands pass, nick, user)
 };
 
 #endif
