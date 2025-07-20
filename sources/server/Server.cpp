@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 18:05:36 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/20 18:11:39 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:12:07 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,13 @@ void Server::handleClientRequest(int clientFd) {
 			_clientsVector.erase(it);
 		}	else {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> e0e0ac7 (wip)
+=======
+>>>>>>> 8467302 (send)
 			buffer[bytesRead] = '\0';
 			it->appendClientBuffer(std::string(buffer));
 			Parser::appendParsedCommand(*it);
@@ -133,6 +136,7 @@ void Server::handleClientRequest(int clientFd) {
 			}
 			it->clearParsedCommands();
 		}
+<<<<<<< HEAD
 
 		else {
 			buffer[bytesRead] = '\0';
@@ -143,6 +147,8 @@ void Server::handleClientRequest(int clientFd) {
 			Parser::appendParsedCommand(*it);
 >>>>>>> d2f4b95 (rebase ..)
 		}
+=======
+>>>>>>> 8467302 (send)
 	}
 }
 // Getters

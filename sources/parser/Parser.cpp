@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:11:41 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:12:00 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ void Parser::appendParsedCommand(Client & client) {
 	while (true) {
 		pos = buffer.find('\n');
 		if (pos != std::string::npos) {
+			std::cout << BOLD << "Incomming buffer: " << '"' << buffer << '"' << RESET;
 			std::string messageSplitedByLine = buffer.substr(0, pos + 1);
 			client.setClientBufferStr(buffer.erase(0, pos + 1));
+			std::cout << CYAN << "MSBL: " << '"' << messageSplitedByLine << '"' << RESET;
 			appendLineCommand(messageSplitedByLine, client);
-		}
-		else
+		} else
 			break;
 	}
 }
@@ -41,6 +42,8 @@ void Parser::appendLineCommand(const std::string & messageSplitedByLine, Client 
 	if (!line.empty() && line[line.length() - 1] == '\r')
 		line = line.substr(0, line.length() - 1);
 
-	if (!line.empty())
+	if (!line.empty()){
 		client.appendParsedCommand(line);
+		std::cout << GREEN << "Parsed Line: " << '"' << line << '"' << RESET << std:: endl;
+	}
 }

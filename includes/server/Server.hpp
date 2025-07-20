@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:09:34 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:14:00 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Server {
 		std::string							_password;
 		int 										_serverFd;
 		int											_epollFd;
-		bool										_running;
+		volatile std::sig_atomic_t _gSignalStatus;
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
