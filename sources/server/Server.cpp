@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/08 11:43:42 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:27:57 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
-#include "../includes/utils/Colors.hpp"
+#include "../includes/server/Client.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])),
@@ -148,6 +148,11 @@ void Server::handleClientRequest(int clientFd) {
 			close(it->getClientFd());
 			_clientsVector.erase(it);
 		}
+
+		buffer[bytesRead] = '\0';
+		it->setClientBuffer(buffer);
+		Parser::parseBuffer(*it);
+		//execute;
 	}
 }
 
