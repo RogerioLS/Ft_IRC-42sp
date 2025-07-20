@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:07:56 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:08:31 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ class Server {
 		int 										_serverFd;
 		int											_epollFd;
 		bool										_running;
-		int											_idCounter;
-		std::vector<Client>			_clientsVector;
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
