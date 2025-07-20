@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/08 20:14:52 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:02:28 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class CommandHandler {
 		CommandHandler();
 	public:
 		static void processCommand(Client &client, const std::string &command, class Server &server);
-		static void handlePass(Client &client, const std::vector<std::string> &args, class Server &server);
+		static void handlePass(Client &client, const std::vector<std::string> &args);
 		static void handleNick(Client &client, const std::vector<std::string> &args, class Server &server);
 		static void handleUser(Client &client, const std::vector<std::string> &args);
 		static void sendResponse(Client &client, const std::string &response);
