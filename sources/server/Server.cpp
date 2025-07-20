@@ -6,11 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:22:00 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/07/20 17:27:57 by ecoelho-         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/03 12:08:25 by pmelo-ca         ###   ########.fr       */
->>>>>>> b39bcee (fix: :bug: Refactor Client class buffer handling; rename buffer variables for clarity and update buffer management in Server class.)
+/*   Updated: 2025/07/20 17:32:30 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

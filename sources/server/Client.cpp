@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 17:29:47 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:32:31 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,3 +38,4 @@ void Client::setClientUserName(const std::string & userName) { _userName = userN
 void Client::setClientIpAddress(const std::string & ipAddress) { _ipAddress = ipAddress ;}
 void Client::setClientBufferStr(const std::string & bufferStr) { _bufferStr = bufferStr ;}
 void Client::setClientParsedCommand(const std::vector<std::string> & parsedCommand) { _parsedCommand = parsedCommand ;}
+void Client::appendParsedCommand(const std::string & line) { _parsedCommand.push_back(line); }
