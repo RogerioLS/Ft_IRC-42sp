@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:20:12 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:28:32 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ class Client {
 		int									_id;
 		uint16_t						_port;
 		bool								_isAuthenticated;
+		std::string					_password;
 		std::string					_nickName;
 		std::string					_realName;
 		std::string					_userName;

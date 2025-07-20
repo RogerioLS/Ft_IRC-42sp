@@ -6,11 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/07/20 17:21:25 by ecoelho-         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/20 15:02:48 by ecoelho-         ###   ########.fr       */
->>>>>>> 9a1f0fb (rebase)
+/*   Updated: 2025/07/20 18:51:40 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +33,3 @@ void CommandHandler::processCommand(Client &client, const std::string &command, 
 		handleUser(client, tokens);
 	}
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 9a1f0fb (rebase)

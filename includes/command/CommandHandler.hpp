@@ -6,7 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 17:22:35 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:50:38 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "../server/Client.hpp"
 #include "../server/Server.hpp"
+#include "../utils/Colors.hpp"
 
 class CommandHandler {
 	private:

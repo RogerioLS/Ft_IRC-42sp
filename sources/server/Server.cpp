@@ -6,17 +6,18 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 18:05:36 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/20 18:20:37 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:45:38 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Server.hpp"
 #include "../includes/server/Client.hpp"
 #include "../includes/command/CommandHandler.hpp"
+#include "../includes/utils/Colors.hpp"
 
 Server::Server(char **argv)
  : _port(std::atoi(argv[1])), _password(argv[2]), _serverFd(-1),
- 	_epollFd(-1), _running(true), _idCounter(0) {}
+ 	_epollFd(-1) {}
 Server::~Server() {
 	if (getServerFd() != -1) {
 		close(getServerFd());
@@ -95,11 +96,10 @@ void Server::handleNewClient() {
 		client_event.events = EPOLLIN | EPOLLET;
 		client_event.data.fd = conn_socket;
 		std::string clientIp = inet_ntoa(client_addr.sin_addr);
-		uint16_t clientPort = ntohs(client_addr.sin_port);
+		// uint16_t clientPort = ntohs(client_addr.sin_port);
 		//TODO getbuffer from client to validate password and connect if its right
 		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-		_clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientPort, clientIp));
-		setServerIdCounter(getServerFd() + 1);
+		// _clientsVector.push_back(Client(conn_socket, clientPort, clientIp));
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
 			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
 			return;
@@ -136,13 +136,10 @@ const std::string& Server::getPassword() const { return _password; }
 int		Server::getServerFd() const { return _serverFd; }
 int		Server::getEpollFd() const { return _epollFd; }
 int		Server::getClientCount() const { return _clientsVector.size(); }
-bool	Server:: getServerRunning() const { return _running; }
-int		Server::getServerIdCounter() const { return _idCounter; }
+bool	Server:: getServerRunning() const { return true; }
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
-void Server::setServerRunning(bool running) { _running = running; }
-void Server::setServerIdCounter(int idCounter) { _idCounter = idCounter; }
 template<typename T>
 void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
 	if (vectorToResize.size() <= currSize)
