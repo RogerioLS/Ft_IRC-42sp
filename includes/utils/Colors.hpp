@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Colors.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:26:58 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/07 10:22:04 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:49:21 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COLORS_HPP
 # define COLORS_HPP
 
+>>>>>>> c2eb58c (rebse)
 # define RESET   "\033[0m"
 # define RED    "\033[1;31m"
 # define GREEN  "\033[1;32m"

@@ -6,15 +6,7 @@
 /*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*   Updated: 2025/07/20 17:30:04 by ecoelho-         ###   ########.fr       */
-=======
-/*   Updated: 2025/07/03 13:05:55 by pmelo-ca         ###   ########.fr       */
->>>>>>> 1cbd87a (fix: :bug: Update Parser and Client classes; rename parseBuffer to appendParsedCommand, add appendLineCommand method, and adjust buffer handling in Server class.)
-=======
-/*   Updated: 2025/07/04 13:16:47 by pmelo-ca         ###   ########.fr       */
->>>>>>> cf65712 (fix: :bug: Update .gitignore to include build directory and ircserv; update timestamps in Server.hpp, Parser.cpp, and Server.cpp for consistency.)
+/*   Updated: 2025/07/20 17:52:04 by ecoelho-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +15,6 @@
 
 Parser::Parser() {}
 
-<<<<<<< HEAD
-void Parser::parseBuffer(Client & client) {
-	std::cout << client.getClientBuffer() << std::endl;
-=======
 void Parser::appendParsedCommand(Client & client) {
 
 	std::string buffer = client.getClientBufferChar();
@@ -43,7 +31,6 @@ void Parser::appendParsedCommand(Client & client) {
 		} else
 			break;
 	}
->>>>>>> 1cbd87a (fix: :bug: Update Parser and Client classes; rename parseBuffer to appendParsedCommand, add appendLineCommand method, and adjust buffer handling in Server class.)
 }
 
 void Parser::appendLineCommand(const std::string & messageSplitedByLine, Client & client) {
