@@ -3,7 +3,14 @@
 #include "../includes/utils/Colors.hpp"
 #include "../includes/utils/Utils.hpp"
 #include "../includes/parser/Parser.hpp"
+#include <csignal>
 
+// Global flag for signal handling
+volatile std::sig_atomic_t g_signal_status = 0;
+
+void handle_sigint(int signum) {
+    g_signal_status = signum;
+}
 
 Server::Server(char **argv, Debug& debug)
  : _port(std::atoi(argv[1])),
@@ -11,10 +18,9 @@ Server::Server(char **argv, Debug& debug)
   _serverName("irc.42sp"),
   _serverFd(-1),
 	_epollFd(-1),
-	_gSignalStatus(-1),
+	_gSignalStatus(0),
 	_debug(debug)
 {
-	instance = this;
 	_commandHandler = new CommandHandler(*this, _debug);
 	_debug.debugPrint("✅ Server initialized", GREEN);
 }
@@ -29,9 +35,18 @@ Server::~Server()
 void Server::setupServer() {
 	setupServerSocket();
 	setupEpollEvent();
-	setupEpollLoop();
 	setupClientVector();
 }
+
+void Server::startServerLoop() {
+	_gSignalStatus = 1; // Set server to running state
+	setupEpollLoop();
+}
+
+void Server::handleSignal() {
+	signal(SIGINT, handle_sigint);
+}
+
 void Server::setupServerSocket() {
 	sockaddr_in server_addr;
 	memset(&server_addr, 0, sizeof(server_addr));
@@ -61,25 +76,33 @@ void Server::setupEpollEvent() {
 	_eventsVector.push_back(ev);
 }
 void Server::setupEpollLoop() {
-	while (getServerRunning() == true) {
-		int nfds = epoll_wait(_epollFd, _eventsVector.data(), _eventsVector.size(), 0);
-		if (nfds < 0)
+
+	while (_gSignalStatus == 1 && g_signal_status == 0) {
+
+		int nfds = epoll_wait(_epollFd, _eventsVector.data(), _eventsVector.size(), -1); // Use -1 to block indefinitely
+		if (nfds < 0) {
+            if (g_signal_status != 0) break; // Interrupted by signal
 			throw std::runtime_error("Error epoll_wait");
+        }
+
 		for (int n = 0; n < nfds; ++n) {
 			int clientFd = _eventsVector[n].data.fd;
 			if (clientFd == getServerFd())
 				handleNewClient();
 			else
 				handleClientRequest(clientFd);
+		}
 		resizeVector(static_cast<std::size_t>(nfds), _eventsVector);
 		resizeVector(_clientsVector.size(), _clientsVector);
-		}
 	}
+	std::cout << RED << "\n[SIGNAL] SIGINT received, shutting down." << RESET << std::endl;
 }
+
 void Server::setupClientVector() {
 	if (_clientsVector.empty())
 		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
 }
+
 void Server::handleNewClient() {
 	sockaddr_in client_addr;
 	memset(&client_addr, 0, sizeof(client_addr));
@@ -173,23 +196,36 @@ void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
 void Server::setEpollFd(int epollFd) { _epollFd = epollFd; }
 void Server::setServerRunning(int gSignalStatus) { _gSignalStatus = gSignalStatus; }
 
-void Server::createChannel(const std::string& name, Client& client) {
-	int channelId = _channelsVector.size() + 1;
-	_channelsVector.push_back(Channel(name, channelId, client.getClientId()));
-	_debug.debugPrint("Channel " + name + " created by client " + client.getClientNickName(), GREEN);
+void Server::createChannel(const std::string& name, Client& client)
+{
+	_debug.debugPrint("[Server] Creating channel: " + name, GREEN);
+	_channelsVector.push_back(Channel(name, _channelsVector.size() + 1, client.getClientId(), _debug));
+	_debug.debugPrint("[Server] Channel " + name + " created", GREEN);
 }
 
-template<typename T>
-void Server::resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
-	if (vectorToResize.size() <= currSize)
-		vectorToResize.reserve(vectorToResize.size() * 2);
+void Server::addClientForTest(Client* client) {
+    if (client) {
+        _clientsVector.push_back(*client);
+    }
 }
-std::vector<Client>::iterator Server::clientItFromFd(int fd) {
-	for (std::vector<Client>::iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+
+void Server::sendMessage(int fd, const std::string& message) {
+    send(fd, message.c_str(), message.length(), 0);
+}
+
+const std::vector<Channel>& Server::getChannels() const {
+    return _channelsVector;
+}
+
+std::vector<Client>::iterator Server::clientItFromFd(int fd)
+{
+	std::vector<Client>::iterator it = _clientsVector.begin();
+	for (; it != _clientsVector.end(); it++)
+	{
 		if (it->getClientFd() == fd)
-			return it;
+			return (it);
 	}
-	return _clientsVector.end();
+	return (it);
 }
 
 
@@ -211,5 +247,3 @@ void Server::closeFds() {
 			close(clientFd);
 	}
 }
-
-Server* Server::instance = NULL;

@@ -11,8 +11,10 @@
 /* ************************************************************************** */
 
 #include "../../includes/server/Channel.hpp"
+#include "../../includes/utils/Colors.hpp"
+#include <sstream>
 
-		Channel::Channel(std::string name, int channelId, int clientId)
+		Channel::Channel(std::string name, int channelId, int clientId, Debug& debug)
 		:	_inviteOnly(false),
 			_restrictTopic(true),
 			_userLimit(0),
@@ -21,13 +23,16 @@
 			_topic(""),
 			_key(""),
 			_operatorsById(std::set<int>()),
-			_clientsById(std::set<int>())
+			_clientsById(std::set<int>()),
+			_debug(debug)
 		{
+			_debug.debugPrint("[Channel] Creating channel: " + _name, GREEN);
 			setOperatorsById(clientId);
 			setClientsById(clientId);
 		}
 
 		Channel::~Channel() {
+			_debug.debugPrint("[Channel] Destroying channel: " + _name, RED);
 			_operatorsById.clear();
 			_clientsById.clear();
 		}
@@ -51,5 +56,20 @@
 		void Channel::setName(const std::string & name) { _name = name; }
 		void Channel::setTopic(const std::string & topic) { _topic = topic; }
 		void Channel::setKey(const std::string & key) { _key = key; }
-		void Channel::setOperatorsById(int operatorId) { _operatorsById.insert(operatorId); }
-		void Channel::setClientsById(int clientId) { _clientsById.insert(clientId); }
+		void Channel::setOperatorsById(int operatorId) {
+			std::stringstream ss_op;
+			ss_op << operatorId;
+			_debug.debugPrint("[Channel] Adding operator " + ss_op.str() + " to channel " + _name, CYAN);
+			_operatorsById.insert(operatorId);
+		}
+		void Channel::setClientsById(int clientId)
+{
+	std::stringstream ss_cl;
+	ss_cl << clientId;
+	_debug.debugPrint("[Channel] Adding client " + ss_cl.str() + " to channel " + _name, CYAN);
+	this->_clientsById.insert(clientId);
+}
+
+bool Channel::isClientInChannel(int clientId) const {
+    return (_clientsById.count(clientId) > 0);
+}

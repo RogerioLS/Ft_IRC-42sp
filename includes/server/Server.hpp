@@ -18,10 +18,11 @@
 #include "../parser/Parser.hpp"
 #include "../utils/Debug.hpp"
 #include "../command/CommandHandler.hpp"
+#include "IServer.hpp"
 
 class CommandHandler;
 
-class Server {
+class Server : public IServer {
 
 	private:
 		int											_port;
@@ -50,12 +51,11 @@ class Server {
 		void closeFds();
 
 	public:
-		static Server*					instance;
-
 		Server(char **argv, Debug& debug);
 		~Server();
 
 		void setupServer();
+		void startServerLoop();
 
 		// Getters
 		int getPort() const;
@@ -69,17 +69,23 @@ class Server {
 		Channel* getChannelByName(const std::string& name);
 		Client* getClientByNickname(const std::string& nickname);
 		Client* getClientById(int id);
+		const std::vector<Channel>& getChannels() const;
+
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(int gSignalStatus);
 
 		void createChannel(const std::string& name, Client& client);
+		void addClientForTest(Client* client);
+		void sendMessage(int fd, const std::string& message);
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
+<<<<<<< HEAD
 		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
 		std::vector<Client> &getClientsVector();
+		void sendMessage(int fd, const std::string& message);
 
 };
 
