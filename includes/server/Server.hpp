@@ -82,10 +82,11 @@ class Server : public IServer {
 
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
-<<<<<<< HEAD
-		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
+		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
+			if (currSize == vectorToResize.capacity())
+				vectorToResize.reserve(vectorToResize.capacity() * 2);
+		}
 		std::vector<Client> &getClientsVector();
-		void sendMessage(int fd, const std::string& message);
 
 };
 

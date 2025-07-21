@@ -14,6 +14,7 @@
 #define PARSER_HPP
 
 #include "../utils/IRC.hpp"
+#include "../utils/Debug.hpp"
 
 class Client;
 

@@ -7,6 +7,9 @@
 #include "../../includes/command/PrivmsgCommand.hpp"
 #include "../../includes/command/TopicCommand.hpp"
 #include "../../includes/command/HelpCommand.hpp"
+#include "../../includes/command/PassCommand.hpp"
+#include "../../includes/command/NickCommand.hpp"
+#include "../../includes/command/UserCommand.hpp"
 #include <string>
 
 CommandHandler::CommandHandler(IServer& server, Debug& debug) : _server(server), _debug(debug) {
@@ -17,6 +20,9 @@ CommandHandler::CommandHandler(IServer& server, Debug& debug) : _server(server),
 CommandHandler::~CommandHandler() {}
 
 void CommandHandler::_populateCommands() {
+    _commands["PASS"] = &PassCommand::execute;
+    _commands["NICK"] = &NickCommand::execute;
+    _commands["USER"] = &UserCommand::execute;
     _commands["JOIN"] = &JoinCommand::execute;
     _commands["PRIVMSG"] = &PrivmsgCommand::execute;
     _commands["TOPIC"] = &TopicCommand::execute;
