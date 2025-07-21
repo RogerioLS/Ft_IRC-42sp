@@ -33,6 +33,7 @@ int main(int argc, char **argv) {
 	try {
 		Server server(argv, debug);
 		server.setupServer();
+		server.startServerLoop();
 	} catch (const std::runtime_error& e) {
 		std::cerr << RED << "[Runtime Error] " << e.what() << RESET << std::endl;
 		return 4;

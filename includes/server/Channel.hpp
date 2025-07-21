@@ -14,6 +14,7 @@
 #define CHANNEL_HPP
 
 #include "../utils/IRC.hpp"
+#include "../utils/Debug.hpp"
 
 class Channel {
 
@@ -27,9 +28,10 @@ class Channel {
 		std::string 			_key;
 		std::set<int> 		_operatorsById;
 		std::set<int> 		_clientsById;
+		Debug&						_debug;
 
 	public:
-		Channel(std::string name, int channelId, int clientId);
+		Channel(std::string name, int channelId, int clientId, Debug& debug);
 		~Channel();
 
 		// Getters
@@ -53,6 +55,7 @@ class Channel {
 		void setKey(const std::string& key);
 		void setOperatorsById(int operatorId);
 		void setClientsById(int clientId);
+		bool isClientInChannel(int clientId) const;
 };
 
 #endif

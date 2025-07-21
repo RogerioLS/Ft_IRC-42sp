@@ -12,7 +12,7 @@
 
 # Compilador e flags
 CXX         = c++
-CXXFLAGS    = -Wall -Wextra -Werror -std=c++11 -DUNIT_TEST
+CXXFLAGS    = -Wall -Wextra -Werror -std=c++14 -DUNIT_TEST
 
 # Diretórios
 SRC_DIR     = sources
@@ -40,7 +40,7 @@ $(TEST_EXEC):
 	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(TEST_SRCS) $(SRCS) -o $(TEST_EXEC) $(TEST_FLAGS)
 	@echo "✅ [Compiled] Test Executable"
 
-run:
+run: all
 	@echo "✅ [Running] Tests"
 	@./$(TEST_EXEC)
 
@@ -49,7 +49,7 @@ how_build:
 	@echo make -f Makefile_test run    # Roda os testes
 	@echo make -f Makefile_test clean  # Limpa os objetos de teste
 
-clean:
+fclean:
 	@rm -rf $(OBJ_DIR)
 	@echo "🧹 [Cleaned] Test build"
 
