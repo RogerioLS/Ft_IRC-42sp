@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/18 12:35:47 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:36:35 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,28 +151,17 @@ std::vector<std::string> Parser::splitCommandArg(const std::string &argsToSplit,
 }
 
 std::string Parser::formatOperatorModeArgs(const std::string &operArgs) {
-  std::string args = operArgs;
+  std::string result;
+  char currentSign = 0;
   std::string charsToSplit = "itklo";
-  std::string symbols = "+-";
-  std::string result = "";
-  size_t start = 0;
-
-  while (!args.empty()) {
-    size_t symbolPos = args.find_last_of(symbols);
-    if (symbolPos == std::string::npos)
-      break;
-
-    size_t nextSymbolPos = args.find_first_of(symbols, symbolPos + 1);
-    if (nextSymbolPos == std::string::npos)
-      nextSymbolPos = args.length();
-
-    size_t charPos = args.find_last_of(charsToSplit, nextSymbolPos - 1);
-    if (charPos == std::string::npos || symbolPos > charPos)
-      break;
-
-    result += args[symbolPos];
-    result += args[charPos];
-    args.substr(charPos + 1);
+  for (size_t i = 0; i < operArgs.size(); ++i) {
+      char c = operArgs[i];
+      if (c == '+' || c == '-') {
+          currentSign = c;
+      } else if (charsToSplit.find(c) != std::string::npos && currentSign != 0) {
+          result += currentSign;
+          result += c;
+      }
   }
   return result;
 }
