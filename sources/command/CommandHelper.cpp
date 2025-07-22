@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/19 13:19:13 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:15:47 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,29 +151,85 @@ bool CommandHandler::executeOperMode(Client &client, const std::vector<std::stri
     return (sendResponse(client, "461 USER :Not enough parameters\r\n"), false);
 
   std::string providedChannel  = args[1];
-  std::string providedModes = Parser::formatOperatorModeArgs(args[2]);
-  std::string providedModesArgs = args[3];
   std::string clientNick = client.getClientNickName();
 
-  handleOperMode(server, providedChannel, providedModes, providedModesArgs, clientNick);
+  if (!server.isClientRegistered(clientNick))
+    return(sendResponse(client, "401 : OPER :<nickname> :No such nick/channel\r\n"), false);
+  if (!server.isChannelRegistered(providedChannel))
+    return(sendResponse(client, "403 ERR_NOSUCHCHANNEL " + providedChannel + " :No such channel\r\n"), false);
+  if (!server.isClientOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "442 : OPER : <channel> :You're not on that channel\r\n"), false);
+  if (!server.isClientOperOnChannel(clientNick, providedChannel))
+    return(sendResponse(client, "482 : OPER : <channel> : :You're not channel operator\r\n"), false);
+
+  std::string providedModes = Parser::formatOperatorModes(args[2]);
+  std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
+
+  if (!handleOperMode(server, providedChannel, providedModes, providedModesArgs, clientNick))
+    return(sendResponse(client, "Error while setting mode to channel\r\n"), false);
+
+  return true;
 }
 
+bool CommandHandler::handleOperMode(Server &server, const std::string &providedChannel, const std::string &providedModes, const std::vector<std::string> &providedModesArgs, const std::string &providedOper) {
+  bool atLeastOneModeSucceeded = false;
+  int argIndex = 0;
 
-bool CommandHandler::handleOperMode(Server &server, const std::string & providedChannel, const std::string & providedModes, const std::string & providedModesArgs, const std::string & providedOper) {
-  bool atLeastOneKickSucceeded = false;
+  for (size_t i = 0; i < providedModes.length(); i += 2) {
+    char flag = providedModes[i];
+    char mode = providedModes[i + 1];
+    std::string arg = (mode == 'k' || mode == 'l' || mode == 'o') && argIndex < providedModesArgs.size() ? providedModesArgs[argIndex] : "";
 
-  //check if provided channel exists and the provided oper is operator. return false
+    if (handleSingleMode(server, providedChannel, flag, mode, arg, providedOper))
+      atLeastOneModeSucceeded = true;
 
-  //iterate throught provided modes.
-  // for() {
-  //   switch ()
-  //   {
-  //   case :
-  //     break;
+    if (mode == 'k' || mode == 'l' || mode == 'o')
+      argIndex++;
+  }
 
-  //   default:
-  //     break;
-  //   }
-  // }
+  return atLeastOneModeSucceeded;
+}
 
+bool CommandHandler::handleSingleMode(Server &server, const std::string &channel, char flag, char mode, const std::string &arg, const std::string &oper) {
+  switch (mode) {
+    case 'i': return handleInviteMode(server, channel, flag);
+    case 't': return handleTopicMode(server, channel, flag);
+    case 'k': return handleKeyMode(server, channel, flag, arg);
+    case 'l': return handleLimitMode(server, channel, flag, arg);
+    case 'o': return handleOperatorMode(server, channel, flag, arg, oper);
+    default: return false;
+  }
+}
+
+bool CommandHandler::handleInviteMode(Server &server, const std::string &channel, bool enable) {
+  return true;
+}
+
+bool CommandHandler::handleTopicMode(Server &server, const std::string &channel, bool enable) {
+  return true;
+}
+
+bool CommandHandler::handleKeyMode(Server &server, const std::string &channel, bool enable, const std::string &arg) {
+  if (enable && !arg.empty()) {
+    return true;
+  } else if (!enable) {
+    return true;
+  }
+  return false;
+}
+
+bool CommandHandler::handleLimitMode(Server &server, const std::string &channel, bool enable, const std::string &arg) {
+  if (enable && !arg.empty()) {
+    return true;
+  } else if (!enable) {
+    return true;
+  }
+  return false;
+}
+
+bool CommandHandler::handleOperatorMode(Server &server, const std::string &channel, bool enable, const std::string &arg, const std::string &oper) {
+  if (!arg.empty()) {
+    return true;
+  }
+  return false;
 }

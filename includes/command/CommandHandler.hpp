@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/19 13:15:21 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:13:43 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,13 @@ class CommandHandler {
     static bool executeOperInvite(Client &client, const std::vector<std::string> &args, Server &server);
     static bool inviteClientToChannel(Server &server, const std::string & providedChannel, const std::string & providedClientToInvite, const std::string & providedOper);
     static bool executeOperMode(Client &client, const std::vector<std::string> &args, Server &server);
-    static bool handleOperMode(Server &server, const std::string & providedChannel, const std::string & providedModes, const std::string & providedModesArgs, const std::string & providedOper);
-};
+    static bool handleOperMode(Server &server, const std::string & providedChannel, const std::string & providedModes, const std::vector<std::string> & providedModesArgs, const std::string & providedOper);
+    static bool handleSingleMode(Server &server, const std::string &channel, char flag, char mode, const std::string &arg, const std::string &oper);
+    static bool handleInviteMode(Server &server, const std::string &channel, bool enable);
+    static bool handleTopicMode(Server &server, const std::string &channel, bool enable);
+    static bool handleKeyMode(Server &server, const std::string &channel, bool enable, const std::string &arg);
+    static bool handleLimitMode(Server &server, const std::string &channel, bool enable, const std::string &arg);
+    static bool handleOperatorMode(Server &server, const std::string &channel, bool enable, const std::string &arg, const std::string &oper);
+  };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/21 12:36:35 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/22 12:17:55 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,10 +150,11 @@ std::vector<std::string> Parser::splitCommandArg(const std::string &argsToSplit,
   return result;
 }
 
-std::string Parser::formatOperatorModeArgs(const std::string &operArgs) {
+std::string Parser::formatOperatorModes(const std::string &operArgs) {
   std::string result;
   char currentSign = 0;
   std::string charsToSplit = "itklo";
+
   for (size_t i = 0; i < operArgs.size(); ++i) {
       char c = operArgs[i];
       if (c == '+' || c == '-') {
@@ -164,4 +165,14 @@ std::string Parser::formatOperatorModeArgs(const std::string &operArgs) {
       }
   }
   return result;
+}
+
+std::vector<std::string> Parser::formatOperatorModeArgs(const std::vector<std::string> &args) {
+  std::vector<std::string> result;
+
+  for (size_t i = 3; i < args.size(); ++i)
+    result.push_back(args[i]);
+
+  return result;
+
 }
