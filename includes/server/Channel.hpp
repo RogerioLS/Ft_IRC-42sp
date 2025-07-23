@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:23 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/16 12:33:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/23 12:11:33 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ class Channel {
     void setClientsById(int clientId);
     void setClientsInvitedById(int clientId);
     void removeClient(int cliendId);
+    void removeOper(int operId);
+    void addOper(int operId);
 };
 
 #endif

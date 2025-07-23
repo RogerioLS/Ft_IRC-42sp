@@ -6,13 +6,14 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/19 13:18:57 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/23 12:26:38 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/command/CommandHandler.hpp"
 #include "../includes/server/Client.hpp"
 #include "../includes/server/Server.hpp"
+#include "../includes/server/Channel.hpp"
 #include "../includes/utils/Colors.hpp"
 
 CommandHandler::CommandHandler() {}
@@ -129,7 +130,7 @@ void CommandHandler::handleOperInvite(Client &client, const std::vector<std::str
 }
 
 void CommandHandler::handleOperMode(Client &client, const std::vector<std::string> &args, Server &server) {
-  if(executeOperMode(client, args, server))
+  if(executeChannelMode(client, args, server))
     std::cout << GREEN << "Client " << client.getClientId() << " set mode to channel: (" << args[1] << ")" << RESET << std::endl;
   else
     std::cout << RED << "Client " << client.getClientId() << " does not set mode to channel: (" << args[1] << ")" << RESET << std::endl;

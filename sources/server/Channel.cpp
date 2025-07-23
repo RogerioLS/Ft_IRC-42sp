@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:45 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/16 12:43:47 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/23 12:11:13 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,6 @@ void Channel::setKey(const std::string & key) { _key = key; }
 void Channel::setOperatorsById(int operatorId) { _operatorsById.insert(operatorId); }
 void Channel::setClientsById(int clientId) { _clientsById.insert(clientId); }
 void Channel::setClientsInvitedById(int clientId) { _clientsInvitedById.insert(clientId); }
-void Channel::removeClient(int cliendId) {_clientsById.erase(cliendId); }
+void Channel::removeClient(int cliendId) { _clientsById.erase(cliendId); }
+void Channel::removeOper(int operId) { _operatorsById.erase(operId); }
+void Channel::addOper(int operId) { _operatorsById.insert(operId); }
