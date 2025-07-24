@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/23 12:25:15 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/24 10:21:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,7 @@ bool CommandHandler::handleSingleMode(Server &server, Client &client, const std:
       break;
     }
   }
+
   if (!channel)
     return false;
 
@@ -235,15 +236,15 @@ bool CommandHandler::handleTopicMode(Server &server, Client &client, Channel &ch
   if (channel.getRestrictTopic() == true) {
     if (flag == '-') {
       channel.setRestrictTopic(false);
-      return true;
       //LOGS
     }
+    return true;
   } else if (channel.getRestrictTopic() == false) {
     if (flag == '+') {
       channel.setRestrictTopic(true);
-      return true;
       //LOGS
     }
+    return true;
   }
   return false;
 }
@@ -276,10 +277,34 @@ bool CommandHandler::handleKeyMode(Server &server, Client &client, Channel &chan
 }
 
 bool CommandHandler::handleLimitMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
-  if (flag && !arg.empty()) {
+
+  if (flag == '-') {
+
+    if (channel.getUserLimit() > 0) {
+      channel.setUserLimit(0);
+      //LOGS
+    }
     return true;
-  } else if (!flag) {
-    return true;
+  }
+  else if (flag == '+') {
+    std::string numericArg;
+
+    if (!arg.empty() && std::isdigit(arg[0])) {
+      for (std::string::const_iterator it = arg.begin(); it != arg.end() && std::isdigit(*it); ++it)
+        numericArg.push_back(*it);
+
+      if (numericArg.length() > 10 || numericArg.length() == 0)
+        return (sendResponse(client, ":Invalid limit mode parameter. Syntax: <limit>.\r\n"), false);
+
+      int limit = std::stoi(numericArg);
+      if (limit > 0) {
+        channel.setUserLimit(std::stoi(numericArg));
+        //LOG
+      }
+      return true;
+    }
+    else if (arg.empty())
+      return (sendResponse(client, ":You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"), false);
   }
   return false;
 }
