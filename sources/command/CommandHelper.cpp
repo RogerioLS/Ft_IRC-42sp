@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/24 10:21:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/24 12:02:49 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ bool CommandHandler::inviteClientToChannel(Server &server, const std::string & p
       it->setClientsInvitedById(providedClientToInviteId);
       sendResponse(*const_cast<Client*>(server.getClientInstFromId(providedClientToInviteId)), "You have been invited to " +  providedChannel +  "by " + providedOper);
       return true;
-      }
+    }
     ++it;
   }
   return false;
@@ -148,7 +148,7 @@ bool CommandHandler::inviteClientToChannel(Server &server, const std::string & p
 
 bool CommandHandler::executeChannelMode(Client &client, const std::vector<std::string> &args, Server &server) {
   if (args.size() < 3)
-    return (sendResponse(client, "461 USER :Not enough parameters\r\n"), false);
+    return (sendResponse(client, "461 USER :Not enough parameters\r\n"), false); // TODO handle only one arg show curr mode and infos
 
   std::string providedChannel  = args[1];
   std::string clientNick = client.getClientNickName();
@@ -159,7 +159,7 @@ bool CommandHandler::executeChannelMode(Client &client, const std::vector<std::s
     return(sendResponse(client, "403 ERR_NOSUCHCHANNEL " + providedChannel + " :No such channel\r\n"), false);
   if (!server.isClientOnChannel(clientNick, providedChannel))
     return(sendResponse(client, "442 : OPER : <channel> :You're not on that channel\r\n"), false);
-  if (!server.isClientOperOnChannel(clientNick, providedChannel))
+  if (!server.isClientOperOnChannel(clientNick, providedChannel)) // TODO talvez tirar essa validação daqui para cair nos erros especificos de cada comando...
     return(sendResponse(client, "482 : OPER : <channel> : :You're not channel operator\r\n"), false);
 
   std::string providedModes = Parser::formatOperatorModes(args[2]);
@@ -215,76 +215,51 @@ bool CommandHandler::handleSingleMode(Server &server, Client &client, const std:
 }
 
 bool CommandHandler::handleInviteMode(Server &server, Client &client, Channel &channel, char flag) {
-  if (channel.getInviteOnly() == true) {
-    if (flag == '-') {
-      channel.setInviteOnly(false);
-      return true;
-      //LOGS
-    }
-  } else if (channel.getInviteOnly() == false) {
-    if (flag == '+') {
-      channel.setInviteOnly(true);
-      return true;
-      //LOGS
-    }
+  if (flag == '-' && channel.getInviteOnly() == true) {
+    channel.setInviteOnly(false);
+    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "i on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+  }
+  else if (flag == '+' && channel.getInviteOnly() == false) {
+    channel.setInviteOnly(true);
+    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "i on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
   }
   return false;
 }
 
 bool CommandHandler::handleTopicMode(Server &server, Client &client, Channel &channel, char flag) {
 
-  if (channel.getRestrictTopic() == true) {
-    if (flag == '-') {
-      channel.setRestrictTopic(false);
-      //LOGS
-    }
-    return true;
-  } else if (channel.getRestrictTopic() == false) {
-    if (flag == '+') {
-      channel.setRestrictTopic(true);
-      //LOGS
-    }
-    return true;
+  if (flag == '-' && channel.getRestrictTopic() == true) {
+    channel.setRestrictTopic(false);
+    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+  }
+  else if (flag == '+' && channel.getRestrictTopic() == false) {
+    channel.setRestrictTopic(true);
+    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
   }
   return false;
 }
 
 bool CommandHandler::handleKeyMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
+  if (arg.empty())
+    return (sendResponse(client, channel.getName() + "o * :You must specify a parameter for the key mode. Syntax: <nick>\r\n"), false);
 
-  if (arg.length() > 0) {
-    if (flag == '-' && channel.getKey() == arg) {
-      channel.setKey("");
-      return true;
-      //LOGS
-    }
-    else if (flag == '-' && channel.getKey() != arg) {
-      return false;
-      //LOGS
-    }
-    else if (flag == '+' && channel.getKey().length() == 0) {
-      channel.setKey(arg);
-      return true;
-      //LOGS
-    }
-    else if (flag == '+' && channel.getKey().length() > 0) {
-      return false;
-      //LOGS
-    }
+  if (flag == '-' && channel.getKey() == arg) {
+    channel.setKey("");
+    return (sendResponse(client, client.getClientNickName() + " removes channel keyword" + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
   }
-  else {
-    //LOG #bla k * :You must specify a parameter for the key mode. Syntax: <key>.
+  else if (flag == '-' && channel.getKey() != arg)
+    return (sendResponse(client, channel.getName() + " :Channel key already set" + "\r\n"), false);
+  else if (flag == '+' && channel.getKey().length() == 0) {
+    channel.setKey(arg);
+    return (sendResponse(client, client.getClientNickName() + " sets channel keyword to " +arg + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
   }
+  return false;
 }
 
 bool CommandHandler::handleLimitMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
-
-  if (flag == '-') {
-
-    if (channel.getUserLimit() > 0) {
-      channel.setUserLimit(0);
-      //LOGS
-    }
-    return true;
+  if (flag == '-' && channel.getUserLimit() > 0) {
+    channel.setUserLimit(0);
+    return (sendResponse(client, " removes user limit.\r\n"), true);
   }
   else if (flag == '+') {
     std::string numericArg;
@@ -294,38 +269,40 @@ bool CommandHandler::handleLimitMode(Server &server, Client &client, Channel &ch
         numericArg.push_back(*it);
 
       if (numericArg.length() > 10 || numericArg.length() == 0)
-        return (sendResponse(client, ":Invalid limit mode parameter. Syntax: <limit>.\r\n"), false);
+        return (sendResponse(client, channel.getName() + " l " + arg + " :Invalid limit mode parameter. Syntax: <limit>.\r\n"), false);
 
       int limit = std::stoi(numericArg);
-      if (limit > 0) {
+      if (limit > 0 && limit != channel.getUserLimit()) {
         channel.setUserLimit(std::stoi(numericArg));
-        //LOG
+        return (sendResponse(client, client.getClientNickName() + " sets channel limit to " + numericArg + "\r\n"), true);
       }
-      return true;
     }
     else if (arg.empty())
-      return (sendResponse(client, ":You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"), false);
+      return (sendResponse(client, channel.getName() + " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n"), false);
   }
   return false;
 }
 
 bool CommandHandler::handleOperatorMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
 
+  if (arg.empty())
+    return (sendResponse(client, channel.getName() + "o * :You must specify a parameter for the op mode. Syntax: <nick>\r\n"), false);
+
   if (!server.isClientRegistered(arg))
-    return(sendResponse(client, "401 : OPER :<nickname> :No such nick/channel\r\n"), false);
+    return (sendResponse(client, "401 : OPER :<nickname> :No such nick/channel\r\n"), false);
 
   int clientIdToOper = server.getClientIdFromNickname(arg);
   std::set<int> channelOpers = channel.getOperatorsById();
   bool isClientOper = (channelOpers.find(clientIdToOper) != channelOpers.end());
 
-  if (flag == '-' && isClientOper) {
+  if (isClientOper && flag == '-') {
     channel.removeOper(clientIdToOper);
-    return true;
-    //LOGS
-  } else if (flag == '+' && !isClientOper) {
+    return (sendResponse(client, client.getClientNickName() + " removes channel operator status from " + arg +  "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+  }
+
+  else if (!isClientOper && flag == '+' && clientIdToOper != client.getClientId()) {
     channel.addOper(clientIdToOper);
-    return true;
-    //LOGS
+    return (sendResponse(client, client.getClientNickName() + " gives channel operator status to " + arg +  "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
   }
   return false;
 }
