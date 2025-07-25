@@ -18,13 +18,13 @@ static bool isValidNickname(const std::string& nickname) {
 void NickCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
     if (!client.hasValidPass()) {
         server.sendMessage(client.getClientFd(), ":server NOTICE * :You must provide a password first.\r\n");
-        debug.debugPrint("[NICK] Client has no valid pass.", YELLOW);
+        debug.debugPrint("[NICK-TEST] Failing because client has no valid pass.", RED);
         return;
     }
 
     if (args.empty()) {
         server.sendMessage(client.getClientFd(), Messages::ERR_NONICKNAMEGIVEN(client.getClientNickName()));
-        debug.debugPrint("[NICK] No nickname given.", YELLOW);
+        debug.debugPrint("[NICK-TEST] Failing because args is empty.", RED);
         return;
     }
 
@@ -32,17 +32,18 @@ void NickCommand::execute(IServer& server, Client& client, const std::vector<std
 
     if (!isValidNickname(newNickname)) {
         server.sendMessage(client.getClientFd(), Messages::ERR_ERRONEUSNICKNAME(client.getClientNickName(), newNickname));
-        debug.debugPrint("[NICK] Invalid nickname format.", YELLOW);
+        debug.debugPrint("[NICK-TEST] Failing because nickname is invalid.", RED);
         return;
     }
 
-    if (server.getClientByNickname(newNickname) != NULL) {
+    Client* existingClient = server.getClientByNickname(newNickname);
+    if (existingClient != NULL && existingClient->getClientId() != client.getClientId()) {
         server.sendMessage(client.getClientFd(), Messages::ERR_NICKNAMEINUSE(client.getClientNickName(), newNickname));
-        debug.debugPrint("[NICK] Nickname already in use.", YELLOW);
+        debug.debugPrint("[NICK-TEST] Failing because nickname is in use.", RED);
         return;
     }
 
     client.setClientNickName(newNickname);
     client.setHasValidNick(true);
-    debug.debugPrint("[NICK] Nickname set to: " + newNickname, GREEN);
+    debug.debugPrint("[NICK-TEST] Nickname set successfully to: " + newNickname, GREEN);
 }

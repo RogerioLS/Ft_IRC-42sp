@@ -27,9 +27,8 @@ const std::string Client::getClientNickName() const { return _nickName; }
 const std::string Client::getClientRealName() const { return _realName; }
 const std::string Client::getClientUserName() const { return _userName; }
 const std::string Client::getClientipAddress() const { return _ipAddress; }
-char * Client::getClientBufferChar() { return _bufferChar; }
 const std::string Client::getClientBufferStr() const { return _buffer; }
-const std::vector<std::string> Client:: getClientParsedCommand() const { return _parsedCommand; }
+std::string& Client::getClientBufferForModify() { return _buffer; }
 
 // Setters
 void Client::setClientFd(int fd) { _fd = fd ;}
@@ -41,8 +40,6 @@ void Client::setClientRealName(const std::string &realName) { _realName = realNa
 void Client::setClientUserName(const std::string &userName) { _userName = userName ;}
 void Client::setClientIpAddress(const std::string &ipAddress) { _ipAddress = ipAddress ;}
 void Client::setClientBufferStr(const std::string &bufferStr) { _buffer = bufferStr ;}
-void Client::setClientParsedCommand(const std::vector<std::string> & parsedCommand) { _parsedCommand = parsedCommand ;}
-void Client::appendParsedCommand(const std::string &line) { _parsedCommand.push_back(line); }
 
 bool	Client::hasValidPass() const { return _hasValidPass; }
 bool	Client::hasValidNick() const { return _hasValidNick; }
@@ -57,9 +54,5 @@ void Client::setHasValidUser(bool hasUser) {_hasValidUser = hasUser; };
 
 void Client::appendClientBuffer(const std::string &data) {
   _buffer += data;
-}
-
-void Client::clearParsedCommands() {
-  _parsedCommand.clear();
 }
 

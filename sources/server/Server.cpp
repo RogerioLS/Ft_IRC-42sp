@@ -108,51 +108,63 @@ void Server::handleNewClient() {
 	memset(&client_addr, 0, sizeof(client_addr));
 	socklen_t client_len = sizeof(client_addr);
 	int conn_socket = accept(getServerFd(),(struct sockaddr *) &client_addr, &client_len);
-	if (conn_socket == -1)
-		std::cerr << YELLOW << "Failed to accept client connection. Retrying..." << RESET << std::endl;
+	if (conn_socket == -1) {
+		_debug.debugPrint("Failed to accept client connection. Retrying...", YELLOW);
+		return;
+	}
 	else {
+		_debug.debugPrint("✅ New connection accepted on fd: " + utils::intToString(conn_socket), GREEN);
 		if (fcntl(conn_socket, F_SETFL, O_NONBLOCK) < 0) {
-			std::cerr << YELLOW << "Failed to set client connection to non block. Retrying..." << RESET << std::endl;
+			_debug.debugPrint("Failed to set client connection to non-block", YELLOW);
+			close(conn_socket);
 			return;
 		}
 		epoll_event client_event;
 		client_event.events = EPOLLIN | EPOLLET;
 		client_event.data.fd = conn_socket;
-		std::string clientIp = inet_ntoa(client_addr.sin_addr);
-		// uint16_t clientPort = ntohs(client_addr.sin_port);
-		//TODO getbuffer from client to validate password and connect if its right
-		std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-		// _clientsVector.push_back(Client(conn_socket, clientPort, clientIp));
+		
+		_clientsVector.push_back(Client(conn_socket, _clientsVector.size() + 1));
+		_clientsVector.back().setClientIpAddress(inet_ntoa(client_addr.sin_addr));
+
 		if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {
-			std::cerr << YELLOW << ("Error epoll listen client fd") << RESET << std::endl;
+			_debug.debugPrint("Error epoll listen client fd", RED);
 			return;
 		}
-		std::cout << BOLD << "Client count: " << getClientCount() <<  RESET << std::endl;
+		_debug.debugPrint("Client count: " + utils::intToString(getClientCount()), CYAN);
 	}
 }
 void Server::handleClientRequest(int clientFd) {
-	std::vector<Client>::iterator it = clientItFromFd(clientFd);
-	if (it != _clientsVector.end()) {
-		_debug.debugPrint("Client interacted. fd: " + utils::intToString(clientFd), MAGENTA);
-		char buffer[1024];
-		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
+    std::vector<Client>::iterator it = clientItFromFd(clientFd);
+    if (it != _clientsVector.end()) {
+        _debug.debugPrint("-> Received data from fd " + utils::intToString(clientFd), BLUE);
+        char buffer[1024];
+        ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
 
-		if (bytesRead <= 0) {
-			_debug.debugPrint("Client id: " + utils::intToString(it->getClientId()) + " disconnected", YELLOW);
-			close(it->getClientFd());
-			_clientsVector.erase(it);
-		} else {
-			buffer[bytesRead] = '\0';
-			it->appendClientBuffer(std::string(buffer));
-			Parser::appendParsedCommand(*it);
+        if (bytesRead <= 0) {
+            _debug.debugPrint("🔴 Client id: " + utils::intToString(it->getClientId()) + " disconnected", YELLOW);
+            close(it->getClientFd());
+            epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientFd, NULL);
+            _clientsVector.erase(it);
+        } else {
+            buffer[bytesRead] = '\0';
+            it->appendClientBuffer(std::string(buffer));
+            _debug.debugPrint("Current buffer for client " + utils::intToString(it->getClientId()) + ": [" + it->getClientBufferStr() + "]", CYAN);
 
-			std::vector<std::string> commands = it->getClientParsedCommand();
-			for (size_t i = 0; i < commands.size(); ++i) {
-				_commandHandler->executeCommand(*it, commands[i]);
-			}
-			it->clearParsedCommands();
-		}
-	}
+            std::string& currentBuffer = it->getClientBufferForModify();
+            size_t pos;
+            while ((pos = currentBuffer.find("\n")) != std::string::npos) {
+                std::string command = currentBuffer.substr(0, pos);
+                // Handle both \r\n and \n
+                if (!command.empty() && command[command.length() - 1] == '\r') {
+                    command.erase(command.length() - 1);
+                }
+                currentBuffer.erase(0, pos + 1);
+                if (!command.empty()) {
+                    _commandHandler->executeCommand(*it, command);
+                }
+            }
+        }
+    }
 }
 // Getters
 int		Server::getPort() const { return _port; }

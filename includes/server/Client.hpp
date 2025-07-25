@@ -28,8 +28,6 @@ class Client {
 		std::string					_userName;
 		std::string					_ipAddress;
 		std::string					_buffer;
-		char								_bufferChar[BUFFER_SIZE];
-		std::vector<std::string> _parsedCommand;
 		bool	_hasValidPass;
 		bool	_hasValidNick;
 		bool	_hasValidUser;
@@ -47,9 +45,8 @@ class Client {
 		const std::string getClientRealName() const;
 		const std::string getClientUserName() const;
 		const std::string getClientipAddress() const;
-		char * getClientBufferChar();
 		const std::string getClientBufferStr() const;
-		const std::vector<std::string> getClientParsedCommand() const;
+        std::string& getClientBufferForModify();
 		bool	hasValidPass()	const;
 		bool	hasValidNick()	const;
 		bool	hasValidUser()	const;
@@ -65,15 +62,12 @@ class Client {
 		void setClientUserName(const std::string& userName);
 		void setClientIpAddress(const std::string & ipAddress);
 		void setClientBufferStr(const std::string & bufferStr);
-		void setClientParsedCommand(const std::vector<std::string> & parsedCommand);
-		void appendParsedCommand(const std::string & line);
 		void	setHasValidPass(bool hasPass);
 		void	setHasValidNick(bool hasNick);
 		void	setHasValidUser(bool hasUser);
 
 
 		void appendClientBuffer(const std::string &data);
-		void clearParsedCommands();
 };
 
 #endif

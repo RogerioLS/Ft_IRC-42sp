@@ -11,6 +11,7 @@
 #include "../../includes/command/NickCommand.hpp"
 #include "../../includes/command/UserCommand.hpp"
 #include <string>
+#include <sstream> // Adicionado para std::stringstream
 
 CommandHandler::CommandHandler(IServer& server, Debug& debug) : _server(server), _debug(debug) {
     _populateCommands();
@@ -31,45 +32,55 @@ void CommandHandler::_populateCommands() {
 }
 
 void CommandHandler::executeCommand(Client& client, const std::string& message) {
-    std::stringstream ss(message);
-    std::string line;
+    std::string msg = message;
 
-    _debug.debugPrint("[CMD] Processing message: " + message, BLUE);
-
-    while (std::getline(ss, line)) {
-        // Remove \r from the end of the line
-        if (!line.empty() && line[line.length() - 1] == '\r') {
-            line.erase(line.length() - 1);
-        }
-
-        if (line.empty()) {
-            _debug.debugPrint("[CMD] Skipping empty line.", BLUE);
-            continue;
-        }
-
-        _debug.debugPrint("[CMD] Executing line for client " + utils::intToString(client.getClientId()) + ": " + line, CYAN);
-
-        std::stringstream line_ss(line);
-        std::string command;
-        line_ss >> command;
-
-        std::vector<std::string> args;
-        std::string arg;
-        while (line_ss >> arg) {
-            args.push_back(arg);
-        }
-
-        _debug.debugPrint("[CMD] Found command: " + command, BLUE);
-        std::map<std::string, CommandFunction>::iterator it = _commands.find(command);
-        if (it != _commands.end()) {
-            _debug.debugPrint("[CMD] Executing handler for " + command, BLUE);
-            (it->second)(_server, client, args, _debug);
-            _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
-        } else {
-            _debug.debugPrint("[CMD] Unknown command: " + command, RED);
-            // Aqui enviaremos uma resposta de erro para o cliente, como ERR_UNKNOWNCOMMAND
-        }
+    // Trim \r\n from the end
+    if (!msg.empty() && msg.length() > 0 && msg[msg.length() - 1] == '\n') {
+        msg.erase(msg.length() - 1);
     }
-    _debug.debugPrint("[CMD] Finished processing message.", BLUE);
-}
+    if (!msg.empty() && msg.length() > 0 && msg[msg.length() - 1] == '\r') {
+        msg.erase(msg.length() - 1);
+    }
 
+    if (msg.empty()) {
+        return;
+    }
+
+    _debug.debugPrint("[CMD] Executing line for client " + utils::intToString(client.getClientId()) + ": " + msg, CYAN);
+
+    std::vector<std::string> params;
+    std::string command;
+    std::string trailing;
+    
+    // Find and split the trailing part of the message
+    size_t trailing_start = msg.find(" :");
+    if (trailing_start != std::string::npos) {
+        trailing = msg.substr(trailing_start + 2);
+        msg = msg.substr(0, trailing_start);
+    }
+
+    // Split the first part of the message (command and regular params)
+    std::stringstream ss(msg);
+    ss >> command;
+
+    std::string arg;
+    while (ss >> arg) {
+        params.push_back(arg);
+    }
+
+    // Add the trailing param to the list of arguments
+    if (!trailing.empty()) {
+        params.push_back(trailing);
+    }
+
+    _debug.debugPrint("[CMD] Found command: " + command, BLUE);
+    std::map<std::string, CommandFunction>::iterator it = _commands.find(command);
+    if (it != _commands.end()) {
+        _debug.debugPrint("[CMD] Executing handler for " + command, BLUE);
+        (it->second)(_server, client, params, _debug);
+        _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
+    } else {
+        _debug.debugPrint("[CMD] Unknown command: " + command, RED);
+        // You might want to send ERR_UNKNOWNCOMMAND to the client here
+    }
+}
