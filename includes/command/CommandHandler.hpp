@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:31 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/23 12:26:23 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:33:36 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ class CommandHandler {
     static bool executeChannelMode(Client &client, const std::vector<std::string> &args, Server &server);
     static bool handleChannelMode(Server &server, Client &client, const std::string & providedChannel, const std::string & providedModes, const std::vector<std::string> & providedModesArgs);
     static bool handleSingleMode(Server &server, Client &client, const std::string &channel, char flag, char mode, const std::string &arg);
-    static bool handleInviteMode(Server &server, Client &client, Channel &channel, char flag);
+    static bool handleInviteMode(Client &client, Channel &channel, char flag);
     static bool handleTopicMode(Server &server, Client &client, Channel &channel, char flag);
     static bool handleKeyMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg);
     static bool handleLimitMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg);

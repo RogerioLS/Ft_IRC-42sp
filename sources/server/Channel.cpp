@@ -6,11 +6,13 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:45 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/23 12:11:13 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:52:33 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/server/Channel.hpp"
+#include "../../includes/server/Server.hpp"
+#include "../../includes/server/Client.hpp"
 
 Channel::Channel(std::string name, int id, int clientId)
   : _inviteOnly(false),
@@ -59,3 +61,11 @@ void Channel::setClientsInvitedById(int clientId) { _clientsInvitedById.insert(c
 void Channel::removeClient(int cliendId) { _clientsById.erase(cliendId); }
 void Channel::removeOper(int operId) { _operatorsById.erase(operId); }
 void Channel::addOper(int operId) { _operatorsById.insert(operId); }
+
+void Channel::broadcastToAll(Server & server,const std::string& message) {
+  for (std::set<int>::iterator it = _clientsById.begin(); it != _clientsById.end(); ++it) {
+    const Client * client = server.getClientInstFromId(*it);
+    if (client)
+      send(client->getClientFd(), message.c_str(), message.length(), 0);
+  }
+}

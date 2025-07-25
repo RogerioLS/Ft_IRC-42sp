@@ -6,13 +6,14 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:39:38 by ecoelho-          #+#    #+#             */
-/*   Updated: 2025/07/24 12:02:49 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:51:27 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/command/CommandHandler.hpp"
 #include "../includes/server/Client.hpp"
 #include "../includes/server/Server.hpp"
+#include "../includes/server/Channel.hpp"
 
 void CommandHandler::sendResponse(Client &client, const std::string &response) {
     send(client.getClientFd(), response.c_str(), response.length(), 0);
@@ -85,7 +86,7 @@ bool CommandHandler::executeOperKick(Client &client, const std::vector<std::stri
   return atLeastOneKickSucceeded;
 }
 
-bool CommandHandler::kickClientFromChannel(Server &server,  const std::string &providedChannel, const std::string &providedClientToKick, const std::string & providedOper, const std::string & reasonToKick) {
+bool CommandHandler::kickClientFromChannel(Server &server, const std::string &providedChannel, const std::string &providedClientToKick, const std::string & providedOper, const std::string & reasonToKick) {
   std::vector<Channel>::iterator it = server.getChannelsVector().begin();
 
   while (it != server.getChannelsVector().end()) {
@@ -97,9 +98,8 @@ bool CommandHandler::kickClientFromChannel(Server &server,  const std::string &p
         kickMsg += " : " + reasonToKick;
       else
         kickMsg += providedOper + "(" + providedOper + ")";
-      sendResponse(*const_cast<Client*>(server.getClientInstFromId(clientToKickId)), "You have been kicked from " + providedChannel + " by " + providedOper + "\r\n");
-      // std::string broadcastMsg = ":" + targetClient->getNick() + " KICK " + providedChannel + " :" + targetClient->getNick() + "\r\n";
-      // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+      sendResponse(*const_cast<Client*>(server.getClientInstFromId(clientToKickId)), "You have been kicked from " + providedChannel + " by " + providedOper + "(" + providedOper + ")" + "\r\n");
+      it->broadcastToAll(server, providedChannel + " has kicked " + providedClientToKick + " from " + providedChannel + "(" + providedOper + ")" +"\r\n");
       return true;
     }
     ++it;
@@ -205,7 +205,7 @@ bool CommandHandler::handleSingleMode(Server &server, Client &client, const std:
     return false;
 
   switch (mode) {
-    case 'i': return handleInviteMode(server, client, *channel, flag);
+    case 'i': return handleInviteMode(client, *channel, flag);
     case 't': return handleTopicMode(server, client, *channel, flag);
     case 'k': return handleKeyMode(server, client, *channel, flag, arg);
     case 'l': return handleLimitMode(server, client, *channel, flag, arg);
@@ -214,7 +214,7 @@ bool CommandHandler::handleSingleMode(Server &server, Client &client, const std:
   }
 }
 
-bool CommandHandler::handleInviteMode(Server &server, Client &client, Channel &channel, char flag) {
+bool CommandHandler::handleInviteMode(Client &client, Channel &channel, char flag) {
   if (flag == '-' && channel.getInviteOnly() == true) {
     channel.setInviteOnly(false);
     return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "i on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
@@ -230,11 +230,13 @@ bool CommandHandler::handleTopicMode(Server &server, Client &client, Channel &ch
 
   if (flag == '-' && channel.getRestrictTopic() == true) {
     channel.setRestrictTopic(false);
-    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n");
+    return true;
   }
   else if (flag == '+' && channel.getRestrictTopic() == false) {
     channel.setRestrictTopic(true);
-    return (sendResponse(client, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n");
+    return true;
   }
   return false;
 }
@@ -245,13 +247,15 @@ bool CommandHandler::handleKeyMode(Server &server, Client &client, Channel &chan
 
   if (flag == '-' && channel.getKey() == arg) {
     channel.setKey("");
-    return (sendResponse(client, client.getClientNickName() + " removes channel keyword" + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " removes channel keyword" + "\r\n");
+    return true;
   }
   else if (flag == '-' && channel.getKey() != arg)
     return (sendResponse(client, channel.getName() + " :Channel key already set" + "\r\n"), false);
   else if (flag == '+' && channel.getKey().length() == 0) {
     channel.setKey(arg);
-    return (sendResponse(client, client.getClientNickName() + " sets channel keyword to " +arg + "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " sets channel keyword to " +arg + "\r\n");
+    return true;
   }
   return false;
 }
@@ -268,13 +272,20 @@ bool CommandHandler::handleLimitMode(Server &server, Client &client, Channel &ch
       for (std::string::const_iterator it = arg.begin(); it != arg.end() && std::isdigit(*it); ++it)
         numericArg.push_back(*it);
 
-      if (numericArg.length() > 10 || numericArg.length() == 0)
+      if (numericArg.length() > 10 || numericArg.empty())
         return (sendResponse(client, channel.getName() + " l " + arg + " :Invalid limit mode parameter. Syntax: <limit>.\r\n"), false);
 
-      int limit = std::stoi(numericArg);
+      std::stringstream ss(numericArg);
+      int limit;
+      ss >> limit;
+
+      if (ss.fail())
+        return (sendResponse(client, channel.getName() + " l " + arg + " :Invalid limit mode parameter. Syntax: <limit>.\r\n"), false);
+
       if (limit > 0 && limit != channel.getUserLimit()) {
-        channel.setUserLimit(std::stoi(numericArg));
-        return (sendResponse(client, client.getClientNickName() + " sets channel limit to " + numericArg + "\r\n"), true);
+        channel.setUserLimit(limit);
+        channel.broadcastToAll(server, client.getClientNickName() + " sets channel limit to " + numericArg + "\r\n");
+        return true;
       }
     }
     else if (arg.empty())
@@ -297,12 +308,14 @@ bool CommandHandler::handleOperatorMode(Server &server, Client &client, Channel 
 
   if (isClientOper && flag == '-') {
     channel.removeOper(clientIdToOper);
-    return (sendResponse(client, client.getClientNickName() + " removes channel operator status from " + arg +  "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " removes channel operator status from " + arg +  "\r\n");
+    return true;
   }
 
   else if (!isClientOper && flag == '+' && clientIdToOper != client.getClientId()) {
     channel.addOper(clientIdToOper);
-    return (sendResponse(client, client.getClientNickName() + " gives channel operator status to " + arg +  "\r\n"), true); // it->broadcastMessage(broadcastMsg, *targetClient); TODO
+    channel.broadcastToAll(server, client.getClientNickName() + " gives channel operator status to " + arg +  "\r\n");
+    return true;
   }
   return false;
 }

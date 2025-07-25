@@ -6,14 +6,13 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/15 10:51:33 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:46:56 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include "./Channel.hpp"
 #include "../utils/IRC.hpp"
 #include "../parser/Parser.hpp"
 

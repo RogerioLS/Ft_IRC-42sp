@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:23 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/23 12:11:33 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:49:58 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 #define CHANNEL_HPP
 
 #include "../utils/IRC.hpp"
+
+class Server;
+
+class Client;
 
 class Channel {
 
@@ -59,6 +63,8 @@ class Channel {
     void removeClient(int cliendId);
     void removeOper(int operId);
     void addOper(int operId);
+
+    void  broadcastToAll(Server &server, const std::string & message);
 };
 
 #endif
