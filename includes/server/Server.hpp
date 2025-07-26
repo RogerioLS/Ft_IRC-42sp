@@ -69,6 +69,7 @@ class Server : public IServer {
 		Client* getClientByNickname(const std::string& nickname);
 		Client* getClientById(int id);
 		const std::vector<Channel>& getChannels() const;
+		std::vector<Client>& getClientsVector();
 
 		// Setters
 		void setServerFd(int serverFd);

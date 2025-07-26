@@ -54,11 +54,7 @@ void TopicCommand::execute(IServer& server, Client& client, const std::vector<st
         channel->setTopic(newTopic);
         debug.debugPrint("Client " + client.getClientNickName() + " set topic for " + channelName + " to: " + newTopic, MAGENTA);
 
-<<<<<<< HEAD
         std::string topic_msg_broadcast = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
-=======
-        std::string topic_msg_broadcast = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientHostName() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
->>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
         const std::set<int>& clientIds = channel->getClientsById();
         for (std::set<int>::const_iterator it = clientIds.begin(); it != clientIds.end(); ++it) {
             Client* destClient = server.getClientById(*it);

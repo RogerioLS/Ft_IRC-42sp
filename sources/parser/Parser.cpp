@@ -81,10 +81,7 @@ bool	checkValidPassword(std::string password) {
 		throw std::invalid_argument(ss.str());
 	}
 
-<<<<<<< HEAD
-	for (size_t i = 0; i < password.length(); ++i) {
-=======
->>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
+for (size_t i = 0; i < password.length(); ++i) {
 		if (!isValidChar(password[i]))
 			throw std::invalid_argument("Password contains invalid character.");
 	}
