@@ -1,35 +1,68 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   CommandHandler.cpp                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 19:21:51 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:51:40 by ecoelho-         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "../../includes/command/CommandHandler.hpp"
+#include "../../includes/server/Server.hpp"
+#include "../../includes/server/Client.hpp"
+#include "../../includes/utils/Colors.hpp"
+#include "../../includes/utils/Utils.hpp"
+#include "../../includes/command/JoinCommand.hpp"
+#include "../../includes/command/PrivmsgCommand.hpp"
+#include "../../includes/command/TopicCommand.hpp"
+#include "../../includes/command/HelpCommand.hpp"
+#include <string>
 
-#include "../includes/command/CommandHandler.hpp"
+CommandHandler::CommandHandler(IServer& server, Debug& debug) : _server(server), _debug(debug) {
+    _populateCommands();
+    _debug.debugPrint("✅ CommandHandler initialized", GREEN);
+}
 
-CommandHandler::CommandHandler() {}
+CommandHandler::~CommandHandler() {}
 
-void CommandHandler::processCommand(Client &client, const std::string &command, Server &server) {
-	std::vector<std::string> tokens = Parser::splitCommand(command);
+void CommandHandler::_populateCommands() {
+    _commands["JOIN"] = &JoinCommand::execute;
+    _commands["PRIVMSG"] = &PrivmsgCommand::execute;
+    _commands["TOPIC"] = &TopicCommand::execute;
+    _commands["HELP"] = &HelpCommand::execute;
+    _debug.debugPrint("✅ Commands populated", GREEN);
+}
 
-	if (tokens.empty()) return;
+void CommandHandler::executeCommand(Client& client, const std::string& message) {
+    std::stringstream ss(message);
+    std::string line;
 
-	std::string cmd = tokens[0];
+    _debug.debugPrint("[CMD] Processing message: " + message, BLUE);
 
-	for (size_t i = 0; i < cmd.length(); ++i) {
-		cmd[i] = std::toupper(cmd[i]);
-	}
+    while (std::getline(ss, line)) {
+        // Remove \r from the end of the line
+        if (!line.empty() && line[line.length() - 1] == '\r') {
+            line.erase(line.length() - 1);
+        }
 
-	if (cmd == "PASS") {
-		handlePass(client, tokens);
-	} else if (cmd == "NICK") {
-		handleNick(client, tokens, server);
-	} else if (cmd == "USER") {
-		handleUser(client, tokens);
-	}
+        if (line.empty()) {
+            _debug.debugPrint("[CMD] Skipping empty line.", BLUE);
+            continue;
+        }
+
+        _debug.debugPrint("[CMD] Executing line for client " + utils::intToString(client.getClientId()) + ": " + line, CYAN);
+
+        std::stringstream line_ss(line);
+        std::string command;
+        line_ss >> command;
+
+        std::vector<std::string> args;
+        std::string arg;
+        while (line_ss >> arg) {
+            args.push_back(arg);
+        }
+
+        _debug.debugPrint("[CMD] Found command: " + command, BLUE);
+        std::map<std::string, CommandFunction>::iterator it = _commands.find(command);
+        if (it != _commands.end()) {
+            _debug.debugPrint("[CMD] Executing handler for " + command, BLUE);
+            (it->second)(_server, client, args, _debug);
+            _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
+        } else {
+            _debug.debugPrint("[CMD] Unknown command: " + command, RED);
+            // Aqui enviaremos uma resposta de erro para o cliente, como ERR_UNKNOWNCOMMAND
+        }
+    }
+    _debug.debugPrint("[CMD] Finished processing message.", BLUE);
 }

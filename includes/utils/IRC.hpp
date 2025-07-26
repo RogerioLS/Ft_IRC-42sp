@@ -1,10 +1,6 @@
 #ifndef IRC_HPP
 #define IRC_HPP
 
-#define INITIAL_EVENT_VECTOR_SIZE 16
-#define INITIAL_CLIENT_VECTOR_SIZE 8
-#define BUFFER_SIZE 1024
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,5 +15,11 @@
 #include <fcntl.h>
 #include <sstream>
 #include <csignal>
+
+#define BUFFER_SIZE 4096
+#define INITIAL_EVENT_VECTOR_SIZE 10
+#define INITIAL_CLIENT_VECTOR_SIZE 10
+#define MAX_PASSWORD_LENGTH 20
+
 
 #endif

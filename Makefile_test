@@ -6,28 +6,39 @@
 #    By: codespace <codespace@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/29 19:09:21 by codespace         #+#    #+#              #
-#    Updated: 2025/06/29 20:09:34 by codespace        ###   ########.fr        #
+#    Updated: 2025/07/22 15:00:00 by you              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Compilador e flags
 CXX         = c++
-CXXFLAGS    = -Wall -Wextra -Werror -std=c++11 -DUNIT_TEST
+CXXFLAGS    = -Wall -Wextra -Werror -std=c++14 -DUNIT_TEST
 
 # Diretórios
 SRC_DIR     = sources
-OBJ_DIR     = build_tests/tests
+OBJ_DIR     = build_tests
 INC_DIRS    = includes
-INCLUDES    = -I$(INC_DIRS)
+
+# Google Test
+GTEST_DIR   = googletest
+GTEST_BUILD = $(GTEST_DIR)/build
+GTEST_LIB   = $(GTEST_BUILD)/lib/libgtest.a
+GTEST_MAIN_LIB = $(GTEST_BUILD)/lib/libgtest_main.a
+INCLUDES    = -I$(INC_DIRS) -I./googletest/include
 
 # Bibliotecas de teste
-TEST_FLAGS  = -lgtest -lgtest_main -pthread
+TEST_LIBS   = $(GTEST_LIB) $(GTEST_MAIN_LIB)
+TEST_FLAGS  = -pthread
 
 # Arquivos de teste
-TEST_DIR    = tests
+TEST_DIR    = tests/unit
 TEST_SRCS   = $(shell find $(TEST_DIR) -name "*.cpp")
 # Excluímos o main.cpp do projeto principal
 SRCS        = $(filter-out $(SRC_DIR)/main.cpp, $(shell find $(SRC_DIR) -name "*.cpp"))
+
+# Arquivos objeto
+OBJS        = $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS)) \
+            $(patsubst $(TEST_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(TEST_SRCS))
 
 # Nome do executável de testes
 TEST_EXEC   = $(OBJ_DIR)/test_executable
@@ -35,12 +46,27 @@ TEST_EXEC   = $(OBJ_DIR)/test_executable
 # Alvo padrão
 all: $(TEST_EXEC)
 
-$(TEST_EXEC):
-	@mkdir -p $(OBJ_DIR)
-	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(TEST_SRCS) $(SRCS) -o $(TEST_EXEC) $(TEST_FLAGS)
+# Regra para construir o Google Test se não estiver construído
+$(GTEST_LIB):
+	@echo "🚀 Building Google Test..."
+	@mkdir -p $(GTEST_BUILD)
+	@cd $(GTEST_BUILD) && cmake .. && make
+
+# Regra para construir o executável de teste
+$(TEST_EXEC): $(OBJS) $(GTEST_LIB)
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJS) -o $@ $(TEST_LIBS) $(TEST_FLAGS)
 	@echo "✅ [Compiled] Test Executable"
 
-run:
+# Regras para compilar os arquivos objeto
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp
+	@mkdir -p $(@D)
+	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+run: all
 	@echo "✅ [Running] Tests"
 	@./$(TEST_EXEC)
 
@@ -49,10 +75,10 @@ how_build:
 	@echo make -f Makefile_test run    # Roda os testes
 	@echo make -f Makefile_test clean  # Limpa os objetos de teste
 
-clean:
+fclean:
 	@rm -rf $(OBJ_DIR)
 	@echo "🧹 [Cleaned] Test build"
 
 re: clean all
 
-.PHONY: all run clean re
+.PHONY: all run clean re gtest

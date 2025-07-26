@@ -45,22 +45,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(dir $@)
 	@$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-# Compilar testes
-build_tests:
-	@mkdir -p $(OBJ_DIR)/tests
-	@$(CXX) $(CXXFLAGS) $(INCLUDES) $(TEST_SRCS) $(SRCS) -o $(OBJ_DIR)/tests/test_executable $(TEST_FLAGS)
-	@echo "✅ [Compiled] Test Executable"
-
-# Executar testes
-run_tests: build_tests
-	@echo "✅ [Executed] Tests"
-	./$(OBJ_DIR)/tests/test_executable
-
-# Compilar apenas os testes
-compile_tests: build_tests
-	@echo "✅ [Compiled] Tests Only"
-
-# Limpar arquivos de objeto
 clean:
 	@rm -rf $(OBJ_DIR)
 	@echo "🧹 [Cleaned] Object files"

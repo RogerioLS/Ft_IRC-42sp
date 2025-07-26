@@ -1,0 +1,285 @@
+Título: 4 - 💬 Comandos IRC Essenciais: 4.3 [ ] TOPIC - Definir ou ver tópico do canal
+Estado: open
+Descrição: Comando com permissões dependendo do modo t.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/17
+----------------------------------------
+Título: `5 - 👮‍♂️ Comandos de Operador:`
+Estado: open
+Descrição: | Título                                | Descrição                                                                 | Labels              |
+|---------------------------------------|---------------------------------------------------------------------------|---------------------|
+| [ ] KICK - Expulsar cliente do canal  | Só operadores podem usar. Atualizar lista de membros.                     | command, op, channel|
+| [ ] INVITE - Convidar cliente         | Adiciona cliente à lista de convidados de um canal com modo `i`.          | command, op, channel|
+| [ ] MODE - Modificar modos do canal   | Implementar modos `i`, `t`, `k`, `l`, `o` com regras.                     | command, op, channel|
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/18
+----------------------------------------
+Título: `6 - 🧪 Testes e Robustez:`
+Estado: open
+Descrição: | Título                                | Descrição                                                                 | Labels              |
+|---------------------------------------|---------------------------------------------------------------------------|---------------------|
+| [ ] Testar recebimento parcial de comandos (split) | Simular envio de comandos por partes como `com`, `man`, `d\n`.            | test, robustness    |
+| [ ] Testar múltiplos clientes simultâneos | Validar comportamento com vários clientes conectados e comandos em paralelo. | test, scalability |
+| [ ] Conectar cliente IRC real (HexChat / WeeChat) | Verificar se cliente consegue autenticar, mandar mensagens, etc.          | test, integration   |
+| [ ] Testar canais privados e modos    | Criar canais com senha, limite e modos para verificar regras.             | test, mode          |
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/19
+----------------------------------------
+Título: `7 - 📎 Auxiliares e Organização:`
+Estado: open
+Descrição: | Título                                | Descrição                                                                 | Labels              |
+|---------------------------------------|---------------------------------------------------------------------------|---------------------|
+| [ ] Parser - Dividir input em comandos IRC | Separar buffer recebido em comandos completos usando `\r\n`.              | utils, parser       |
+| [ ] Logger ou debug printer opcional  | Ferramenta de log para debug em tempo real (usado só durante dev).         | utils, debug        |
+| [ ] Documentação das funções e classes | Comentários do tipo Doxygen e organização do `.hpp` vs `.cpp`.            | doc, refactor       |
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/20
+----------------------------------------
+Título: feat(add): Adicinando estrutura para o projeto #1
+Estado: closed
+Descrição: None
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/21
+----------------------------------------
+Título: Feature/infra ini/#1 
+Estado: closed
+Descrição: [1 - 🔧 Infraestrutura e Inicialização - 1.1 [ ] Criação do Makefile padrão #5](https://github.com/RogerioLS/Ft_IRC-42sp/issues/5)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/22
+----------------------------------------
+Título: 5 - 👮‍♂️ Comandos de Operador: 5.1 [ ] KICK - Expulsar cliente do canal
+Estado: open
+Descrição: Só operadores podem usar. Atualizar lista de membros.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/23
+----------------------------------------
+Título: 5 - 👮‍♂️ Comandos de Operador: 5.2 [ ] INVITE - Convidar cliente
+Estado: open
+Descrição: Adiciona cliente à lista de convidados de um canal com modo i.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/24
+----------------------------------------
+Título: 5 - 👮‍♂️ Comandos de Operador: 5.3 [ ] MODE - Modificar modos do canal
+Estado: open
+Descrição: Implementar modos i, t, k, l, o com regras.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/25
+----------------------------------------
+Título: 6 - 🧪 Testes e Robustez: 6.1 [ ] Testar recebimento parcial de comandos (split)
+Estado: open
+Descrição: Simular envio de comandos por partes como com, man, d\n.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/26
+----------------------------------------
+Título: 6 - 🧪 Testes e Robustez: 6.2 [ ] Testar múltiplos clientes simultâneos
+Estado: open
+Descrição: Validar comportamento com vários clientes conectados e comandos em paralelo.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/27
+----------------------------------------
+Título: 6 - 🧪 Testes e Robustez: 6.3 [ ] [ ] Conectar cliente IRC real (HexChat / WeeChat)
+Estado: open
+Descrição: Verificar se cliente consegue autenticar, mandar mensagens, etc.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/28
+----------------------------------------
+Título: 6 - 🧪 Testes e Robustez: 6.4 [ ] Testar canais privados e modos
+Estado: open
+Descrição: Criar canais com senha, limite e modos para verificar regras.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/29
+----------------------------------------
+Título: 7 - 📎 Auxiliares e Organização: 7.1 [ ] Parser - Dividir input em comandos IRC
+Estado: open
+Descrição: Separar buffer recebido em comandos completos usando \r\n.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/30
+----------------------------------------
+Título: 7 - 📎 Auxiliares e Organização: 7.2 [ ] Logger ou debug printer opcional
+Estado: open
+Descrição: Ferramenta de log para debug em tempo real (usado só durante dev).
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/31
+----------------------------------------
+Título: 7 - 📎 Auxiliares e Organização: 7.3 [ ] Documentação das funções e classes
+Estado: open
+Descrição: Comentários do tipo Doxygen e organização do .hpp vs .cpp.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/32
+----------------------------------------
+Título: feat(ci): Add Makefile CI workflow to check if project compiles as re…
+Estado: closed
+Descrição: Check if project compiles as required.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/33
+----------------------------------------
+Título: feature/infra-ini/#2
+Estado: closed
+Descrição: Garantir que o programa só inicie com os dois argumentos corretos e válidos.
+
+feat: validate program input to validate args, checking if port and password follows the rules. Handle error properly in each case.
+
+[Issue: 1 - 🔧 Infraestrutura e Inicialização - 1.2 [ ] Parse dos argumentos <port> <password> ](https://github.com/users/RogerioLS/projects/6/views/1?pane=issue&itemId=114585611&issue=RogerioLS%7CFt_IRC-42sp%7C6)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/34
+----------------------------------------
+Título: Feature/infra ini/#3
+Estado: closed
+Descrição: Criar a classe Server para inicializar e preparar para receber conexões no socket, validando de forma adequada se as operações ocorreram como esperado. Obviamente a classe ainda não está completa pois é preciso a classe client, channel, epool...
+
+Incluir um IRC.hpp para evitar repetição de includes e servir como "lib";
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/35
+----------------------------------------
+Título: Infraestrutura e Inicialização - 1.4 [ ] Configuração do poll()
+Estado: closed
+Descrição: This pull request introduces epoll-based event handling to the `Server` class, enabling efficient monitoring of file descriptors for I/O events. The changes include new methods for epoll setup and event looping, updates to the constructor and destructor, and modifications to `main.cpp` to integrate the new functionality.
+
+### Epoll Integration:
+
+* **New epoll-related attributes in `Server` class**: Added `_epollFd`, `_eventStruct`, and `_eventsVector` to manage epoll file descriptors and events.
+* **Epoll setup methods**: Implemented `setupEpoolEvent()` to initialize epoll and add the server file descriptor, and `setupEpoolLoop()` to handle events using `epoll_wait`.
+* **Constructor and destructor updates**: Updated `Server` constructor to initialize epoll attributes and added cleanup for `_epollFd` in the destructor.
+
+### Integration with `main.cpp`:
+
+* **Main function changes**: Added calls to `setupEpoolEvent()` and `setupEpoolLoop()` in the `Server` setup sequence.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/36
+----------------------------------------
+Título: 4 - 💬 Comandos IRC Essenciais: 4.4 [ ] Help - Criar comando de Help
+Estado: closed
+Descrição: Mostrar os comandos suportados, como se cadastrar no server e como usar os comandos
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/37
+----------------------------------------
+Título: Feature/gerenciaconexoes#9 and Feature/gerenciaconexoes#10
+Estado: closed
+Descrição: This pull request introduces significant changes to the `ircserv` project to enhance functionality, improve code organization, and add debugging capabilities. Key updates include the addition of the `Client` class, enhancements to the `Server` class, and the introduction of color-coded console messages for better debugging.
+
+### Enhancements to the `Server` class:
+* Added new member variables `_clientCount`, `_running`, and `_clientsVector` to manage client connections and server state.
+* Implemented new methods `setupServer()`, `setupClientVector()`, `handleNewClient()`, and `handleClientRequest()` to streamline server setup and client handling. [[1]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R30-R36) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L66-R153)
+* Modified `setupEpollEvent()` to use an initial vector size constant and dynamically resize vectors as needed.
+
+### Addition of the `Client` class:
+* Introduced the `Client` class in `Client.hpp` and `Client.cpp` to encapsulate client-related functionality, including attributes like `_fd`, `_id`, and `_nickName`, and getter/setter methods. [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L6-R58) [[2]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL6-R41)
+
+### Debugging and usability improvements:
+* Added color-coded console messages using ANSI escape codes (`RED`, `GREEN`, `YELLOW`, etc.) for better readability of logs and error messages. [[1]](diffhunk://#diff-efc42479747964fa4241d3af8f136cc4dd9959d9afba83c18589a6cd3c99d48eR4-R15) [[2]](diffhunk://#diff-669fd9ef8dce5419b9db6f6be17c28372a26dc6103efe3c4be14f912204c3a7aL20-R20) [[3]](diffhunk://#diff-ec98ac1fc357c7b52ae40dec32dfecb87e4cb21c19672464fbcc466798025b7dL22-R29)
+* Updated the `main` function to use the new `setupServer()` method and improved error handling with colored output.
+
+### Code organization and refactoring:
+* Refactored includes across files to ensure proper dependencies, such as replacing `IRC.hpp` with `Client.hpp` in `Server.hpp`. [[1]](diffhunk://#diff-55bb2aeb8a3e823ccaa28da4ce56032a4013f8ede87d5c1286a12e007699a97bL18-R18) [[2]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL6-R16)
+* Added constants for initial vector sizes (`INITIAL_EVENT_VECTOR_SIZE`, `INITIAL_CLIENT_VECTOR_SIZE`) in `IRC.hpp` to improve maintainability.
+
+### Debugging flags:
+* Updated `Makefile` to include the `-g` flag for debugging during compilation.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/38
+----------------------------------------
+Título: feat(debbug tests): teste automatizados para parser e class debugger #20
+Estado: closed
+Descrição: None
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/39
+----------------------------------------
+Título: Gerenciamento de Conexões: 2.3 [ ] Desconectar clientes com erro
+Estado: closed
+Descrição: This pull request introduces several updates to the `Server` and `Client` classes to enhance functionality and improve code organization. Key changes include refactoring methods to handle client interactions more effectively, adding new member variables and methods to manage client authentication and password handling, and modifying the `Server` class to support dynamic client management.
+
+### Updates to Client functionality:
+
+* **Added client authentication and password management**:
+  - Introduced `_isAuthenticated` and `_password` member variables to the `Client` class. Added corresponding getter (`getClientPassword`) and setter (`setClientPassword`) methods. (`[[1]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL9-R23)`, `[[2]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aR33)`)
+
+### Updates to Server functionality:
+
+* **Refactored client request handling**:
+  - Updated `handleClientRequest` to accept a `clientFd` parameter, allowing targeted handling of client interactions. Added logic to disconnect clients and update the client count when a client disconnects. (`[[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL42-R58)`, `[[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L85-R89)`, `[[3]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R118-L143)`)
+
+* **Enhanced client management**:
+  - Replaced `_parsedCommand` with a `std::vector<std::string>` for better command parsing flexibility. Added `clientItFromFd` method to retrieve a client iterator based on its file descriptor. (`[[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL23-R27)`, `[[2]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL42-R58)`, `[[3]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R166-R173)`)
+
+* **Improved client connection handling**:
+  - Refactored `handleNewClient` to initialize new clients with unique IDs and update the client count correctly. Added logging for client connection events. (`[[1]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R102)`, `[[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R118-L143)`)
+
+These changes collectively improve the codebase by enhancing client interaction handling, supporting dynamic client management, and introducing authentication capabilities.
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/40
+----------------------------------------
+Título: 2 - 👥  Gerenciamento de Conexcções: 2.4 [] Fix Client
+Estado: closed
+Descrição: None
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/issues/41
+----------------------------------------
+Título: fix::bug: Enhance Client and Server 
+Estado: closed
+Descrição: 
+This pull request introduces several updates to the `Client` and `Server` classes, enhancing functionality and improving code clarity. Key changes include the addition of new attributes to the `Client` class, removal of redundant attributes from the `Server` class, and modifications to client handling logic to incorporate IP address and port information. Additionally, minor improvements were made to utility files and memory handling.
+
+### Updates to `Client` class:
+
+* Added new attributes `_port`, `_ipAddress`, `_buffer`, and `_parsedCommand` to the `Client` class for better client data management. Updated constructor, getters, and setters accordingly. (`includes/server/Client.hpp`, `sources/server/Client.cpp`) [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34R23-R61) [[2]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL9-R44)
+* Changed several setters and getters to use `const` references for improved efficiency. (`includes/server/Client.hpp`, `sources/server/Client.cpp`) [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34R23-R61) [[2]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL9-R44)
+
+### Updates to `Server` class:
+
+* Removed `_clientCount` and `_parsedCommand` attributes from the `Server` class, simplifying the design. Client count is now derived dynamically from `_clientsVector`. (`includes/server/Server.hpp`, `sources/server/Server.cpp`) [[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL25-L27) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L152-L158)
+* Updated `handleNewClient` method to capture and store client IP address and port information using `inet_ntoa` and `ntohs`. (`sources/server/Server.cpp`)
+
+### Improvements to memory handling:
+
+* Added `memset` initialization for `sockaddr_in` structure in `handleNewClient` to ensure clean memory allocation. (`sources/server/Server.cpp`)
+* Ensured client socket is properly closed when a client disconnects. (`sources/server/Server.cpp`)
+
+### Miscellaneous updates:
+
+* Included `<arpa/inet.h>` in `IRC.hpp` for network address manipulation functions. (`includes/utils/IRC.hpp`)
+* Updated file headers to reflect the latest modification dates. (`includes/server/Client.hpp`, `includes/server/Server.hpp`, `sources/server/Client.cpp`, `sources/server/Server.cpp`) [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L9-R9) [[2]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL9-R9) [[3]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL9-R44) [[4]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L9-R17)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/42
+----------------------------------------
+Título: Feature/joincreatechannel#15 - Create Channel class
+Estado: closed
+Descrição: This pull request introduces significant updates to the server's architecture, focusing on adding a `Channel` class, modifying the `Client` and `Server` classes to support channels, and improving code maintainability. The most important changes include the creation of the `Channel` class, updates to the `Client` class to include channel-related attributes, and modifications to the `Server` class to manage channels and refine its initialization process.
+
+### New `Channel` class:
+* Added a new `Channel` class in `includes/server/Channel.hpp` to represent IRC channels with attributes like `_inviteOnly`, `_userLimit`, `_name`, and `_clientsById`. Includes getters, setters, and a constructor that initializes the channel with an operator.
+* Implemented the `Channel` class methods in `sources/server/Channel.cpp`, including logic for managing operators and clients.
+
+### Changes to `Client` class:
+* Replaced `_ipAddress` and `_buffer` with `_hostName` and `_clientChannels` in `includes/server/Client.hpp` to support channel membership tracking. Updated corresponding getters and setters.
+* Simplified the `Client` constructor by removing unused parameters like `ipAddress` and `port`. Updated related logic in `sources/server/Client.cpp`.
+
+### Changes to `Server` class:
+* Added `_channelsVector` to `Server` in `includes/server/Server.hpp` to manage multiple channels and restructured the `_clientsVector`.
+* Updated the `Server` constructor to set `_running` to `false` by default and added logic to enable it during the epoll setup. [[1]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L18-R18) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R75)
+* Simplified the `handleNewClient` method in `sources/server/Server.cpp` by removing IP and port tracking for clients.
+
+### General improvements:
+* Added `#include` statements for dependencies like `Channel.hpp` in `Client.hpp` and `Server.hpp`. [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L9-R16) [[2]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeL9-R17)
+* Defined a `CHANNEL_USER_LIMIT` constant and included the `<set>` header in `includes/utils/IRC.hpp` for channel-related operations. [[1]](diffhunk://#diff-efc42479747964fa4241d3af8f136cc4dd9959d9afba83c18589a6cd3c99d48eL2-R6) [[2]](diffhunk://#diff-efc42479747964fa4241d3af8f136cc4dd9959d9afba83c18589a6cd3c99d48eR17)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/43
+----------------------------------------
+Título: Feature/gracefullshutdown
+Estado: closed
+Descrição: This pull request introduces signal handling and resource cleanup improvements to the `Server` class, along with minor refactoring and code organization changes. The most significant updates include the addition of a static `instance` pointer for signal handling, a new method to close file descriptors, and changes to the server's initialization and shutdown processes.
+
+### Signal Handling and Server Lifecycle Management:
+* Added a static `Server* instance` pointer to the `Server` class for managing signal handling and server state. (`includes/server/Server.hpp`, `sources/server/Server.cpp`) [[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeR32-R38) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R181-R198)
+* Implemented `handleSignal` and `handleSigInt` methods to gracefully handle `SIGINT` signals and stop the server. (`includes/server/Server.hpp`, `sources/server/Server.cpp`) [[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeR32-R38) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L96-R106)
+* Updated the `Server` constructor to initialize the `instance` pointer. (`sources/server/Server.cpp`)
+
+### Resource Cleanup:
+* Replaced the destructor logic with a new `closeFds` method to ensure all file descriptors, including client sockets, are properly closed during server shutdown. (`includes/server/Server.hpp`, `sources/server/Server.cpp`) [[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeR48-R49) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R181-R198)
+
+### Code Organization and Refactoring:
+* Moved the `setupClientVector` call to ensure the client vector is initialized before the event loop starts. (`sources/server/Server.cpp`) [[1]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3R83-R87) [[2]](diffhunk://#diff-85176593e90928b0ed88d5c96d544667f91025bf2e4f0248e5d4d581c966ede3L96-R106)
+* Minor formatting adjustments in the `Server` constructor for better readability. (`sources/server/Server.cpp`)
+
+### Dependency Updates:
+* Added the `signal.h` header to `IRC.hpp` to support signal handling functionality. (`includes/utils/IRC.hpp`)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/44
+----------------------------------------
+Título: Feature/auth and register
+Estado: closed
+Descrição: This pull request introduces significant changes to the IRC server codebase, focusing on enhancing the command handling, client management, and parsing functionality. The updates include the implementation of a new `CommandHandler` class, improvements to the `Client` and `Server` classes, and the addition of utility methods for parsing and validation.
+
+### Command Handling Enhancements:
+* Added a new `CommandHandler` class to process IRC commands (`PASS`, `NICK`, `USER`) with methods for validation and response handling. (`includes/command/CommandHandler.hpp`, `sources/command/CommandHandler.cpp`, `sources/command/CommandHelper.cpp`) [[1]](diffhunk://#diff-db3b9165ec66da54d6a53285107676dfe2f85cc08e845bc4a68549f0d73e2788L6-R33) [[2]](diffhunk://#diff-b2e79806aeddbdbd41142848ce4329d86839c908f1574bc8ba5927570243d84dL6-R108) [[3]](diffhunk://#diff-7bd3db01ba5eb9c9814686ad196d00cd877acf68701ad187a8a7f17b756e426fR1-R46)
+
+### Client Class Improvements:
+* Introduced new attributes (`_hasValidPass`, `_hasValidNick`, `_hasValidUser`) to track client registration state and methods to check if a client is fully registered. (`includes/server/Client.hpp`, `sources/server/Client.cpp`) [[1]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34R32-R36) [[2]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L47-R58) [[3]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L60-R78) [[4]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL30-R32) [[5]](diffhunk://#diff-8b27959a101a8b0878017a43d09d003b3ebe6fcd23afe5b1f6e165f7f117844aL43-R67)
+* Added a `BUFFER_SIZE` constant and methods to manage client buffers (`getClientBufferChar`, `appendClientBuffer`, `clearParsedCommands`). (`includes/utils/IRC.hpp`, `sources/server/Client.cpp`) [[1]](diffhunk://#diff-efc42479747964fa4241d3af8f136cc4dd9959d9afba83c18589a6cd3c99d48eR15) [[2]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L47-R58) [[3]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L60-R78)
+
+### Parsing Functionality:
+* Implemented a `Parser` class to handle command parsing, including splitting commands into tokens and appending parsed commands to clients. (`includes/parser/Parser.hpp`, `sources/parser/Parser.cpp`) [[1]](diffhunk://#diff-23b74cf32a84bdb9b96839e0c75f4e5a86ea9810f5132fb3da9d3e864bbdaaccL6-R31) [[2]](diffhunk://#diff-d409301fad201d309dfb6773fc7fa9a7319ffcd45120ba2c099a0b9d968ae772L6-R61)
+
+### Server Class Adjustments:
+* Added an `_idCounter` attribute and corresponding getter/setter methods to manage unique client IDs. (`includes/server/Server.hpp`) [[1]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeR28) [[2]](diffhunk://#diff-47f2cf5f380a4aa11c2e77c431e7f671d94489587abe35eae5f37c5a6dfa0aeeR52-R62)
+
+### Miscellaneous:
+* Updated authorship information in file headers to reflect contributions. (`includes/command/CommandHandler.hpp`, `includes/parser/Parser.hpp`, `includes/server/Client.hpp`, `sources/main.cpp`, etc.) [[1]](diffhunk://#diff-db3b9165ec66da54d6a53285107676dfe2f85cc08e845bc4a68549f0d73e2788L6-R33) [[2]](diffhunk://#diff-23b74cf32a84bdb9b96839e0c75f4e5a86ea9810f5132fb3da9d3e864bbdaaccL6-R31) [[3]](diffhunk://#diff-47a5d94172fb7753db4b4d4f18f4e7c6cf125787ba5ffc5af92201aea5a6bd34L6-R17) [[4]](diffhunk://#diff-669fd9ef8dce5419b9db6f6be17c28372a26dc6103efe3c4be14f912204c3a7aL9-L13)
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/45
+----------------------------------------
+Título: Feature/parser getinput#30
+Estado: closed
+Descrição: None
+URL: https://github.com/RogerioLS/Ft_IRC-42sp/pull/46
+----------------------------------------

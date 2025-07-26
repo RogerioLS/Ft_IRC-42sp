@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:43:03 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/08 11:41:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,26 @@
 
 #include "./Client.hpp"
 #include "./Channel.hpp"
-#include "../parser/Parser.hpp"
+#include "../utils/Debug.hpp"
+#include "../command/CommandHandler.hpp"
+#include "IServer.hpp"
 
-class Server {
+class CommandHandler;
+
+class Server : public IServer {
 
 	private:
 		int											_port;
 		std::string							_password;
+		std::string							_serverName;
 		int 										_serverFd;
 		int											_epollFd;
 		volatile std::sig_atomic_t _gSignalStatus;
 		std::vector<struct epoll_event> _eventsVector;
 		std::vector<Client>			_clientsVector;
 		std::vector<Channel>		_channelsVector;
+		Debug&									_debug;
+		CommandHandler*					_commandHandler;
 
 		void handleSignal();
 		static void handleSigInt(int signum);
@@ -43,29 +50,42 @@ class Server {
 		void closeFds();
 
 	public:
-		static Server*					instance;
-
-		Server(char **argv);
+		Server(char **argv, Debug& debug);
 		~Server();
 
 		void setupServer();
+		void startServerLoop();
 
 		// Getters
 		int getPort() const;
 		const std::string& getPassword() const;
+		const std::string& getServerName() const;
 		int getServerFd() const;
 		int getEpollFd() const;
 		int getClientCount() const;
-		bool getServerRunning() const;
+		int getServerRunning() const;
+		Debug& getDebug();
+		Channel* getChannelByName(const std::string& name);
+		Client* getClientByNickname(const std::string& nickname);
+		Client* getClientById(int id);
+		const std::vector<Channel>& getChannels() const;
+		std::vector<Client>& getClientsVector();
+
 		// Setters
 		void setServerFd(int serverFd);
 		void setEpollFd(int epollFd);
 		void setServerRunning(int gSignalStatus);
 
+		void createChannel(const std::string& name, Client& client);
+		void addClientForTest(Client* client);
+		void sendMessage(int fd, const std::string& message);
+
 		std::vector<Client>::iterator clientItFromFd(int fd);
 		template<typename T>
-		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
-		std::vector<Client> &getClientsVector();
+		void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize) {
+			if (currSize == vectorToResize.capacity())
+				vectorToResize.reserve(vectorToResize.capacity() * 2);
+		}
 
 };
 
