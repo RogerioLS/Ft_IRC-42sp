@@ -4,11 +4,15 @@
 #include "../../includes/server/Channel.hpp"
 #include "../../includes/server/Client.hpp"
 #include "../../includes/utils/Debug.hpp"
+<<<<<<< HEAD
 #include "../../includes/utils/Messages.hpp"
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 #include <map>
 #include <string>
 #include <vector>
 
+<<<<<<< HEAD
 // Helper para limpar mensagens
 std::string cleanMessage(std::string msg) {
     if (!msg.empty() && msg.back() == '\n') {
@@ -20,6 +24,8 @@ std::string cleanMessage(std::string msg) {
     return msg;
 }
 
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 // Mock do Servidor para testes de unidade
 class ServerMock : public IServer {
 public:
@@ -27,12 +33,16 @@ public:
 	std::map<std::string, Channel> _channels;
 	std::map<int, Client> _clients;
 	std::string _serverName;
+<<<<<<< HEAD
 	std::string _password;
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 	std::vector<std::string> sent_messages; // Para rastrear mensagens enviadas
 
 	ServerMock(Debug& debug) : _debug(debug), _serverName("irc.mock") {
 		// Adiciona clientes mock
 		_clients.emplace(1, Client(1, 1));
+<<<<<<< HEAD
 		_clients.at(1).setClientNickName("user1"); // Nick temporário até o registro
 		_clients.at(1).setClientUserName("username1");
 
@@ -43,6 +53,14 @@ public:
 		_clients.at(2).setHasValidPass(true);
 		_clients.at(2).setHasValidNick(true);
 		_clients.at(2).setHasValidUser(true);
+=======
+		_clients.at(1).setClientNickName("user1");
+		_clients.at(1).setClientUserName("username1");
+
+		_clients.emplace(2, Client(2, 2));
+		_clients.at(2).setClientNickName("user2");
+		_clients.at(2).setClientUserName("username2");
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 	}
 
 	~ServerMock() override {}
@@ -77,12 +95,17 @@ public:
 		return _serverName;
 	}
 
+<<<<<<< HEAD
 	const std::string& getPassword() const override {
 		return _password;
 	}
 
 	// Mock para envio de mensagens
 	void sendMessage(int fd, const std::string& message) override {
+=======
+	// Mock para envio de mensagens
+	void sendMessage(int fd, const std::string& message) {
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 		sent_messages.push_back("to:" + std::to_string(fd) + " msg:" + message);
 	}
 
@@ -102,18 +125,26 @@ protected:
 
 	void SetUp() override {
 		debug = new Debug();
+<<<<<<< HEAD
 		debug->enableDebugMode(true); // HABILITA DEBUG
 		serverMock = new ServerMock(*debug);
 		serverMock->_password = "password"; // Define a senha do servidor mock
+=======
+		debug->enableDebugMode(false);
+		serverMock = new ServerMock(*debug);
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 		commandHandler = new CommandHandler(*serverMock, *debug);
 
 		client1 = serverMock->getClientById(1);
 		client2 = serverMock->getClientById(2);
+<<<<<<< HEAD
 
 		// Garante que o client1 comece não registrado
 		client1->setHasValidPass(false);
 		client1->setHasValidNick(false);
 		client1->setHasValidUser(false);
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 	}
 
 	void TearDown() override {
@@ -123,6 +154,7 @@ protected:
 	}
 };
 
+<<<<<<< HEAD
 // Testes de Autenticação
 TEST_F(CommandTest, PassCommand_CorrectPassword) {
 	commandHandler->executeCommand(*client1, "PASS password\r\n");
@@ -207,6 +239,14 @@ TEST_F(CommandTest, JoinCommand_NewChannel) {
 	Channel* channel = serverMock->getChannelByName("#test");
 	ASSERT_TRUE(channel != nullptr);
 	EXPECT_TRUE(channel->isClientInChannel(client2->getClientId()));
+=======
+// Testes JOIN
+TEST_F(CommandTest, JoinCommand_NewChannel) {
+	commandHandler->executeCommand(*client1, "JOIN #test\r\n");
+	Channel* channel = serverMock->getChannelByName("#test");
+	ASSERT_TRUE(channel != nullptr);
+	EXPECT_TRUE(channel->isClientInChannel(client1->getClientId()));
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }
 
 TEST_F(CommandTest, JoinCommand_ExistingChannel) {
@@ -220,6 +260,7 @@ TEST_F(CommandTest, JoinCommand_ExistingChannel) {
 
 // Testes PRIVMSG
 TEST_F(CommandTest, PrivmsgCommand_ToUser) {
+<<<<<<< HEAD
 	commandHandler->executeCommand(*client2, "PRIVMSG user1 :Hello\r\n");
 	ASSERT_FALSE(serverMock->getSentMessages().empty());
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[0]), cleanMessage("to:1 msg::user2!username2@ PRIVMSG user1 :Hello"));
@@ -230,32 +271,67 @@ TEST_F(CommandTest, PrivmsgCommand_ToChannel) {
 	serverMock->sent_messages.clear(); // Limpa mensagens anteriores do JOIN
 	commandHandler->executeCommand(*client2, "PRIVMSG #test :Hello all\r\n");
 	ASSERT_EQ(serverMock->getSentMessages().size(), 0); // Nenhum outro cliente no canal
+=======
+	commandHandler->executeCommand(*client1, "PRIVMSG user2 :Hello\r\n");
+	ASSERT_FALSE(serverMock->getSentMessages().empty());
+	EXPECT_EQ(serverMock->getSentMessages()[0], "to:2 msg::user1!username1@ PRIVMSG user2 :Hello\r\n");
+}
+
+TEST_F(CommandTest, PrivmsgCommand_ToChannel) {
+	commandHandler->executeCommand(*client1, "JOIN #test\r\n");
+	commandHandler->executeCommand(*client2, "JOIN #test\r\n");
+	serverMock->sent_messages.clear(); // Limpa mensagens anteriores do JOIN
+	commandHandler->executeCommand(*client1, "PRIVMSG #test :Hello all\r\n");
+	ASSERT_EQ(serverMock->getSentMessages().size(), 1); // Espera 1 mensagem (para client2, remetente não recebe)
+	EXPECT_EQ(serverMock->getSentMessages()[0], "to:2 msg::user1!username1@ PRIVMSG #test :Hello all\r\n");
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }
 
 // Testes TOPIC
 TEST_F(CommandTest, TopicCommand_SetAndGetTopic) {
+<<<<<<< HEAD
 	commandHandler->executeCommand(*client2, "JOIN #test\r\n");
 	commandHandler->executeCommand(*client2, "TOPIC #test :New Topic!\r\n");
+=======
+	commandHandler->executeCommand(*client1, "JOIN #test\r\n");
+	commandHandler->executeCommand(*client1, "TOPIC #test :New Topic!\r\n");
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 	Channel* channel = serverMock->getChannelByName("#test");
 	ASSERT_TRUE(channel != nullptr);
 	EXPECT_EQ(channel->getTopic(), "New Topic!");
 }
 
 TEST_F(CommandTest, TopicCommand_GetEmptyTopic) {
+<<<<<<< HEAD
 	commandHandler->executeCommand(*client2, "JOIN #test\r\n");
 	serverMock->sent_messages.clear(); // Limpa mensagens anteriores do JOIN
 	commandHandler->executeCommand(*client2, "TOPIC #test\r\n");
 	ASSERT_FALSE(serverMock->getSentMessages().empty());
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[0]), cleanMessage("to:2 msg::irc.mock 331 user2 #test :No topic is set"));
+=======
+	commandHandler->executeCommand(*client1, "JOIN #test\r\n");
+	serverMock->sent_messages.clear(); // Limpa mensagens anteriores do JOIN
+	commandHandler->executeCommand(*client1, "TOPIC #test\r\n");
+	ASSERT_FALSE(serverMock->getSentMessages().empty());
+	EXPECT_EQ(serverMock->getSentMessages()[0], "to:1 msg::irc.mock 331 user1 #test :No topic is set\r\n");
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }
 
 // Teste HELP
 TEST_F(CommandTest, HelpCommand) {
 	commandHandler->executeCommand(*client1, "HELP\r\n");
 	ASSERT_EQ(serverMock->getSentMessages().size(), 5); // Espera 5 partes da mensagem de ajuda
+<<<<<<< HEAD
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[0]), cleanMessage("to:1 msg::irc.mock NOTICE user1 :Available commands:"));
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[1]), cleanMessage("to:1 msg::irc.mock NOTICE user1 :  JOIN <#channel> - Join or create a channel."));
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[2]), cleanMessage("to:1 msg::irc.mock NOTICE user1 :  PRIVMSG <target> :<message> - Send a private message to a user or channel."));
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[3]), cleanMessage("to:1 msg::irc.mock NOTICE user1 :  TOPIC <#channel> [:<new_topic>] - View or set the topic of a channel."));
 	EXPECT_EQ(cleanMessage(serverMock->getSentMessages()[4]), cleanMessage("to:1 msg::irc.mock NOTICE user1 :  HELP - Shows this help message."));
+=======
+	EXPECT_EQ(serverMock->getSentMessages()[0], "to:1 msg::irc.mock NOTICE user1 :Available commands:\r\n");
+	EXPECT_EQ(serverMock->getSentMessages()[1], "to:1 msg::irc.mock NOTICE user1 :  JOIN <#channel> - Join or create a channel.\r\n");
+	EXPECT_EQ(serverMock->getSentMessages()[2], "to:1 msg::irc.mock NOTICE user1 :  PRIVMSG <target> :<message> - Send a private message to a user or channel.\r\n");
+	EXPECT_EQ(serverMock->getSentMessages()[3], "to:1 msg::irc.mock NOTICE user1 :  TOPIC <#channel> [:<new_topic>] - View or set the topic of a channel.\r\n");
+	EXPECT_EQ(serverMock->getSentMessages()[4], "to:1 msg::irc.mock NOTICE user1 :  HELP - Shows this help message.\r\n");
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }

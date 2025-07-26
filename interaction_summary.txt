@@ -13,43 +13,6 @@ Resumo da Jornada:
     *   Solução: Adicionei o método `sendMessage` à interface `IServer` e o implementei tanto na classe `Server` (usando `send()` real) quanto no `ServerMock` (capturando mensagens). Atualizei o `CommandHandler` para usar `_server.sendMessage()`. Também ajustei as asserções nos testes para corresponderem exatamente às mensagens esperadas e à contagem correta.
 7.  Refactoring dos Comandos: Você solicitou a separação da lógica dos comandos `JOIN`, `PRIVMSG`, `TOPIC` e `HELP` em arquivos `.cpp` e `.hpp` dedicados.
     *   Solução: Criei `JoinCommand.hpp/.cpp`, `PrivmsgCommand.hpp/.cpp`, `TopicCommand.hpp/.cpp` e `HelpCommand.hpp/.cpp`. Movi a lógica de `CommandHandler.cpp` para esses novos arquivos, transformando-os em métodos estáticos. Atualizei `CommandHandler.hpp` e `CommandHandler.cpp` para chamar esses novos métodos.
-8.  Resolução de Conflitos Pós-Rebase: Após um `git rebase`, o projeto apresentou múltiplos erros de compilação.
-    *   Solução: Corrigi referências a `getClientHostName()` para `getClientipAddress()`, adicionei includes e definições de macros faltantes (`Debug.hpp`, `MAX_PASSWORD_LENGTH`), resolvi redefinições de macros e corrigi um erro de linkagem de template movendo a implementação de `resizeVector` para o `Server.hpp`.
-
----
-### **Atualização Pós-Rebase: Implementação de Autenticação e Testes**
-
-10. **Implementação dos Comandos de Autenticação:** Após estabilizar o projeto, reimplementamos a funcionalidade de autenticação (`PASS`, `NICK`, `USER`) que havia sido temporariamente desativada.
-    *   **Ação:** Criei arquivos dedicados para cada comando (`PassCommand.hpp/.cpp`, `NickCommand.hpp/.cpp`, `UserCommand.hpp/.cpp`), seguindo a nova arquitetura.
-    *   **Ação:** Centralizei as respostas numéricas do IRC (Replies) em um novo arquivo `includes/utils/Messages.hpp`.
-    *   **Ação:** Registrei os novos comandos no `CommandHandler`.
-
-11. **Criação de Testes de Unidade para Autenticação:** Para validar a nova implementação, adicionei testes ao `tests/unit/test_commands.cpp`.
-    *   **Ação:** Estendi o `ServerMock` para lidar com senhas.
-    *   **Ação:** Adicionei 8 novos casos de teste cobrindo o registro de usuário (sucesso, senhas incorretas, apelidos em uso, etc.).
-
-12. **Depuração Intensiva dos Testes:** Os novos testes revelaram vários bugs sutis.
-    *   **Bug:** O parser de comandos em `CommandHandler.cpp` não lidava corretamente com argumentos que continham espaços (argumentos "trailing" que começam com `:`).
-    *   **Solução:** Re-escrevi a lógica de parsing de comandos para ser mais robusta e lidar corretamente com o padrão IRC.
-    *   **Bug:** Inconsistências entre o código de teste e o de produção (funções com assinaturas diferentes) causaram falhas na compilação do executável principal.
-    *   **Solução:** Sincronizei as declarações e implementações, e removi variáveis não utilizadas que geravam erros de compilação com a flag `-Werror`.
-
-13. **Preparação para Teste Manual:** A pedido, preparei o servidor para testes manuais no terminal.
-    *   **Ação:** Adicionei mensagens de depuração detalhadas em `Server.cpp` para monitorar conexões de clientes e dados recebidos.
-    *   **Ação:** Verifiquei que o modo de depuração já estava ativado por padrão em `main.cpp`.
-    *   **Ação:** Corrigi erros de compilação que surgiram ao adicionar os novos logs, garantindo que o executável `ircserv` fosse gerado com sucesso.
-
-14. **Correção do Bug de Autenticação:**
-    *   **Problema:** O servidor não enviava a mensagem de boas-vindas (`RPL_WELCOME`) após o cliente se autenticar com `PASS`, `NICK` e `USER`.
-    *   **Diagnóstico:** A lógica de parsing do buffer de entrada era falha. Ela acumulava os comandos, mas não os processava porque esperava estritamente por um terminador de linha `
-` (CRLF), enquanto o `netcat` enviava apenas `
-` (LF).
-    *   **Solução:**
-        1.  Refatorei completamente a função `Server::handleClientRequest` para processar o buffer de forma mais robusta e direta.
-        2.  A nova lógica agora procura por `
-` como o principal delimitador de comando.
-        3.  Ela também remove o `` opcional, tornando o servidor compatível tanto com o padrão IRC (`
-`) quanto com ferramentas de teste como o `netcat` (`
-`).
-        4.  Simplifiquei as classes `Client` e `Parser`, removendo métodos e membros que se tornaram obsoletos com a nova abordagem.
-    *   **Resultado:** O processo de autenticação agora funciona perfeitamente, com o servidor respondendo corretamente a cada comando e enviando a mensagem de boas-vindas no final.
+8.  Erro de Digitação no Refactoring: Um erro de digitação (`n}`) foi introduzido em `sources/command/TopicCommand.cpp` durante o refactoring.
+    *   Solu��ão: Corrigi o erro de digitação em `sources/command/TopicCommand.cpp`.
+9.  Verificação Final: Após todas as alterações, o projeto principal compila com C++98 e todos os 13 testes de unidade passam com C++14, confirmando a funcionalidade e a conformidade com as normas.

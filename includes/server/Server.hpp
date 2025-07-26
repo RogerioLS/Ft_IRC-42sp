@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:43:03 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/08 11:41:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "./Client.hpp"
 #include "./Channel.hpp"
-#include "../parser/Parser.hpp"
 #include "../utils/Debug.hpp"
 #include "../command/CommandHandler.hpp"
 #include "IServer.hpp"
@@ -86,7 +85,6 @@ class Server : public IServer {
 			if (currSize == vectorToResize.capacity())
 				vectorToResize.reserve(vectorToResize.capacity() * 2);
 		}
-		std::vector<Client> &getClientsVector();
 
 };
 

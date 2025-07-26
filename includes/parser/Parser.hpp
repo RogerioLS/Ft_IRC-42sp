@@ -25,6 +25,7 @@ class Parser {
 
 	public:
 
+
 };
 
 int		checkPortAndPassword(char **argv, Debug &debug);

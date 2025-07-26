@@ -75,7 +75,7 @@ how_build:
 	@echo make -f Makefile_test run    # Roda os testes
 	@echo make -f Makefile_test clean  # Limpa os objetos de teste
 
-clean:
+fclean:
 	@rm -rf $(OBJ_DIR)
 	@echo "🧹 [Cleaned] Test build"
 

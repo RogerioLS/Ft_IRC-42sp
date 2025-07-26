@@ -2,7 +2,10 @@
 #include "../includes/command/CommandHandler.hpp"
 #include "../includes/utils/Colors.hpp"
 #include "../includes/utils/Utils.hpp"
+<<<<<<< HEAD
 #include "../includes/parser/Parser.hpp"
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 #include <csignal>
 
 // Global flag for signal handling
@@ -96,12 +99,16 @@ void Server::setupEpollLoop() {
 		resizeVector(_clientsVector.size(), _clientsVector);
 	}
 	std::cout << RED << "\n[SIGNAL] SIGINT received, shutting down." << RESET << std::endl;
+<<<<<<< HEAD
 }
 
 void Server::setupClientVector() {
 	if (_clientsVector.empty())
 		_clientsVector.reserve(INITIAL_CLIENT_VECTOR_SIZE);
+=======
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }
+
 
 void Server::handleNewClient() {
 	sockaddr_in client_addr;
@@ -140,6 +147,7 @@ void Server::handleClientRequest(int clientFd) {
         char buffer[1024];
         ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
 
+<<<<<<< HEAD
         if (bytesRead <= 0) {
             _debug.debugPrint("🔴 Client id: " + utils::intToString(it->getClientId()) + " disconnected", YELLOW);
             close(it->getClientFd());
@@ -165,6 +173,23 @@ void Server::handleClientRequest(int clientFd) {
             }
         }
     }
+=======
+	std::vector<Client>::iterator it = clientItFromFd(clientFd);
+	if (it != _clientsVector.end()) {
+		_debug.debugPrint("Client interacted. fd: " + utils::intToString(clientFd), MAGENTA);
+		char buffer[1024];
+		ssize_t bytesRead = recv(clientFd, buffer, sizeof(buffer) - 1, 0);
+
+		if (bytesRead <= 0) {
+			_debug.debugPrint("Client id: " + utils::intToString(it->getClientId()) + " disconnected", YELLOW);
+			close(it->getClientFd());
+			_clientsVector.erase(it);
+		} else {
+			buffer[bytesRead] = '\0';
+			_commandHandler->executeCommand(*it, std::string(buffer));
+		}
+	}
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 }
 // Getters
 int		Server::getPort() const { return _port; }

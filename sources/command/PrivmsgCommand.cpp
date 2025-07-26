@@ -23,7 +23,11 @@ void PrivmsgCommand::execute(IServer& server, Client& client, const std::vector<
         message = message.substr(1);
     }
 
+<<<<<<< HEAD
     std::string fullMessage = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " PRIVMSG " + target + " :" + message + "\r\n";
+=======
+    std::string fullMessage = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientHostName() + " PRIVMSG " + target + " :" + message + "\r\n";
+>>>>>>> e9e986572a02a4928f512be00842cce8cfa768a6
 
     if (target[0] == '#') {
         // Enviar para canal
