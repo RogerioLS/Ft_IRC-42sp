@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:07 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 12:10:05 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:29:23 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void CommandHandler::executeCommand(Client& client, const std::string& message) 
       _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
     } else {
       _debug.debugPrint("[CMD] Unknown command: " + command, RED);
-      // Aqui enviaremos uma resposta de erro para o cliente, como ERR_UNKNOWNCOMMAND
+      _server.sendMessage(client.getClientFd(), "[CMD] Unknown command: " + command + RED);
     }
   }
   _debug.debugPrint("[CMD] Finished processing message.", BLUE);

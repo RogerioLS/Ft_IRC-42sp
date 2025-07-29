@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:21 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:34:22 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:32:53 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 void TopicCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
   if (args.empty()) {
     debug.debugPrint("TOPIC command missing arguments", YELLOW);
-    // Enviar ERR_NEEDMOREPARAMS
-    return;
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_NEEDMOREPARAMS(client.getClientNickName(), "TOPIC")));
   }
 
   const std::string& channelName = args[0];
@@ -27,8 +26,7 @@ void TopicCommand::execute(Server& server, Client& client, const std::vector<std
 
   if (!channel) {
     debug.debugPrint("Channel " + channelName + " not found", YELLOW);
-    // Enviar ERR_NOSUCHCHANNEL
-    return;
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_NOSUCHCHANNEL(client.getClientNickName(), "TOPIC")));
   }
 
   if (args.size() == 1) {
@@ -48,8 +46,7 @@ void TopicCommand::execute(Server& server, Client& client, const std::vector<std
     const std::set<int>& operators = channel->getOperatorsById();
     if (channel->getRestrictTopic() && operators.find(client.getClientId()) == operators.end()) {
       debug.debugPrint("Client " + client.getClientNickName() + " is not an operator of " + channelName, YELLOW);
-      // Enviar ERR_CHANOPRIVSNEEDED
-      return;
+      return (server.sendMessage(client.getClientFd(), Messages::ERR_CHANOPRIVSNEEDED(client.getClientNickName(), "TOPIC")));
     }
 
     std::string newTopic;
@@ -69,7 +66,7 @@ void TopicCommand::execute(Server& server, Client& client, const std::vector<std
     for (std::set<int>::const_iterator it = clientIds.begin(); it != clientIds.end(); ++it) {
       const Client* destClient = server.getClientInstFromId(*it);
       if (destClient) {
-          server.sendMessage(destClient->getClientFd(), topic_msg_broadcast);
+        server.sendMessage(destClient->getClientFd(), topic_msg_broadcast);
       }
     }
   }

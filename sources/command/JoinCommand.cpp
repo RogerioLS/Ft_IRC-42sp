@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:11 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:34:12 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:36:53 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void JoinCommand::execute(Server& server, Client& client, const std::vector<std:
   debug.debugPrint("[JOIN] Handling JOIN command", BLUE);
   if (args.empty()) {
     debug.debugPrint("[JOIN] Missing arguments", YELLOW);
-    // Enviar ERR_NEEDMOREPARAMS para o cliente
-    return;
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_NEEDMOREPARAMS(client.getClientNickName(), "JOIN")));
   }
 
   const std::string& channelName = args[0];

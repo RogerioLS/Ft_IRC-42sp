@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:19 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:34:20 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:36:02 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 void PrivmsgCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
   if (args.size() < 2) {
     debug.debugPrint("PRIVMSG command missing arguments", YELLOW);
-    // Enviar ERR_NEEDMOREPARAMS
-    return;
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_NEEDMOREPARAMS(client.getClientNickName(), "PRIVMSG")));
   }
 
   const std::string& target = args[0];
@@ -51,7 +50,7 @@ void PrivmsgCommand::execute(Server& server, Client& client, const std::vector<s
       }
     } else {
       debug.debugPrint("Channel " + target + " not found", YELLOW);
-      // Enviar ERR_NOSUCHCHANNEL
+      return(server.sendMessage(client.getClientFd(), Messages::ERR_NOSUCHCHANNEL(target, "PRIVMSG")));
     }
   } else {
     // Enviar para usuário
@@ -61,7 +60,7 @@ void PrivmsgCommand::execute(Server& server, Client& client, const std::vector<s
       server.sendMessage(destClient->getClientFd(), fullMessage);
     } else {
       debug.debugPrint("User " + target + " not found", YELLOW);
-      // Enviar ERR_NOSUCHNICK
+      return(server.sendMessage(client.getClientFd(), Messages::ERR_NOSUCHNICK(target, "PRIVMSG")));
     }
   }
 }
