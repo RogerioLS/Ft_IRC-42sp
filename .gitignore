@@ -1,2 +1,4 @@
 
 ircserv
+*.vscode
+*.o

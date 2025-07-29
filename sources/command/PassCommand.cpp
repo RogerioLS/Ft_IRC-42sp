@@ -1,8 +1,21 @@
-#include "../../includes/command/PassCommand.hpp"
-#include "../../includes/utils/Messages.hpp"
-#include "../../includes/utils/Colors.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PassCommand.cpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 10:34:16 by pmelo-ca          #+#    #+#             */
+/*   Updated: 2025/07/29 10:34:17 by pmelo-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void PassCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
+#include "../../includes/command/CommandHandler.hpp"
+#include "../includes/server/Client.hpp"
+#include "../includes/server/Server.hpp"
+#include "../includes/server/Channel.hpp"
+
+void PassCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
     if (client.isFullyRegistered()) {
         server.sendMessage(client.getClientFd(), Messages::ERR_ALREADYREGISTRED(client.getClientNickName()));
         debug.debugPrint("[PASS] Client already registered.", YELLOW);

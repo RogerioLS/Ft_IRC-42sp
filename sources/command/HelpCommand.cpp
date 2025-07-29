@@ -1,10 +1,21 @@
-#include "../../includes/command/HelpCommand.hpp"
-#include "../../includes/server/Client.hpp"
-#include "../../includes/utils/Colors.hpp"
-#include "../../includes/utils/Utils.hpp"
-#include <string>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   HelpCommand.cpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 10:34:09 by pmelo-ca          #+#    #+#             */
+/*   Updated: 2025/07/29 10:34:10 by pmelo-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void HelpCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
+#include "../../includes/command/CommandHandler.hpp"
+#include "../includes/server/Client.hpp"
+#include "../includes/server/Server.hpp"
+#include "../includes/server/Channel.hpp"
+
+void HelpCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
     (void)args;
     debug.debugPrint("Executing HELP command for client " + client.getClientNickName(), MAGENTA);
 

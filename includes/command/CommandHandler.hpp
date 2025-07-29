@@ -1,31 +1,41 @@
-#ifndef COMMANDHANDLER_HPP
-#define COMMANDHANDLER_HPP
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   CommandHandler.hpp                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 10:34:54 by pmelo-ca          #+#    #+#             */
+/*   Updated: 2025/07/29 10:35:50 by pmelo-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../utils/IRC.hpp"
-#include "../utils/Debug.hpp"
-#include "../server/IServer.hpp"
-#include "./JoinCommand.hpp"
-#include "./PrivmsgCommand.hpp"
-#include "./TopicCommand.hpp"
-#include "./HelpCommand.hpp"
-#include <map>
-#include <string>
-#include <vector>
+#ifndef COMMAND_HANDLER_HPP
+#define COMMAND_HANDLER_HPP
+
+#include "HelpCommand.hpp"
+#include "JoinCommand.hpp"
+#include "NickCommand.hpp"
+#include "PrivmsgCommand.hpp"
+#include "PassCommand.hpp"
+#include "TopicCommand.hpp"
+#include "UserCommand.hpp"
 
 class Client;
 
 class CommandHandler {
-private:
-    typedef void (*CommandFunction)(IServer&, Client&, const std::vector<std::string>&, Debug&);
 
-    IServer& _server;
+  private:
+    typedef void (*CommandFunction)(Server&, Client&, const std::vector<std::string>&, Debug&);
+
+    Server& _server;
     Debug&  _debug;
     std::map<std::string, CommandFunction> _commands;
 
-    void _populateCommands();
+    void populateCommands();
 
-public:
-    CommandHandler(IServer& server, Debug& debug);
+  public:
+    CommandHandler(Server& server, Debug& debug);
     ~CommandHandler();
 
     void executeCommand(Client& client, const std::string& message);
