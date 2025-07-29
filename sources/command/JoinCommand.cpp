@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:11 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 12:36:53 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:40:04 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ void JoinCommand::execute(Server& server, Client& client, const std::vector<std:
   // Validação simples do nome do canal
   if (channelName[0] != '#') {
     debug.debugPrint("[JOIN] Invalid channel name: " + channelName, YELLOW);
-    // Enviar ERR_BADCHANMASK ou similar
-    return;
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_BADCHANMASK(client.getClientNickName(), channelName, "JOIN")));
   }
 
   debug.debugPrint("[JOIN] Client " + client.getClientNickName() + " wants to join " + channelName, MAGENTA);

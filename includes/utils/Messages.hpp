@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:33:53 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 11:21:55 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:42:02 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,10 @@ namespace Messages {
 
   inline std::string ERR_PASSWDMISMATCH(const std::string& nick) {
     return ":server 464 " + nick + " :Password incorrect\r\n";
+  }
+
+  inline std::string ERR_BADCHANMASK(const std::string& nick, const std::string& channel, const std::string& command) {
+    return ":server 476 " + nick + " " + command + " "  + channel + " :Bad Channel Mask\r\n";
   }
 
   inline std::string ERR_CHANOPRIVSNEEDED(const std::string& nick, const std::string& channel) {
