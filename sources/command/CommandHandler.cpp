@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:07 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:34:08 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:09:40 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ CommandHandler::~CommandHandler() {}
 
 void CommandHandler::populateCommands() {
   _commands["HELP"] = &HelpCommand::execute;
+  _commands["INVITE"] = &InviteCommand::execute;
   _commands["JOIN"] = &JoinCommand::execute;
+  _commands["KICK"] = &KickCommand::execute;
   _commands["NICK"] = &NickCommand::execute;
   _commands["PASS"] = &PassCommand::execute;
   _commands["PRIVMSG"] = &PrivmsgCommand::execute;
@@ -43,38 +45,38 @@ void CommandHandler::executeCommand(Client& client, const std::string& message) 
   _debug.debugPrint("[CMD] Processing message: " + message, BLUE);
 
   while (std::getline(ss, line)) {
-      // Remove \r from the end of the line
-      if (!line.empty() && line[line.length() - 1] == '\r') {
-          line.erase(line.length() - 1);
-      }
+    // Remove \r from the end of the line
+    if (!line.empty() && line[line.length() - 1] == '\r') {
+      line.erase(line.length() - 1);
+    }
 
-      if (line.empty()) {
-          _debug.debugPrint("[CMD] Skipping empty line.", BLUE);
-          continue;
-      }
+    if (line.empty()) {
+      _debug.debugPrint("[CMD] Skipping empty line.", BLUE);
+      continue;
+    }
 
-      _debug.debugPrint("[CMD] Executing line for client " + Utils::intToString(client.getClientId()) + ": " + line, CYAN);
+    _debug.debugPrint("[CMD] Executing line for client " + Utils::intToString(client.getClientId()) + ": " + line, CYAN);
 
-      std::stringstream line_ss(line);
-      std::string command;
-      line_ss >> command;
+    std::stringstream line_ss(line);
+    std::string command;
+    line_ss >> command;
 
-      std::vector<std::string> args;
-      std::string arg;
-      while (line_ss >> arg) {
-          args.push_back(arg);
-      }
+    std::vector<std::string> args;
+    std::string arg;
+    while (line_ss >> arg) {
+      args.push_back(arg);
+    }
 
-      _debug.debugPrint("[CMD] Found command: " + command, BLUE);
-      std::map<std::string, CommandFunction>::iterator it = _commands.find(command);
-      if (it != _commands.end()) {
-          _debug.debugPrint("[CMD] Executing handler for " + command, BLUE);
-          (it->second)(_server, client, args, _debug);
-          _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
-      } else {
-          _debug.debugPrint("[CMD] Unknown command: " + command, RED);
-          // Aqui enviaremos uma resposta de erro para o cliente, como ERR_UNKNOWNCOMMAND
-      }
+    _debug.debugPrint("[CMD] Found command: " + command, BLUE);
+    std::map<std::string, CommandFunction>::iterator it = _commands.find(command);
+    if (it != _commands.end()) {
+      _debug.debugPrint("[CMD] Executing handler for " + command, BLUE);
+      (it->second)(_server, client, args, _debug);
+      _debug.debugPrint("[CMD] Finished handler for " + command, BLUE);
+    } else {
+      _debug.debugPrint("[CMD] Unknown command: " + command, RED);
+      // Aqui enviaremos uma resposta de erro para o cliente, como ERR_UNKNOWNCOMMAND
+    }
   }
   _debug.debugPrint("[CMD] Finished processing message.", BLUE);
 }

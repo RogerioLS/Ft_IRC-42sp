@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:54 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:35:50 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 10:58:17 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,10 @@
 #define COMMAND_HANDLER_HPP
 
 #include "HelpCommand.hpp"
+#include "InviteCommand.hpp"
 #include "JoinCommand.hpp"
+#include "KickCommand.hpp"
+#include "ModeCommand.hpp"
 #include "NickCommand.hpp"
 #include "PrivmsgCommand.hpp"
 #include "PassCommand.hpp"
