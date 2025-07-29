@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:07 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 12:09:40 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:10:05 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void CommandHandler::populateCommands() {
   _commands["INVITE"] = &InviteCommand::execute;
   _commands["JOIN"] = &JoinCommand::execute;
   _commands["KICK"] = &KickCommand::execute;
+  _commands["MODE"] = &ModeCommand::execute;
   _commands["NICK"] = &NickCommand::execute;
   _commands["PASS"] = &PassCommand::execute;
   _commands["PRIVMSG"] = &PrivmsgCommand::execute;
