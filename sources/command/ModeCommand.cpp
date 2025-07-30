@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 18:53:48 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:21:43 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,14 +210,16 @@ namespace {
 void ModeCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
   std::string clientNick = client.getClientNickName();
   int clientFd = client.getClientFd();
-  std::string providedChannel  = args[1];
-
+  std::string providedChannel  = args[0];
+  for (size_t i = 0; i < args.size(); ++i) {
+    std::cout << "args[" << i << "]: " << args[i] << std::endl;
+  }
   debug.debugPrint("[MODE] Command received from: " + clientNick, CYAN);
 
-  if (args.size() < 3) {
-    debug.debugPrint("[MODE] Not enough parameters", YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
-  }
+  // if (args.size() < 2) {
+  //   debug.debugPrint("[MODE] Not enough parameters", YELLOW);
+  //   return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
+  // }
 
   if (!client.isFullyRegistered()) {
     debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
@@ -226,20 +228,20 @@ void ModeCommand::execute(Server& server, Client& client, const std::vector<std:
 
   if (!server.isChannelRegistered(providedChannel)) {
     debug.debugPrint("[MODE] Channel not registered: " + providedChannel, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHCHANNEL(clientNick, "MODE")));
+    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHCHANNEL(clientNick, providedChannel)));
   }
 
   if (!server.isClientOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[MODE] Client not on channel: " + providedChannel, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, "MODE")));
+    return(server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, providedChannel)));
   }
 
   if (!server.isClientOperOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[MODE] Client is not channel operator: " + clientNick, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, "MODE")));
+    return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, providedChannel)));
   }
 
-  std::string providedModes = Parser::formatOperatorModes(args[2]);
+  std::string providedModes = Parser::formatOperatorModes(args[1]);
   std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
 
   debug.debugPrint("[MODE] Modes: " + providedModes, GREEN);
