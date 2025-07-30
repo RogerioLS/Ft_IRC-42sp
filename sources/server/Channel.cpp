@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:45 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/28 12:13:59 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 13:25:45 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,7 @@ Channel::Channel(std::string name, int channelId, int clientId, Debug& debug)
     setClientsById(clientId);
   }
 
-  Channel::~Channel() {
-    _debug.debugPrint("[Channel] Destroying channel: " + _name, RED);
-    _operatorsById.clear();
-    _clientsById.clear();
-  }
+  Channel::~Channel() {}
 
     // Getters
 bool Channel::getInviteOnly() const { return _inviteOnly; }

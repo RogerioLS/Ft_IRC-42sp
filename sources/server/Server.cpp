@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:31 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 10:34:32 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 13:28:00 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ Channel* Server::getChannelByName(const std::string& name) {
   return NULL;
 }
 
-std::vector<Channel> Server::getChannelsVector() const { return _channelsVector; }
+std::vector<Channel> & Server::getChannelsVector() { return _channelsVector; }
 
 // Setters
 void Server::setServerFd(int serverFd) { _serverFd = serverFd; }
@@ -327,7 +327,7 @@ const Client * Server::getClientInstFromNick(const std::string & nickName) const
 void Server::createChannel(const std::string& name, Client& client)
 {
   _debug.debugPrint("[Server] Creating channel: " + name, GREEN);
-  _channelsVector.push_back(Channel(name, _channelsVector.size() + 1, client.getClientId(), _debug));
+  getChannelsVector().push_back(Channel(name, _channelsVector.size() + 1, client.getClientId(), _debug));
   _debug.debugPrint("[Server] Channel " + name + " created", GREEN);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/29 10:20:33 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 13:21:47 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ class Server {
     int getServerIdCounter() const;
     Debug& getDebug();
     Channel* getChannelByName(const std::string& name);
-    std::vector<Channel> getChannelsVector() const;
+    std::vector<Channel>& getChannelsVector();
     std::vector<Client>& getClientsVector();
     std::set<int> getChannelClients(const std::string & channelName) const;
     std::set<int> getChannelOpers(const std::string & channelName) const;
