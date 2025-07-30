@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/30 13:21:47 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:04:21 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ class Server {
     Channel* getChannelByName(const std::string& name);
     std::vector<Channel>& getChannelsVector();
     std::vector<Client>& getClientsVector();
-    std::set<int> getChannelClients(const std::string & channelName) const;
-    std::set<int> getChannelOpers(const std::string & channelName) const;
+    const std::set<int>& getChannelClients(const std::string & channelName) const;
+    const std::set<int>& getChannelOpers(const std::string & channelName) const;
     int getClientIdFromNickname(const std::string & clientNickName) const;
     const Client * getClientInstFromId(int clientId) const;
     const std::string& getServerName() const;
@@ -86,7 +86,7 @@ class Server {
     template<typename T>
     void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
 
-    bool isClientRegistered(const std::string & clientNickName) const;
+    bool isClientFullyRegistered(const std::string & clientNickName) const;
     bool isChannelRegistered(const std::string & channelName) const;
     bool isClientOnChannel(const std::string & clientNickName, std::string & channelName) const;
     bool isClientOperOnChannel(const std::string & clientNickName, std::string & channelName) const;

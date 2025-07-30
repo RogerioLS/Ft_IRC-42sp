@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:31 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 13:28:00 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:07:54 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,10 +245,14 @@ std::vector<Client> &Server::getClientsVector() {
   return _clientsVector;
 }
 
-bool Server::isClientRegistered (const std::string & clientNickName) const {
-  for (std::vector<Client>::const_iterator it  = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
-    if (it->getClientNickName() == clientNickName)
-      return true;
+bool Server::isClientFullyRegistered(const std::string & clientNickName) const {
+  for (std::vector<Client>::const_iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
+    if (it->getClientNickName() == clientNickName) {
+      if (it->hasValidPass() && it->hasValidNick() && it->hasValidUser())
+        return true;
+      else
+        return false;
+    }
   }
   return false;
 }
@@ -262,7 +266,7 @@ bool Server::isChannelRegistered(const std::string & channelName) const {
 }
 
 bool Server::isClientOnChannel(const std::string & clientNickName, std::string & channelName) const {
-  if (isClientRegistered(clientNickName) && isChannelRegistered(channelName)) {
+  if (isClientFullyRegistered(clientNickName) && isChannelRegistered(channelName)) {
     std::set<int> channelClients = getChannelClients(channelName);
     if ((!channelClients.empty()) && (channelClients.find(getClientIdFromNickname(clientNickName)) != channelClients.end()))
       return true;
@@ -271,7 +275,7 @@ bool Server::isClientOnChannel(const std::string & clientNickName, std::string &
 }
 
 bool Server::isClientOperOnChannel(const std::string & clientNickName, std::string & channelName) const {
-  if (isClientRegistered(clientNickName) && isChannelRegistered(channelName)) {
+  if (isClientFullyRegistered(clientNickName) && isChannelRegistered(channelName)) {
     std::set<int> channelOpers = getChannelOpers(channelName);
     if ((!channelOpers.empty()) && (channelOpers.find(getClientIdFromNickname(clientNickName)) != channelOpers.end()))
       return true;
@@ -279,25 +283,26 @@ bool Server::isClientOperOnChannel(const std::string & clientNickName, std::stri
   return false;
 }
 
-std::set<int> Server::getChannelClients(const std::string & channelName) const {
+const std::set<int> & Server::getChannelClients(const std::string & channelName) const {
 
   for (std::vector<Channel>::const_iterator it = _channelsVector.begin(); it != _channelsVector.end(); ++it) {
     if (it->getName() == channelName)
       return it->getClientsById();
   }
 
-  return std::set<int>();
-
+  static const std::set<int> emptySet;
+  return emptySet;
 }
 
-std::set<int> Server::getChannelOpers(const std::string & channelName) const {
+const std::set<int> & Server::getChannelOpers(const std::string & channelName) const {
 
   for (std::vector<Channel>::const_iterator it = _channelsVector.begin(); it != _channelsVector.end(); ++it) {
     if (it->getName() == channelName)
       return it->getOperatorsById();
   }
 
-  return std::set<int>();
+  static const std::set<int> emptySet;
+  return emptySet;
 }
 
 int Server::getClientIdFromNickname(const std::string & clientNickName) const {

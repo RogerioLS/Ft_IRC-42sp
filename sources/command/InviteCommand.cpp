@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:00 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 10:44:15 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:54:34 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,29 +52,34 @@ void InviteCommand::execute(Server& server, Client& client, const std::vector<st
   std::string providedChannel = args[2];
   static_cast<void>(debug);
 
-  if (!server.isClientRegistered(providedClientToInvite)) {
+  if (!client.isFullyRegistered()) {
+    debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
+    server.sendMessage(clientFd, Messages::ERR_NOTREGISTERED(clientNick));
+  }
+
+  if (!server.isClientFullyRegistered(providedClientToInvite)) {
     debug.debugPrint("[INVITE] Target nick not registered: " + providedClientToInvite, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, "INVITE")));
+    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, providedClientToInvite)));
   }
 
   if(!server.isChannelRegistered(providedChannel)) {
     debug.debugPrint("[INVITE] Channel not registered: " + providedChannel, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHCHANNEL(clientNick, "INVITE")));
+    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHCHANNEL(clientNick, providedChannel)));
   }
 
   if (!server.isClientOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[INVITE] Client not on channel: " + providedChannel, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, "INVITE")));
+    return(server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, providedChannel)));
   }
 
   if (!server.isClientOperOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[INVITE] Client is not channel operator: " + clientNick, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, "INVITE")));
+    return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, providedChannel)));
   }
 
   if (!server.isClientOnChannel(providedClientToInvite, providedChannel)) {
     debug.debugPrint("[INVITE] Target already on channel: " + providedClientToInvite + " " + providedChannel, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_USERONCHANNEL(providedClientToInvite, "INVITE", providedChannel)));
+    return(server.sendMessage(clientFd, Messages::ERR_USERONCHANNEL(clientNick, providedClientToInvite, providedChannel)));
   }
 
   if (!inviteClientToChannel(server, providedChannel, providedClientToInvite, clientNick)) {

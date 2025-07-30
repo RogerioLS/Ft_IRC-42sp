@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:33:53 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/29 12:42:02 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:44:52 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ namespace Messages {
 
   inline std::string ERR_USERONCHANNEL(const std::string& nick, const std::string& user, const std::string& channel) {
     return ":server 443 " + nick + " " + user + " " + channel + " :is already on channel\r\n";
+  }
+
+  inline std::string ERR_NOTREGISTERED(const std::string& nick) {
+    return ":server 451 " + nick + + " :You have not registered\r\n";
   }
 
   inline std::string ERR_NEEDMOREPARAMS(const std::string& nick, const std::string& command) {

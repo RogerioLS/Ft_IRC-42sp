@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 10:46:04 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:53:48 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ namespace {
       return (server.sendMessage(client.getClientFd(), channel.getName() + "o * :You must specify a parameter for the op mode. Syntax: <nick>\r\n"), false);
     }
 
-    if (!server.isClientRegistered(arg)) {
+    if (!server.isClientFullyRegistered(arg)) {
       server.getDebug().debugPrint("[MODE] Target nick not registered for op mode: " + arg, YELLOW);
       return (server.sendMessage(client.getClientFd(), Messages::ERR_NOSUCHNICK(client.getClientNickName(), arg)), false);
     }
@@ -219,9 +219,9 @@ void ModeCommand::execute(Server& server, Client& client, const std::vector<std:
     return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
   }
 
-  if (!server.isClientRegistered(clientNick)) {
-    debug.debugPrint("[MODE] Nick not registered: " + clientNick, YELLOW);
-    return(server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, "MODE")));
+  if (!client.isFullyRegistered()) {
+    debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
+    server.sendMessage(clientFd, Messages::ERR_NOTREGISTERED(clientNick));
   }
 
   if (!server.isChannelRegistered(providedChannel)) {

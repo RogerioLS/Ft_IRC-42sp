@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 10:21:46 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 18:54:09 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,14 @@ void KickCommand::execute(Server& server, Client& client, const std::vector<std:
 
     for (size_t j = 0; j < clientsToKick.size(); ++j) {
       std::string providedClientToKick = clientsToKick[j];
-      if (!server.isClientRegistered(providedClientToKick)) {
-        debug.debugPrint("[KICK] Target nick not registered: " + providedClientToKick, YELLOW);
-        server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, providedClientToKick));
+      if (!client.isFullyRegistered()) {
+        debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
+        server.sendMessage(clientFd, Messages::ERR_NOTREGISTERED(clientNick));
         continue;
+      }
+      if (!server.isClientFullyRegistered(providedClientToKick)) {
+        debug.debugPrint("[INVITE] Target nick not registered: " + providedClientToKick, YELLOW);
+        return(server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, providedClientToKick)));
       }
       if (!server.isClientOnChannel(providedClientToKick, providedChannel)) {
         debug.debugPrint("[KICK] Target not on channel: " + providedClientToKick + " " + providedChannel, YELLOW);
