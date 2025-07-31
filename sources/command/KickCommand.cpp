@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 18:54:09 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:29:58 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void KickCommand::execute(Server& server, Client& client, const std::vector<std:
         continue;
       }
       if (!server.isClientFullyRegistered(providedClientToKick)) {
-        debug.debugPrint("[INVITE] Target nick not registered: " + providedClientToKick, YELLOW);
+        debug.debugPrint("[KICK] Target nick not registered: " + providedClientToKick, YELLOW);
         return(server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(clientNick, providedClientToKick)));
       }
       if (!server.isClientOnChannel(providedClientToKick, providedChannel)) {
