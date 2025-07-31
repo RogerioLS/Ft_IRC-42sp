@@ -50,18 +50,17 @@ void KickCommand::execute(Server& server, Client& client, const std::vector<std:
   int clientFd = client.getClientFd();
   debug.debugPrint("[KICK] Command received from: " + clientNick, CYAN);
 
-  if (args.size() < 3) {
+  if (args.size() < 2) {
     debug.debugPrint("[KICK] Not enough parameters", YELLOW);
     return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "KICK")));
   }
 
   std::string reasonToKick;
-  std::vector<std::string> channelsFromKick = Parser::splitCommandArg(args[1], ",");
-  std::vector<std::string> clientsToKick = Parser::splitCommandArg(args[2], ",");
-  static_cast<void>(debug);
+  std::vector<std::string> channelsFromKick = Parser::splitCommandArg(args[0], ",");
+  std::vector<std::string> clientsToKick = Parser::splitCommandArg(args[1], ",");
 
-  if (args.size() > 3)
-    reasonToKick = args[3];
+  if (args.size() > 2)
+    reasonToKick = args[2];
   else
     reasonToKick = "";
 

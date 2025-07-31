@@ -43,14 +43,13 @@ void InviteCommand::execute(Server& server, Client& client, const std::vector<st
   std::string clientNick = client.getClientNickName();
   int clientFd = client.getClientFd();
 
-  if (args.size() < 3) {
+  if (args.size() < 2) {
     debug.debugPrint("[INVITE] Not enough parameters", YELLOW);
     return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "INVITE")));
   }
 
-  std::string providedClientToInvite = args[1];
-  std::string providedChannel = args[2];
-  static_cast<void>(debug);
+  std::string providedClientToInvite = args[0];
+  std::string providedChannel = args[1];
 
   if (!client.isFullyRegistered()) {
     debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
@@ -77,7 +76,7 @@ void InviteCommand::execute(Server& server, Client& client, const std::vector<st
     return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, providedChannel)));
   }
 
-  if (!server.isClientOnChannel(providedClientToInvite, providedChannel)) {
+  if (server.isClientOnChannel(providedClientToInvite, providedChannel)) {
     debug.debugPrint("[INVITE] Target already on channel: " + providedClientToInvite + " " + providedChannel, YELLOW);
     return(server.sendMessage(clientFd, Messages::ERR_USERONCHANNEL(clientNick, providedClientToInvite, providedChannel)));
   }
@@ -88,5 +87,5 @@ void InviteCommand::execute(Server& server, Client& client, const std::vector<st
   }
 
   debug.debugPrint("[INVITE] Invitation successful: " + providedClientToInvite + " to " + providedChannel, GREEN);
-  server.sendMessage(clientFd, Messages::RPL_INVITING(clientNick, providedChannel, providedClientToInvite));
+  server.sendMessage(clientFd, Messages::RPL_INVITING(providedClientToInvite, providedChannel));
 }

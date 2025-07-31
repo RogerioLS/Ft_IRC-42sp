@@ -20,8 +20,8 @@ namespace Messages {
     return ":server 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "\r\n";
   }
 
-  inline std::string RPL_INVITING(const std::string& nick, const std::string& channel, const std::string& target) {
-    return ":server 341 " + nick + " " + target + " " + channel + "\r\n";
+  inline std::string RPL_INVITING(const std::string& channel, const std::string& target) {
+    return ":server 341 " + target + " " + channel + "\r\n";
   }
 
   inline std::string ERR_NOSUCHNICK(const std::string& nick, const std::string& target) {
