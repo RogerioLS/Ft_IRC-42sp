@@ -80,7 +80,8 @@ namespace {
     if (flag == '-' && channel.getUserLimit() > 0) {
       channel.setUserLimit(0);
       server.getDebug().debugPrint("[MODE] User limit removed from " + channel.getName(), GREEN);
-      return (server.sendMessage(client.getClientFd(), " removes user limit.\r\n"), true);
+      channel.broadcastToAll(server, client.getClientNickName() + " removes user limit.\r\n");
+      return true;
     }
     else if (flag == '+') {
       std::string numericArg;

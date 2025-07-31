@@ -170,8 +170,10 @@ std::string Parser::formatOperatorModes(const std::string &operArgs) {
 std::vector<std::string> Parser::formatOperatorModeArgs(const std::vector<std::string> &args) {
   std::vector<std::string> result;
 
-  for (size_t i = 3; i < args.size(); ++i)
+  for (size_t i = 2; i < args.size(); ++i) {
     result.push_back(args[i]);
+    std::cout << "Args: " << args[i] << std::endl;
+    }
 
   return result;
 
