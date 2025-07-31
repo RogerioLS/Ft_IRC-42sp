@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 19:29:58 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:23:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,13 @@ namespace {
         server.getDebug().debugPrint("[KICK] Client instance not found for: " + providedClientToKick, RED);
         return false;
       }
-      std::string kickMsg = reasonToKick;
-      if (!kickMsg.empty())
-        kickMsg += " : " + reasonToKick;
-      else
-        kickMsg += providedOper + "(" + providedOper + ")";
-      server.getDebug().debugPrint("[KICK] Sending kick message to " + providedClientToKick + " from " + providedChannel, CYAN);
-      server.sendMessage(clientInstance->getClientFd(),  "You have been kicked from " + providedChannel + " by " + providedOper + "(" + providedOper + ")" + "\r\n");
-      it->broadcastToAll(server, providedChannel + " has kicked " + providedClientToKick + " from " + providedChannel + "(" + providedOper + ")" +"\r\n");
+      if (it->getOperatorsById().find(clientInstance->getClientId()) != it->getOperatorsById().end()) {
+        it->removeOper(clientInstance->getClientId());
+        server.getDebug().debugPrint("[KICK] Removed operator from " + providedClientToKick + " from " + providedChannel , CYAN);
+      }
+      server.getDebug().debugPrint("[KICK] Sending kick message to " + providedClientToKick + " from " + providedChannel + " reason" + reasonToKick, CYAN);
+      server.sendMessage(clientInstance->getClientFd(),  "You have been kicked from " + providedChannel + " by " + providedOper + "(" + providedChannel + reasonToKick + ")" + "\r\n");
+      it->broadcastToAll(server, providedOper + " has kicked " + providedClientToKick + " from " + providedChannel + "(" + providedChannel + reasonToKick + ")" +"\r\n");
       return true;
     }
     ++it;
@@ -48,7 +47,13 @@ namespace {
 void KickCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
   std::string clientNick = client.getClientNickName();
   int clientFd = client.getClientFd();
+
   debug.debugPrint("[KICK] Command received from: " + clientNick, CYAN);
+  for (size_t i = 0; i < args.size(); ++i) {
+    std::stringstream ss;
+    ss << i;
+    debug.debugPrint("[KICK] Mode arg[" + ss.str() + "]: " + args[i], GREEN);
+  }
 
   if (args.size() < 2) {
     debug.debugPrint("[KICK] Not enough parameters", YELLOW);
@@ -59,8 +64,12 @@ void KickCommand::execute(Server& server, Client& client, const std::vector<std:
   std::vector<std::string> channelsFromKick = Parser::splitCommandArg(args[0], ",");
   std::vector<std::string> clientsToKick = Parser::splitCommandArg(args[1], ",");
 
-  if (args.size() > 2)
-    reasonToKick = args[2];
+  if (args.size() > 2) {
+    for (size_t i = 2; i < args.size(); ++i) {
+      reasonToKick += " ";
+      reasonToKick += args[i];
+    }
+  }
   else
     reasonToKick = "";
 

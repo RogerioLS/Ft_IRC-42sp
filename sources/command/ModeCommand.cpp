@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 19:21:43 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:30:45 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,21 +55,22 @@ namespace {
       return (server.sendMessage(client.getClientFd(), channel.getName() + "o * :You must specify a parameter for the key mode. Syntax: <nick>\r\n"), false);
     }
 
-    if (flag == '-' && channel.getKey() == arg) {
+    std::string providedKey = arg;
+    if (flag == '-' && channel.getKey() == providedKey) {
       channel.setKey("");
       server.getDebug().debugPrint("[MODE] Channel key removed from " + channel.getName(), GREEN);
       channel.broadcastToAll(server, client.getClientNickName() + " removes channel keyword" + "\r\n");
       return true;
     }
-    else if (flag == '-' && channel.getKey() != arg) {
+    else if (flag == '-' && channel.getKey() != providedKey) {
       server.getDebug().debugPrint("[MODE] Channel key mismatch for removal on " + channel.getName(), YELLOW);
       return (server.sendMessage(client.getClientFd(), channel.getName() + " :Channel key already set" + "\r\n"), false);
     }
     else if (flag == '+' && channel.getKey().length() == 0) {
-      channel.setKey(arg);
-      server.getDebug().debugPrint("[MODE] Channel key set on " + channel.getName() + " to " + arg, GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " sets channel keyword to " +arg + "\r\n");
-      return true;
+      channel.setKey(providedKey);
+      server.getDebug().debugPrint("[MODE] Channel key set on " + channel.getName() + " to " + providedKey, GREEN);
+      channel.broadcastToAll(server, client.getClientNickName() + " sets channel keyword\r\n");
+      return (server.sendMessage(client.getClientFd(), channel.getName() + " " + client.getClientNickName() + " sets channel keyword to " + providedKey + "\r\n"), true);
     }
     server.getDebug().debugPrint("[MODE] No change to channel key for " + channel.getName(), YELLOW);
     return false;
@@ -120,36 +121,46 @@ namespace {
   }
 
   bool handleOperatorMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
-    server.getDebug().debugPrint("[MODE] handleOperatorMode: flag=" + std::string(1, flag) + " channel=" + channel.getName() + " arg=" + arg, CYAN);
+    std::string providedChannel  = channel.getName();
+    std::string clientNick = client.getClientNickName();
+    std::string clientToGiveOper = arg;
+    int clientFd = client.getClientFd();
+
+    server.getDebug().debugPrint("[MODE] handleOperatorMode: flag=" + std::string(1, flag) + " channel=" + channel.getName() + " arg=" + clientToGiveOper, CYAN);
 
     if (arg.empty()) {
       server.getDebug().debugPrint("[MODE] Operator mode argument missing", YELLOW);
-      return (server.sendMessage(client.getClientFd(), channel.getName() + "o * :You must specify a parameter for the op mode. Syntax: <nick>\r\n"), false);
+      return (server.sendMessage(clientFd, channel.getName() + " * :You must specify a parameter for the op mode. Syntax: <nick>\r\n"), false);
     }
 
-    if (!server.isClientFullyRegistered(arg)) {
-      server.getDebug().debugPrint("[MODE] Target nick not registered for op mode: " + arg, YELLOW);
-      return (server.sendMessage(client.getClientFd(), Messages::ERR_NOSUCHNICK(client.getClientNickName(), arg)), false);
+    if (!server.isClientFullyRegistered(clientToGiveOper)) {
+      server.getDebug().debugPrint("[MODE] Client to give operator nick not fully registered: " + clientToGiveOper, YELLOW);
+      return (server.sendMessage(clientFd, Messages::ERR_NOSUCHNICK(client.getClientNickName(), clientToGiveOper)), false);
     }
 
-    int clientIdToOper = server.getClientIdFromNickname(arg);
+    if (!server.isClientOnChannel(clientToGiveOper, providedChannel)) {
+      server.getDebug().debugPrint("[MODE] Target nick on channel: " + providedChannel, YELLOW);
+      return (server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, providedChannel)), false);
+    }
+
+    int clientIdToOper = server.getClientIdFromNickname(clientToGiveOper);
     std::set<int> channelOpers = channel.getOperatorsById();
     bool isClientOper = (channelOpers.find(clientIdToOper) != channelOpers.end());
 
     if (isClientOper && flag == '-') {
       channel.removeOper(clientIdToOper);
-      server.getDebug().debugPrint("[MODE] Operator status removed from " + arg + " on " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " removes channel operator status from " + arg +  "\r\n");
+      server.getDebug().debugPrint("[MODE] Operator status removed from " + clientToGiveOper + " on " + channel.getName(), GREEN);
+      channel.broadcastToAll(server, clientNick + " removes channel operator status from " + clientToGiveOper +  "\r\n");
       return true;
     }
 
     else if (!isClientOper && flag == '+' && clientIdToOper != client.getClientId()) {
       channel.addOper(clientIdToOper);
-      server.getDebug().debugPrint("[MODE] Operator status given to " + arg + " on " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " gives channel operator status to " + arg +  "\r\n");
+      server.getDebug().debugPrint("[MODE] Operator status given to " + clientToGiveOper + " on " + channel.getName(), GREEN);
+      channel.broadcastToAll(server, clientNick + " gives channel operator status to " + clientToGiveOper +  "\r\n");
       return true;
     }
-    server.getDebug().debugPrint("[MODE] No change to operator status for " + arg + " on " + channel.getName(), YELLOW);
+    server.getDebug().debugPrint("[MODE] No change to operator status for " + clientToGiveOper + " on " + channel.getName(), YELLOW);
     return false;
   }
 
@@ -192,7 +203,7 @@ namespace {
       char mode = providedModes[i + 1];
       std::string arg = (mode == 'k' || mode == 'l' || mode == 'o') && argIndex < providedModesArgs.size() ? providedModesArgs[argIndex] : "";
 
-      if (handleSingleMode(server, client, providedChannel, flag, mode, arg)) {}
+      if (handleSingleMode(server, client, providedChannel, flag, mode, arg))
         atLeastOneModeSucceeded = true;
 
       if (mode == 'k' || mode == 'l' || mode == 'o')
@@ -212,15 +223,18 @@ void ModeCommand::execute(Server& server, Client& client, const std::vector<std:
   std::string clientNick = client.getClientNickName();
   int clientFd = client.getClientFd();
   std::string providedChannel  = args[0];
-  for (size_t i = 0; i < args.size(); ++i) {
-    std::cout << "args[" << i << "]: " << args[i] << std::endl;
-  }
-  debug.debugPrint("[MODE] Command received from: " + clientNick, CYAN);
+  std::string providedModes = Parser::formatOperatorModes(args[1]);
+  std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
 
-  // if (args.size() < 2) {
-  //   debug.debugPrint("[MODE] Not enough parameters", YELLOW);
-  //   return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
-  // }
+  debug.debugPrint("[MODE] Command received from: " + clientNick, CYAN);
+  debug.debugPrint("[MODE] Modes: " + providedModes, GREEN);
+  for (size_t i = 0; i < providedModesArgs.size(); ++i) {
+    std::stringstream ss;
+    ss << i;
+    debug.debugPrint("[MODE] Mode arg[" + ss.str() + "]: " + providedModesArgs[i], GREEN);
+  }
+
+  //TODO  /MODE
 
   if (!client.isFullyRegistered()) {
     debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
@@ -240,16 +254,6 @@ void ModeCommand::execute(Server& server, Client& client, const std::vector<std:
   if (!server.isClientOperOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[MODE] Client is not channel operator: " + clientNick, YELLOW);
     return(server.sendMessage(clientFd, Messages::ERR_CHANOPRIVSNEEDED(clientNick, providedChannel)));
-  }
-
-  std::string providedModes = Parser::formatOperatorModes(args[1]);
-  std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
-
-  debug.debugPrint("[MODE] Modes: " + providedModes, GREEN);
-  for (size_t i = 0; i < providedModesArgs.size(); ++i) {
-    std::stringstream ss;
-    ss << i;
-    debug.debugPrint("[MODE] Mode arg[" + ss.str() + "]: " + providedModesArgs[i], GREEN);
   }
 
   if (!handleChannelMode(server, client ,providedChannel, providedModes, providedModesArgs)) {

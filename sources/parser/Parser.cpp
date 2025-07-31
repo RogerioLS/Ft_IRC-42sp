@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:57 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/28 12:08:20 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/07/31 12:38:50 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,9 @@ std::string Parser::formatOperatorModes(const std::string &operArgs) {
     char c = operArgs[i];
     if (c == '+' || c == '-') {
       currentSign = c;
-    } else if (charsToSplit.find(c) != std::string::npos && currentSign != 0) {
+    } else if (charsToSplit.find(c) != std::string::npos) {
+      if (currentSign == 0)
+        currentSign = '+';
       result += currentSign;
       result += c;
     }
