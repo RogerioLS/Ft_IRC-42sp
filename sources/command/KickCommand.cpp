@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/31 12:23:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 12:58:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ namespace {
   while (it != server.getChannelsVector().end()) {
     if (it->getName() == providedChannel) {
       const Client * clientInstance = server.getClientInstFromNick(providedClientToKick);
-      it->removeClient(clientInstance->getClientId());
       if (!clientInstance) {
         server.getDebug().debugPrint("[KICK] Client instance not found for: " + providedClientToKick, RED);
         return false;
       }
+      it->removeClient(clientInstance->getClientId());
+      
       if (it->getOperatorsById().find(clientInstance->getClientId()) != it->getOperatorsById().end()) {
         it->removeOper(clientInstance->getClientId());
         server.getDebug().debugPrint("[KICK] Removed operator from " + providedClientToKick + " from " + providedChannel , CYAN);
