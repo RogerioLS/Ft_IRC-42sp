@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/01 12:15:05 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 12:34:29 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ namespace {
 
   bool handleSingleMode(Server &server, Client &client, const std::string &providedChannel, char flag, char mode, const std::string &arg) {
     server.getDebug().debugPrint("[MODE] handleSingleMode: channel=" + providedChannel + " flag=" + std::string(1, flag) + " mode=" + std::string(1, mode) + " arg=" + arg, CYAN);
-    Channel* channel = server.getChannelInstFromName(providedChannel);
+    Channel* channel = server.getChannelByName(providedChannel);
 
     if (!channel) {
       server.getDebug().debugPrint("[MODE] Channel not found: " + providedChannel, RED);
@@ -211,7 +211,7 @@ namespace {
   }
 
   bool displayChannelModes(Server & server, Client & client, std::string providedChannel) {
-    const Channel * channel = server.getChannelInstFromName(providedChannel);
+    const Channel * channel = server.getChannelByName(providedChannel);
 
     std::string modeRules = "";
     if (!channel) {
