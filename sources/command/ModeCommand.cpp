@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/31 12:30:45 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 12:15:05 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ namespace {
   bool handleKeyMode(Server &server, Client &client, Channel &channel, char flag, const std::string &arg) {
     if (arg.empty()) {
       server.getDebug().debugPrint("[MODE] Key mode argument missing", YELLOW);
-      return (server.sendMessage(client.getClientFd(), channel.getName() + "o * :You must specify a parameter for the key mode. Syntax: <nick>\r\n"), false);
+      return (server.sendMessage(client.getClientFd(), channel.getName() + "o * :You must specify a parameter for the key mode. Syntax: <key>\r\n"), false);
     }
 
     std::string providedKey = arg;
@@ -166,15 +166,7 @@ namespace {
 
   bool handleSingleMode(Server &server, Client &client, const std::string &providedChannel, char flag, char mode, const std::string &arg) {
     server.getDebug().debugPrint("[MODE] handleSingleMode: channel=" + providedChannel + " flag=" + std::string(1, flag) + " mode=" + std::string(1, mode) + " arg=" + arg, CYAN);
-    Channel* channel = NULL;
-    std::vector<Channel>::iterator it = server.getChannelsVector().begin();
-
-    while (it != server.getChannelsVector().end()) {
-      if (it->getName() == providedChannel) {
-        channel = &(*it);
-        break;
-      }
-    }
+    Channel* channel = server.getChannelInstFromName(providedChannel);
 
     if (!channel) {
       server.getDebug().debugPrint("[MODE] Channel not found: " + providedChannel, RED);
@@ -206,7 +198,7 @@ namespace {
       if (handleSingleMode(server, client, providedChannel, flag, mode, arg))
         atLeastOneModeSucceeded = true;
 
-      if (mode == 'k' || mode == 'l' || mode == 'o')
+      if (mode == 'k' || (mode == 'l' && flag == '+' ) || mode == 'o')
         argIndex++;
     }
 
@@ -217,27 +209,52 @@ namespace {
 
   return atLeastOneModeSucceeded;
   }
+
+  bool displayChannelModes(Server & server, Client & client, std::string providedChannel) {
+    const Channel * channel = server.getChannelInstFromName(providedChannel);
+
+    std::string modeRules = "";
+    if (!channel) {
+      modeRules = "No modes to set";
+      server.getDebug().debugPrint("[MODE] Channel Modes are: " + modeRules, YELLOW);
+      return(server.sendMessage(client.getClientFd(), Messages::RPL_CHANNELMODEIS(providedChannel, modeRules)), false);
+    }
+
+    std::string modes = providedChannel + " " + channel->getTopic() + " " + channel->getKey();
+    if (channel->getInviteOnly())
+      modeRules += "i";
+    if (channel->getRestrictTopic())
+      modeRules += "t";
+    if (channel->getUserLimit() > 0)
+      modeRules += "l";
+    if (!channel->getKey().empty())
+      modeRules += "k";
+    if (server.isClientOperOnChannel(client.getClientNickName(), providedChannel))
+      modeRules += "o";
+
+    if (modeRules.empty())
+      modeRules = "No modes to set";
+    else
+      modeRules = "+" + modeRules;
+
+    server.getDebug().debugPrint("[MODE] Channel Modes are: " + modeRules, YELLOW);
+    return(server.sendMessage(client.getClientFd(), Messages::RPL_CHANNELMODEIS(channel->getName(), modeRules)), true);
+  }
 }
 
 void ModeCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
   std::string clientNick = client.getClientNickName();
   int clientFd = client.getClientFd();
-  std::string providedChannel  = args[0];
-  std::string providedModes = Parser::formatOperatorModes(args[1]);
-  std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
 
-  debug.debugPrint("[MODE] Command received from: " + clientNick, CYAN);
-  debug.debugPrint("[MODE] Modes: " + providedModes, GREEN);
-  for (size_t i = 0; i < providedModesArgs.size(); ++i) {
-    std::stringstream ss;
-    ss << i;
-    debug.debugPrint("[MODE] Mode arg[" + ss.str() + "]: " + providedModesArgs[i], GREEN);
+  if (args.empty()) {
+    debug.debugPrint("[MODE] Need channel params", YELLOW);
+    return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
   }
 
-  //TODO  /MODE
+  std::string providedChannel  = args[0];
 
   if (!client.isFullyRegistered()) {
-    debug.debugPrint("[KICK] Client not registered: " + clientNick, YELLOW);
+    debug.debugPrint("[MODE] Client not registered: " + clientNick, YELLOW);
     server.sendMessage(clientFd, Messages::ERR_NOTREGISTERED(clientNick));
   }
 
@@ -249,6 +266,30 @@ void ModeCommand::execute(Server& server, Client& client, const std::vector<std:
   if (!server.isClientOnChannel(clientNick, providedChannel)) {
     debug.debugPrint("[MODE] Client not on channel: " + providedChannel, YELLOW);
     return(server.sendMessage(clientFd, Messages::ERR_NOTONCHANNEL(clientNick, providedChannel)));
+  }
+
+  if (args.size() == 1) {
+    if (displayChannelModes(server, client, providedChannel))
+      debug.debugPrint("[MODE] Display Channel Modes successufully " , GREEN);
+    else
+      debug.debugPrint("[MODE] Display Channel Modes error " , YELLOW);
+    return;
+  }
+
+  if (args.size() < 2) {
+    debug.debugPrint("[MODE] Not enough parameters", YELLOW);
+    return(server.sendMessage(clientFd, Messages::ERR_NEEDMOREPARAMS(clientNick, "MODE")));
+  }
+
+  std::string providedModes = Parser::formatOperatorModes(args[1]);
+  std::vector<std::string> providedModesArgs = Parser::formatOperatorModeArgs(args);
+
+  debug.debugPrint("[MODE] Command received from: " + clientNick, CYAN);
+  debug.debugPrint("[MODE] Modes: " + providedModes, GREEN);
+  for (size_t i = 0; i < providedModesArgs.size(); ++i) {
+    std::stringstream ss;
+    ss << i;
+    debug.debugPrint("[MODE] Mode arg[" + ss.str() + "]: " + providedModesArgs[i], GREEN);
   }
 
   if (!server.isClientOperOnChannel(clientNick, providedChannel)) {

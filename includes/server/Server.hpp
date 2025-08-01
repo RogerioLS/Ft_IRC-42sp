@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:37 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/30 19:04:21 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 11:30:49 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ class Server {
     const Client * getClientInstFromId(int clientId) const;
     const std::string& getServerName() const;
     const Client * getClientInstFromNick(const std::string & nickName) const;
+    Channel * getChannelInstFromName(const std::string &channelName) const;
 
     // Setters
     void setServerFd(int serverFd);

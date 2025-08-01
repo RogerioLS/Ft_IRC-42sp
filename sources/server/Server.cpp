@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:31 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 19:07:54 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 12:16:06 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,6 +325,17 @@ const Client * Server::getClientInstFromNick(const std::string & nickName) const
   for (std::vector<Client>::const_iterator it = _clientsVector.begin(); it != _clientsVector.end(); ++it) {
     if (it->getClientNickName() == nickName)
       return &(*it);
+  }
+  return NULL;
+}
+
+Channel * Server::getChannelInstFromName(const std::string & channelName) const {
+  std::vector<Channel>::const_iterator it = _channelsVector.begin();
+
+  while (it != _channelsVector.end()) {
+    if (it->getName() == channelName)
+      return const_cast<Channel*>(&(*it));
+    ++it;
   }
   return NULL;
 }

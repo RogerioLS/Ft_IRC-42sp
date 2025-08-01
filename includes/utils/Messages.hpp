@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:33:53 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 18:44:52 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/01 12:08:16 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 namespace Messages {
   inline std::string RPL_WELCOME(const std::string& nick) {
     return ":server 001 " + nick + " :Welcome to the Internet Relay Network " + nick + "\r\n";
+  }
+
+  inline std::string RPL_CHANNELMODEIS(const std::string& channel, const std::string& modeRules){
+    return ":server 324 Channel " + channel + " modes: " + modeRules + "\r\n";
   }
 
   inline std::string RPL_INVITING(const std::string& channel, const std::string& target) {
