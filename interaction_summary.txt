@@ -16,3 +16,12 @@ Resumo da Jornada:
 8.  Erro de Digitação no Refactoring: Um erro de digitação (`n}`) foi introduzido em `sources/command/TopicCommand.cpp` durante o refactoring.
     *   Solu��ão: Corrigi o erro de digitação em `sources/command/TopicCommand.cpp`.
 9.  Verificação Final: Após todas as alterações, o projeto principal compila com C++98 e todos os 13 testes de unidade passam com C++14, confirmando a funcionalidade e a conformidade com as normas.
+10. Refinamento dos Comandos JOIN e TOPIC: Adicionamos validações detalhadas para os comandos JOIN e TOPIC para alinhá-los com as especificações do IRC e com os modos de canal (+i, +t, +k, +l).
+    - **TOPIC**: A lógica foi ajustada para que, se o modo `+t` (tópico restrito) não estiver ativo, qualquer usuário registrado no canal possa alterar o tópico. Se estiver ativo, apenas operadores podem.
+    - **JOIN**: O comando foi reescrito para incluir uma cadeia de validações:
+        - Verifica se o cliente está totalmente registrado (PASS, NICK, USER).
+        - Verifica se o cliente já não está no canal.
+        - **Modo `+l` (limite):** Verifica se o canal está cheio.
+        - **Modo `+i` (apenas para convidados):** Verifica se o cliente foi convidado caso o modo esteja ativo.
+        - **Modo `+k` (senha):** Verifica se a senha fornecida corresponde à do canal.
+    - **Mensagens de Resposta**: Adicionamos as respostas numéricas necessárias (RPL_TOPIC, RPL_NAMREPLY, RPL_ENDOFNAMES) e mensagens de erro (ERR_CHANNELISFULL, ERR_INVITEONLYCHAN, ERR_BADCHANNELKEY) ao `Messages.hpp` para melhorar a comunicação com o cliente IRC (como o HexChat).
