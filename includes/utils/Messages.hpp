@@ -80,6 +80,30 @@ namespace Messages {
     return ":server 476 " + nick + " " + command + " "  + channel + " :Bad Channel Mask\r\n";
   }
 
+  inline std::string ERR_CHANNELISFULL(const std::string& nick, const std::string& channel) {
+    return ":server 471 " + nick + " " + channel + " :Cannot join channel (+l)\r\n";
+  }
+
+  inline std::string ERR_INVITEONLYCHAN(const std::string& nick, const std::string& channel) {
+    return ":server 473 " + nick + " " + channel + " :Cannot join channel (+i)\r\n";
+  }
+
+  inline std::string ERR_BADCHANNELKEY(const std::string& nick, const std::string& channel) {
+    return ":server 475 " + nick + " " + channel + " :Cannot join channel (+k)\r\n";
+  }
+
+  inline std::string RPL_TOPIC(const std::string& nick, const std::string& channel, const std::string& topic) {
+    return ":server 332 " + nick + " " + channel + " :" + topic + "\r\n";
+  }
+
+  inline std::string RPL_NAMREPLY(const std::string& nick, const std::string& channel, const std::string& users) {
+    return ":server 353 " + nick + " = " + channel + " :" + users + "\r\n";
+  }
+
+  inline std::string RPL_ENDOFNAMES(const std::string& nick, const std::string& channel) {
+    return ":server 366 " + nick + " " + channel + " :End of /NAMES list.\r\n";
+  }
+
   inline std::string ERR_CHANOPRIVSNEEDED(const std::string& nick, const std::string& channel) {
     return ":server 482 " + nick + " " + channel + " :You're not channel operator\r\n";
   }
