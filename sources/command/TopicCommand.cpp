@@ -3,12 +3,13 @@
 #include "../../includes/server/Client.hpp"
 #include "../../includes/utils/Colors.hpp"
 #include "../../includes/utils/Utils.hpp"
+#include "../../includes/utils/Messages.hpp"
 #include <string>
 
 void TopicCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
+    (void)debug;
     if (args.empty()) {
-        debug.debugPrint("TOPIC command missing arguments", YELLOW);
-        // Enviar ERR_NEEDMOREPARAMS
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NEEDMOREPARAMS, client.getClientNickName(), "TOPIC :Not enough parameters"));
         return;
     }
 
@@ -16,29 +17,28 @@ void TopicCommand::execute(IServer& server, Client& client, const std::vector<st
     Channel* channel = server.getChannelByName(channelName);
 
     if (!channel) {
-        debug.debugPrint("Channel " + channelName + " not found", YELLOW);
-        // Enviar ERR_NOSUCHCHANNEL
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NOSUCHCHANNEL, client.getClientNickName(), channelName + " :No such channel"));
+        return;
+    }
+
+    // Check if client is in the channel
+    if (!channel->isClientInChannel(client.getClientId())) {
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NOTONCHANNEL, client.getClientNickName(), channelName + " :You're not on that channel"));
         return;
     }
 
     if (args.size() == 1) {
-        // Ver o tópico
+        // View topic
         const std::string& topic = channel->getTopic();
-        std::string topic_message;
         if (topic.empty()) {
-            topic_message = ":" + server.getServerName() + " 331 " + client.getClientNickName() + " " + channelName + " :No topic is set\r\n";
-            debug.debugPrint("No topic set for channel " + channelName, CYAN);
+            server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_NOTOPIC, client.getClientNickName(), channelName + " :No topic is set"));
         } else {
-            topic_message = ":" + server.getServerName() + " 332 " + client.getClientNickName() + " " + channelName + " :" + topic + "\r\n";
-            debug.debugPrint("Topic for channel " + channelName + " is: " + topic, CYAN);
+            server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_TOPIC, client.getClientNickName(), channelName + " :" + topic));
         }
-        server.sendMessage(client.getClientFd(), topic_message);
     } else {
-        // Definir o tópico
-        const std::set<int>& operators = channel->getOperatorsById();
-        if (channel->getRestrictTopic() && operators.find(client.getClientId()) == operators.end()) {
-            debug.debugPrint("Client " + client.getClientNickName() + " is not an operator of " + channelName, YELLOW);
-            // Enviar ERR_CHANOPRIVSNEEDED
+        // Set topic
+        if (channel->getRestrictTopic() && !channel->isOperator(client.getClientId())) {
+            server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_CHANOPRIVSNEEDED, client.getClientNickName(), channelName + " :You're not channel operator"));
             return;
         }
 
@@ -47,20 +47,13 @@ void TopicCommand::execute(IServer& server, Client& client, const std::vector<st
             if (i > 1) newTopic += " ";
             newTopic += args[i];
         }
-        if (newTopic[0] == ':') {
+        if (!newTopic.empty() && newTopic[0] == ':') {
             newTopic = newTopic.substr(1);
         }
 
         channel->setTopic(newTopic);
-        debug.debugPrint("Client " + client.getClientNickName() + " set topic for " + channelName + " to: " + newTopic, MAGENTA);
 
-        std::string topic_msg_broadcast = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
-        const std::set<int>& clientIds = channel->getClientsById();
-        for (std::set<int>::const_iterator it = clientIds.begin(); it != clientIds.end(); ++it) {
-            Client* destClient = server.getClientById(*it);
-            if (destClient) {
-                server.sendMessage(destClient->getClientFd(), topic_msg_broadcast);
-            }
-        }
+        std::string topicMsgBroadcast = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
+        channel->broadcastMessage(topicMsgBroadcast, server);
     }
 }

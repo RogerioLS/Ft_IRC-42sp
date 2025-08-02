@@ -23,7 +23,7 @@ void NickCommand::execute(IServer& server, Client& client, const std::vector<std
     }
 
     if (args.empty()) {
-        server.sendMessage(client.getClientFd(), Messages::ERR_NONICKNAMEGIVEN(client.getClientNickName()));
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NONICKNAMEGIVEN, client.getClientNickName(), ":No nickname given"));
         debug.debugPrint("[NICK-TEST] Failing because args is empty.", RED);
         return;
     }
@@ -31,14 +31,14 @@ void NickCommand::execute(IServer& server, Client& client, const std::vector<std
     const std::string& newNickname = args[0];
 
     if (!isValidNickname(newNickname)) {
-        server.sendMessage(client.getClientFd(), Messages::ERR_ERRONEUSNICKNAME(client.getClientNickName(), newNickname));
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_ERRONEUSNICKNAME, client.getClientNickName(), newNickname + " :Erroneous nickname"));
         debug.debugPrint("[NICK-TEST] Failing because nickname is invalid.", RED);
         return;
     }
 
     Client* existingClient = server.getClientByNickname(newNickname);
     if (existingClient != NULL && existingClient->getClientId() != client.getClientId()) {
-        server.sendMessage(client.getClientFd(), Messages::ERR_NICKNAMEINUSE(client.getClientNickName(), newNickname));
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NICKNAMEINUSE, client.getClientNickName(), newNickname + " :Nickname is already in use"));
         debug.debugPrint("[NICK-TEST] Failing because nickname is in use.", RED);
         return;
     }

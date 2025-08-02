@@ -12,10 +12,14 @@
 
 #include "../../includes/server/Channel.hpp"
 #include "../../includes/utils/Colors.hpp"
+#include "../../includes/server/IServer.hpp"
+#include "../../includes/server/Client.hpp"
 #include <sstream>
+#include <string>
+#include <set>
 
 		Channel::Channel(std::string name, int channelId, int clientId, Debug& debug)
-		:	_inviteOnly(false),
+		: _inviteOnly(false),
 			_restrictTopic(true),
 			_userLimit(0),
 			_channelId(channelId),
@@ -72,4 +76,18 @@
 
 bool Channel::isClientInChannel(int clientId) const {
     return (_clientsById.count(clientId) > 0);
+}
+
+bool Channel::isOperator(int clientId) const {
+    return (_operatorsById.count(clientId) > 0);
+}
+
+void Channel::broadcastMessage(const std::string& message, IServer& server) {
+    const std::set<int>& clientIds = getClientsById();
+    for (std::set<int>::const_iterator it = clientIds.begin(); it != clientIds.end(); ++it) {
+        Client* destClient = server.getClientById(*it);
+        if (destClient) {
+            server.sendMessage(destClient->getClientFd(), message);
+        }
+    }
 }

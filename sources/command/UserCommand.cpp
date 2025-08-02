@@ -10,13 +10,13 @@ void UserCommand::execute(IServer& server, Client& client, const std::vector<std
     }
 
     if (client.isFullyRegistered()) {
-        server.sendMessage(client.getClientFd(), Messages::ERR_ALREADYREGISTRED(client.getClientNickName()));
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_ALREADYREGISTRED, client.getClientNickName(), ":You may not reregister"));
         debug.debugPrint("[USER] Client already registered.", YELLOW);
         return;
     }
 
     if (args.size() < 4) {
-        server.sendMessage(client.getClientFd(), Messages::ERR_NEEDMOREPARAMS(client.getClientNickName(), "USER"));
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NEEDMOREPARAMS, client.getClientNickName(), "USER :Not enough parameters"));
         debug.debugPrint("[USER] Not enough parameters.", YELLOW);
         return;
     }
@@ -29,7 +29,8 @@ void UserCommand::execute(IServer& server, Client& client, const std::vector<std
     debug.debugPrint("[USER] User details set.", GREEN);
 
     if (client.isFullyRegistered()) {
-        server.sendMessage(client.getClientFd(), Messages::RPL_WELCOME(client.getClientNickName()));
+        std::string welcome_msg = ":Welcome to the Internet Relay Network " + client.getClientNickName();
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_WELCOME, client.getClientNickName(), welcome_msg));
         debug.debugPrint("[USER] Client is now fully registered.", GREEN);
     }
 }

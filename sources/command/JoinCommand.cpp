@@ -1,37 +1,60 @@
 #include "../../includes/command/JoinCommand.hpp"
 #include "../../includes/server/Channel.hpp"
 #include "../../includes/utils/Colors.hpp"
-#include "../../includes/utils/Utils.hpp" // Para utils::intToString
+#include "../../includes/utils/Utils.hpp"
+#include "../../includes/utils/Messages.hpp"
 
 void JoinCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
-    debug.debugPrint("[JOIN] Handling JOIN command", BLUE);
+    (void)debug;
     if (args.empty()) {
-        debug.debugPrint("[JOIN] Missing arguments", YELLOW);
-        // Enviar ERR_NEEDMOREPARAMS para o cliente
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_NEEDMOREPARAMS, client.getClientNickName(), "JOIN :Not enough parameters"));
         return;
     }
 
     const std::string& channelName = args[0];
-    debug.debugPrint("[JOIN] Channel name: " + channelName, BLUE);
 
-    // Validação simples do nome do canal
     if (channelName[0] != '#') {
-        debug.debugPrint("[JOIN] Invalid channel name: " + channelName, YELLOW);
-        // Enviar ERR_BADCHANMASK ou similar
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), ERR_BADCHANMASK, client.getClientNickName(), channelName + " :Bad Channel Mask"));
         return;
     }
 
-    debug.debugPrint("[JOIN] Client " + client.getClientNickName() + " wants to join " + channelName, MAGENTA);
-
     Channel* channel = server.getChannelByName(channelName);
-    if (channel) {
-        // Canal existe, adicionar cliente
-        debug.debugPrint("[JOIN] Channel " + channelName + " already exists. Adding client.", CYAN);
-        channel->setClientsById(client.getClientId());
-    } else {
-        // Canal não existe, criar
-        debug.debugPrint("[JOIN] Channel " + channelName + " does not exist. Creating.", CYAN);
+    if (!channel) {
         server.createChannel(channelName, client);
+        channel = server.getChannelByName(channelName);
+    } else {
+        channel->setClientsById(client.getClientId());
     }
-    debug.debugPrint("[JOIN] Finished handling JOIN command", BLUE);
+
+    // Broadcast JOIN message to all clients in the channel
+    std::string joinMsg = ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " JOIN " + channelName + "\r\n";
+    channel->broadcastMessage(joinMsg, server);
+
+    // Send topic
+    const std::string& topic = channel->getTopic();
+    if (topic.empty()) {
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_NOTOPIC, client.getClientNickName(), channelName + " :No topic is set"));
+    } else {
+        server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_TOPIC, client.getClientNickName(), channelName + " :" + topic));
+    }
+
+    // Send names list
+    std::string namesList;
+    const std::set<int>& clientIds = channel->getClientsById();
+    for (std::set<int>::const_iterator it = clientIds.begin(); it != clientIds.end(); ++it) {
+        Client* member = server.getClientById(*it);
+        if (member) {
+            if (channel->isOperator(member->getClientId())) {
+                namesList += "@";
+            }
+            namesList += member->getClientNickName() + " ";
+        }
+    }
+    // Remove trailing space
+    if (!namesList.empty()) {
+        namesList.resize(namesList.size() - 1);
+    }
+
+    server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_NAMREPLY, client.getClientNickName(), "= " + channelName + " :" + namesList));
+    server.sendMessage(client.getClientFd(), irc::numericReply(server.getServerName(), RPL_ENDOFNAMES, client.getClientNickName(), channelName + " :End of /NAMES list."));
 }
