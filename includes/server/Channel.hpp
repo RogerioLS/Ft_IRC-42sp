@@ -16,6 +16,8 @@
 #include "../utils/IRC.hpp"
 #include "../utils/Debug.hpp"
 
+class IServer;
+
 class Channel {
 
 	private:
@@ -56,6 +58,8 @@ class Channel {
 		void setOperatorsById(int operatorId);
 		void setClientsById(int clientId);
 		bool isClientInChannel(int clientId) const;
+		bool isOperator(int clientId) const;
+		void broadcastMessage(const std::string& message, IServer& server);
 };
 
 #endif
