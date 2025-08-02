@@ -43,10 +43,17 @@ void TopicCommand::execute(Server& server, Client& client, const std::vector<std
     server.sendMessage(client.getClientFd(), topic_message);
   } else {
     // Definir o tópico
-    const std::set<int>& operators = channel->getOperatorsById();
-    if (channel->getRestrictTopic() && operators.find(client.getClientId()) == operators.end()) {
-      debug.debugPrint("Client " + client.getClientNickName() + " is not an operator of " + channelName, YELLOW);
-      return (server.sendMessage(client.getClientFd(), Messages::ERR_CHANOPRIVSNEEDED(client.getClientNickName(), "TOPIC")));
+    if (channel->getRestrictTopic()) {
+      const std::set<int>& operators = channel->getOperatorsById();
+      if (operators.find(client.getClientId()) == operators.end()) {
+        debug.debugPrint("Client " + client.getClientNickName() + " is not an operator of " + channelName, YELLOW);
+        return (server.sendMessage(client.getClientFd(), Messages::ERR_CHANOPRIVSNEEDED(client.getClientNickName(), channelName)));
+      }
+    } else {
+      if (!client.isFullyRegistered()) {
+        debug.debugPrint("Client " + client.getClientNickName() + " is not fully registered", YELLOW);
+        return (server.sendMessage(client.getClientFd(), Messages::ERR_NOTREGISTERED(client.getClientNickName())));
+      }
     }
 
     std::string newTopic;

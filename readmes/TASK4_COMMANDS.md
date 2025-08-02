@@ -26,12 +26,21 @@ A lógica de todos os comandos é centralizada na classe `CommandHandler`. Esta 
 *   **Descrição:** O comando `JOIN` é usado por um cliente para começar a escutar as mensagens de um canal específico. Se o canal não existir, ele é criado e o cliente que o criou se torna um operador do canal.
 *   **Uso:** `JOIN <#canal>`
 *   **Lógica de Implementação:**
-    1.  O `CommandHandler` recebe o comando e verifica se o argumento `<#canal>` foi fornecido.
+    1.  O `CommandHandler` recebe o comando e verifica se o cliente está totalmente registrado (autenticado com `PASS`, `NICK`, e `USER`).
     2.  Ele valida se o nome do canal começa com o caractere `#`.
     3.  O `Server` é consultado para verificar se um canal com o nome fornecido já existe.
-    4.  **Se o canal existe:** O ID do cliente é adicionado à lista de membros do canal.
-    5.  **Se o canal não existe:** Um novo objeto `Channel` é criado através do `Server`. O cliente que emitiu o comando é automaticamente definido como o primeiro membro e operador do novo canal.
-    6.  *(Futuro)*: Respostas numéricas apropriadas, como `RPL_TOPIC` e `RPL_NAMREPLY`, serão enviadas ao cliente para confirmar a entrada no canal e informar sobre seu estado atual.
+    4.  **Se o canal existe:**
+        *   O sistema verifica se o cliente já é membro do canal. Se for, a ação é interrompida.
+        *   **Validação de Modos:**
+            *   **Modo `+l` (Limite de usuários):** Se o canal atingiu seu número máximo de usuários, a entrada é negada (`ERR_CHANNELISFULL`).
+            *   **Modo `+i` (Apenas para convidados):** Se o canal for apenas para convidados, o sistema verifica se o cliente está na lista de convidados do canal. Se não estiver, a entrada é negada (`ERR_INVITEONLYCHAN`).
+            *   **Modo `+k` (Chave/Senha):** Se o canal tiver uma senha, o sistema verifica se o cliente forneceu a senha correta como argumento. Se não, a entrada é negada (`ERR_BADCHANNELKEY`).
+        *   Se todas as validações passarem, o cliente é adicionado ao canal.
+    5.  **Se o canal não existe:** Um novo objeto `Channel` é criado, e o cliente que emitiu o comando se torna seu primeiro membro e operador.
+    6.  **Respostas ao Cliente:** Após entrar no canal, o cliente recebe:
+        *   Uma mensagem de `JOIN` confirmando sua entrada.
+        *   O tópico atual do canal (`RPL_TOPIC`).
+        *   A lista de todos os membros do canal (`RPL_NAMREPLY` e `RPL_ENDOFNAMES`), essencial para que clientes como o HexChat exibam corretamente os usuários no canal.
 *   **Implementação Detalhada:**
     *   O comando `JOIN` é encapsulado na classe `JoinCommand` (`includes/command/JoinCommand.hpp` e `sources/command/JoinCommand.cpp`).
     *   Sua lógica reside no método estático `static void execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug)`.
@@ -72,10 +81,11 @@ A lógica de todos os comandos é centralizada na classe `CommandHandler`. Esta 
     2.  **Se um novo tópico não for fornecido (visualização):**
         *   O servidor envia uma resposta numérica ao cliente. `RPL_TOPIC` (332) se o tópico existir, ou `RPL_NOTOPIC` (331) caso contrário.
     3.  **Se um novo tópico for fornecido (modificação):**
-        *   O sistema verifica se o canal tem o modo `+t` (tópico restrito a operadores) ativo.
-        *   Se o modo `+t` estiver ativo, ele verifica se o cliente é um operador do canal. Se não for, uma mensagem de erro (`ERR_CHANOPRIVSNEEDED`) é registrada no debug.
+        *   **Validação de Permissão:** A lógica de permissão depende do modo `+t` do canal.
+            *   **Se o modo `+t` (tópico restrito) estiver ativo:** Apenas operadores do canal podem alterar o tópico. Se o cliente não for um operador, ele recebe a mensagem de erro `ERR_CHANOPRIVSNEEDED`.
+            *   **Se o modo `+t` não estiver ativo:** Qualquer cliente que seja membro do canal e esteja totalmente registrado no servidor pode alterar o tópico.
         *   Se o cliente tiver permissão, o novo tópico é definido no objeto `Channel`.
-        *   Uma mensagem `TOPIC` é enviada para todos os membros do canal, informando sobre a alteração.
+        *   Uma mensagem `TOPIC` é enviada (broadcast) para todos os membros do canal, informando sobre a alteração.
 *   **Implementação Detalhada:**
     *   A classe `TopicCommand` (`includes/command/TopicCommand.hpp` e `sources/command/TopicCommand.cpp`) contém a lógica para este comando.
     *   O método estático `static void execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug)` gerencia a visualização e a modificação do tópico.
