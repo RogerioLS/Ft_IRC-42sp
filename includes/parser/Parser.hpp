@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ecoelho- <ecoelho-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:34 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/20 18:11:21 by ecoelho-         ###   ########.fr       */
+/*   Updated: 2025/07/29 10:33:31 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,34 @@
 #define PARSER_HPP
 
 #include "../utils/IRC.hpp"
-#include "../utils/Debug.hpp"
 
 class Client;
+class Debug;
 
 class Parser {
 
-	private:
-		Parser();
+  private:
+    Parser();
 
-	public:
+  public:
+    static void appendParsedCommand(Client & client);
+    static void appendLineCommand(const std::string & messageSplitedByLine, Client & client);
+    static std::vector<std::string> splitCommand(const std::string &command);
+    static std::vector<std::string> splitCommandArg(const std::string &argsToSplit, const std::string &charsToSplit);
+    static std::string formatOperatorModes(const std::string &operArgs);
+    static std::vector<std::string> formatOperatorModeArgs(const std::vector<std::string> &args);
+  };
 
-
-};
-
-int		checkPortAndPassword(char **argv, Debug &debug);
-bool	checkValidPassword(std::string password);
-bool	checkValidPort(std::string port);
-void	parseArguments(int argc, Debug &debug);
+int   checkPortAndPassword(char **argv, Debug &debug);
+bool  checkValidPassword(std::string password);
+bool  checkValidPort(std::string port);
+void  parseArguments(int argc, Debug &debug);
 
 enum ValidationStatus {
-	VALIDATION_OK,
-	INVALID_PORT=2,
-	INVALID_PASSWORD=3,
-	INVALID_BOTH=4
+  VALIDATION_OK,
+  INVALID_PORT=2,
+  INVALID_PASSWORD=3,
+  INVALID_BOTH=4
 };
 
 #endif

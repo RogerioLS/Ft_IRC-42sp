@@ -1,37 +1,47 @@
-#include "../../includes/command/JoinCommand.hpp"
-#include "../../includes/server/Channel.hpp"
-#include "../../includes/utils/Colors.hpp"
-#include "../../includes/utils/Utils.hpp" // Para utils::intToString
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   JoinCommand.cpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 10:34:11 by pmelo-ca          #+#    #+#             */
+/*   Updated: 2025/07/29 12:40:04 by pmelo-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void JoinCommand::execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
-    debug.debugPrint("[JOIN] Handling JOIN command", BLUE);
-    if (args.empty()) {
-        debug.debugPrint("[JOIN] Missing arguments", YELLOW);
-        // Enviar ERR_NEEDMOREPARAMS para o cliente
-        return;
-    }
+#include "../../includes/command/CommandHandler.hpp"
+#include "../includes/server/Client.hpp"
+#include "../includes/server/Server.hpp"
+#include "../includes/server/Channel.hpp"
 
-    const std::string& channelName = args[0];
-    debug.debugPrint("[JOIN] Channel name: " + channelName, BLUE);
+void JoinCommand::execute(Server& server, Client& client, const std::vector<std::string>& args, Debug& debug) {
+  debug.debugPrint("[JOIN] Handling JOIN command", BLUE);
+  if (args.empty()) {
+    debug.debugPrint("[JOIN] Missing arguments", YELLOW);
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_NEEDMOREPARAMS(client.getClientNickName(), "JOIN")));
+  }
 
-    // Validação simples do nome do canal
-    if (channelName[0] != '#') {
-        debug.debugPrint("[JOIN] Invalid channel name: " + channelName, YELLOW);
-        // Enviar ERR_BADCHANMASK ou similar
-        return;
-    }
+  const std::string& channelName = args[0];
+  debug.debugPrint("[JOIN] Channel name: " + channelName, BLUE);
 
-    debug.debugPrint("[JOIN] Client " + client.getClientNickName() + " wants to join " + channelName, MAGENTA);
+  // Validação simples do nome do canal
+  if (channelName[0] != '#') {
+    debug.debugPrint("[JOIN] Invalid channel name: " + channelName, YELLOW);
+    return(server.sendMessage(client.getClientFd(), Messages::ERR_BADCHANMASK(client.getClientNickName(), channelName, "JOIN")));
+  }
 
-    Channel* channel = server.getChannelByName(channelName);
-    if (channel) {
-        // Canal existe, adicionar cliente
-        debug.debugPrint("[JOIN] Channel " + channelName + " already exists. Adding client.", CYAN);
-        channel->setClientsById(client.getClientId());
-    } else {
-        // Canal não existe, criar
-        debug.debugPrint("[JOIN] Channel " + channelName + " does not exist. Creating.", CYAN);
-        server.createChannel(channelName, client);
-    }
-    debug.debugPrint("[JOIN] Finished handling JOIN command", BLUE);
+  debug.debugPrint("[JOIN] Client " + client.getClientNickName() + " wants to join " + channelName, MAGENTA);
+
+  Channel* channel = server.getChannelByName(channelName);
+  if (channel) {
+    // Canal existe, adicionar cliente
+    debug.debugPrint("[JOIN] Channel " + channelName + " already exists. Adding client.", CYAN);
+    channel->setClientsById(client.getClientId());
+  } else {
+    // Canal não existe, criar
+    debug.debugPrint("[JOIN] Channel " + channelName + " does not exist. Creating.", CYAN);
+    server.createChannel(channelName, client);
+  }
+  debug.debugPrint("[JOIN] Finished handling JOIN command", BLUE);
 }

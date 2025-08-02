@@ -1,5 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   IRC.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 10:33:50 by pmelo-ca          #+#    #+#             */
+/*   Updated: 2025/07/29 10:33:51 by pmelo-ca         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef IRC_HPP
 #define IRC_HPP
+
+#include "./Utils.hpp"
+#include "./Colors.hpp"
+#include "./Debug.hpp"
+#include "./Messages.hpp"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -11,15 +28,14 @@
 #include <sys/epoll.h>
 #include <vector>
 #include <set>
+#include <map>
 #include <cstdlib>
 #include <fcntl.h>
-#include <sstream>
 #include <csignal>
 
 #define BUFFER_SIZE 4096
 #define INITIAL_EVENT_VECTOR_SIZE 10
 #define INITIAL_CLIENT_VECTOR_SIZE 10
 #define MAX_PASSWORD_LENGTH 20
-
 
 #endif
