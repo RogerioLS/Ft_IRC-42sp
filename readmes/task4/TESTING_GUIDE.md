@@ -118,9 +118,22 @@ Para interagir com o servidor, um cliente deve primeiro se autenticar. A sequên
     JOIN #test
     ```
     **O que esperar:**
-    1.  O servidor confirma que você entrou no canal.
-    2.  O servidor envia a lista de usuários no canal (`RPL_NAMREPLY`).
-    3.  O servidor envia a mensagem de fim da lista (`RPL_ENDOFNAMES`).
+    1.  O servidor envia uma mensagem para todos no canal (incluindo você) confirmando que você entrou.
+    2.  O servidor envia o tópico do canal (`RPL_TOPIC`) ou uma mensagem de que não há tópico (`RPL_NOTOPIC`).
+    3.  O servidor envia a lista de usuários no canal (`RPL_NAMREPLY`), prefixando operadores com `@`.
+    4.  O servidor envia a mensagem de fim da lista (`RPL_ENDOFNAMES`).
+
+-   **Cenários de Erro:**
+    -   **Canal com nome inválido:**
+        ```
+        JOIN test
+        ```
+        *O servidor deve responder com `ERR_BADCHANMASK`.*
+    -   **Comando sem argumentos:**
+        ```
+        JOIN
+        ```
+        *O servidor deve responder com `ERR_NEEDMOREPARAMS`.*
 
 #### PRIVMSG - Enviar Mensagens
 
@@ -165,7 +178,7 @@ Para interagir com o servidor, um cliente deve primeiro se autenticar. A sequên
     -   Definir tópico: `TOPIC #<nome_do_canal> :<novo tópico>`
 
 -   **Teste de Sucesso:**
-    1.  **Definir o tópico:**
+    1.  **Definir o tópico (como operador):**
         ```
         TOPIC #test :This is a cool topic!
         ```
@@ -182,9 +195,19 @@ Para interagir com o servidor, um cliente deve primeiro se autenticar. A sequên
         ```
         TOPIC #nonexistent
         ```
-        *O servidor deve responder com `ERR_NOTONCHANNEL` (pois você não pode ver o tópico de um canal em que não está).*
-    -   **Permissão negada (se o modo `+t` estiver ativo e você não for operador):**
-        *(Este teste dependerá da implementação do comando `MODE`)*.
+        *O servidor deve responder com `ERR_NOSUCHCHANNEL`.*
+    -   **Usuário não está no canal:**
+        *Com um segundo cliente, tente ver o tópico de um canal no qual ele não está.*
+        ```
+        TOPIC #test
+        ```
+        *O servidor deve responder com `ERR_NOTONCHANNEL`.*
+    -   **Permissão negada (modo `+t` ativo e usuário não é operador):**
+        *Com um segundo cliente que não é operador, tente definir o tópico.*
+        ```
+        TOPIC #test :Trying to change the topic
+        ```
+        *O servidor deve responder com `ERR_CHANOPRIVSNEEDED`.*
 
 ### 3. Comando HELP
 

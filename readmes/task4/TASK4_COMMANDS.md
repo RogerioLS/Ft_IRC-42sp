@@ -26,12 +26,16 @@ A lógica de todos os comandos é centralizada na classe `CommandHandler`. Esta 
 *   **Descrição:** O comando `JOIN` é usado por um cliente para começar a escutar as mensagens de um canal específico. Se o canal não existir, ele é criado e o cliente que o criou se torna um operador do canal.
 *   **Uso:** `JOIN <#canal>`
 *   **Lógica de Implementação:**
-    1.  O `CommandHandler` recebe o comando e verifica se o argumento `<#canal>` foi fornecido.
-    2.  Ele valida se o nome do canal começa com o caractere `#`.
+    1.  O `CommandHandler` recebe o comando e verifica se o argumento `<#canal>` foi fornecido. Caso contrário, envia a resposta `ERR_NEEDMOREPARAMS`.
+    2.  Ele valida se o nome do canal começa com o caractere `#`. Se não, envia `ERR_BADCHANMASK`.
     3.  O `Server` é consultado para verificar se um canal com o nome fornecido já existe.
-    4.  **Se o canal existe:** O ID do cliente é adicionado à lista de membros do canal.
-    5.  **Se o canal não existe:** Um novo objeto `Channel` é criado através do `Server`. O cliente que emitiu o comando é automaticamente definido como o primeiro membro e operador do novo canal.
-    6.  *(Futuro)*: Respostas numéricas apropriadas, como `RPL_TOPIC` e `RPL_NAMREPLY`, serão enviadas ao cliente para confirmar a entrada no canal e informar sobre seu estado atual.
+    4.  **Se o canal existe:** O cliente é adicionado à lista de membros do canal.
+    5.  **Se o canal não existe:** Um novo objeto `Channel` é criado. O cliente que emitiu o comando é automaticamente definido como o primeiro membro e operador do novo canal.
+    6.  **Após entrar no canal:** O servidor envia uma sequência de respostas para o cliente:
+        *   Um broadcast para todo o canal informando que o novo usuário entrou.
+        *   `RPL_TOPIC` (332) ou `RPL_NOTOPIC` (331) para informar o tópico atual.
+        *   `RPL_NAMREPLY` (353) com a lista de todos os usuários no canal (operadores são prefixados com `@`).
+        *   `RPL_ENDOFNAMES` (366) para sinalizar o fim da lista de nomes.
 *   **Implementação Detalhada:**
     *   O comando `JOIN` é encapsulado na classe `JoinCommand` (`includes/command/JoinCommand.hpp` e `sources/command/JoinCommand.cpp`).
     *   Sua lógica reside no método estático `static void execute(IServer& server, Client& client, const std::vector<std::string>& args, Debug& debug)`.
@@ -68,12 +72,13 @@ A lógica de todos os comandos é centralizada na classe `CommandHandler`. Esta 
     *   Para visualizar: `TOPIC <#canal>`
     *   Para modificar: `TOPIC <#canal> :<novo_tópico>`
 *   **Lógica de Implementação:**
-    1.  O `CommandHandler` verifica se o canal existe.
-    2.  **Se um novo tópico não for fornecido (visualização):**
-        *   O servidor envia uma resposta numérica ao cliente. `RPL_TOPIC` (332) se o tópico existir, ou `RPL_NOTOPIC` (331) caso contrário.
-    3.  **Se um novo tópico for fornecido (modificação):**
+    1.  O `CommandHandler` verifica se o canal existe. Se não, envia `ERR_NOSUCHCHANNEL`.
+    2.  O comando verifica se o cliente é membro do canal. Se não for, envia `ERR_NOTONCHANNEL`.
+    3.  **Se um novo tópico não for fornecido (visualização):**
+        *   O servidor envia a resposta `RPL_TOPIC` (332) se o tópico existir, ou `RPL_NOTOPIC` (331) caso contrário.
+    4.  **Se um novo tópico for fornecido (modificação):**
         *   O sistema verifica se o canal tem o modo `+t` (tópico restrito a operadores) ativo.
-        *   Se o modo `+t` estiver ativo, ele verifica se o cliente é um operador do canal. Se não for, uma mensagem de erro (`ERR_CHANOPRIVSNEEDED`) é registrada no debug.
+        *   Se o modo `+t` estiver ativo, ele verifica se o cliente é um operador do canal. Se não for, uma mensagem de erro (`ERR_CHANOPRIVSNEEDED`) é enviada.
         *   Se o cliente tiver permissão, o novo tópico é definido no objeto `Channel`.
         *   Uma mensagem `TOPIC` é enviada para todos os membros do canal, informando sobre a alteração.
 *   **Implementação Detalhada:**

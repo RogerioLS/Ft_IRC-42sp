@@ -16,3 +16,9 @@ Resumo da Jornada:
 8.  Erro de Digitação no Refactoring: Um erro de digitação (`n}`) foi introduzido em `sources/command/TopicCommand.cpp` durante o refactoring.
     *   Solu��ão: Corrigi o erro de digitação em `sources/command/TopicCommand.cpp`.
 9.  Verificação Final: Após todas as alterações, o projeto principal compila com C++98 e todos os 13 testes de unidade passam com C++14, confirmando a funcionalidade e a conformidade com as normas.
+10. Validação dos Comandos e Respostas IRC: Focamos em refinar os comandos existentes para cumprir as especificações da RFC.
+    *   **Plano:** Adicionar respostas numéricas de erro/sucesso para o cliente, em vez de apenas logs no servidor.
+    *   **Solução Centralizada:** Criei o arquivo `includes/utils/Messages.hpp` para centralizar todas as respostas numéricas do IRC, melhorando a manutenibilidade.
+    *   **Refatoração do `TOPIC`:** Adicionei uma verificação para garantir que o cliente seja membro do canal antes de permitir a visualização ou alteração do tópico, enviando `ERR_NOTONCHANNEL` se necessário.
+    *   **Refatoração do `JOIN`:** Implementei o envio das respostas padrão que um cliente espera ao entrar em um canal: broadcast da entrada, `RPL_TOPIC` (ou `RPL_NOTOPIC`) e a lista de nomes (`RPL_NAMREPLY`/`RPL_ENDOFNAMES`).
+    *   **Correções de Compilação:** Durante o processo, corrigi uma série de erros de compilação em `Channel.cpp`, `NickCommand.cpp`, `PassCommand.cpp`, e `UserCommand.cpp` que surgiram devido à nova estrutura de mensagens e ao tratamento de parâmetros não utilizados, garantindo que o projeto voltasse a compilar com sucesso.
