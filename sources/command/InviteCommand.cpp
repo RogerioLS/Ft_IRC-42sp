@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:00 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/07/30 18:54:34 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/04 20:08:47 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ namespace {
         }
         it->setClientsInvitedById(clientInstance->getClientId());
         server.getDebug().debugPrint("[INVITE] " + providedClientToInvite + " invited to " + providedChannel + " by " + providedOper, GREEN);
-        server.sendMessage(clientInstance->getClientFd(), "You have been invited to " +  providedChannel +  " by " + providedOper);
+        server.sendMessage(clientInstance->getClientFd(), ":" + providedOper + " INVITE " + providedClientToInvite + " :" + providedChannel + "\r\n");
         return true;
       }
       ++it;

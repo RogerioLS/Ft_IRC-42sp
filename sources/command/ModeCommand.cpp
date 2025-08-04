@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:52:49 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/01 12:34:29 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/04 20:05:35 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,14 @@ namespace {
     if (flag == '-' && channel.getInviteOnly() == true) {
       channel.setInviteOnly(false);
       server.getDebug().debugPrint("[MODE] Invite-only mode removed from " + channel.getName(), GREEN);
-      return (server.sendMessage(client.getClientFd(), client.getClientNickName() + " sets mode " + flag + "i on " + channel.getName() + "\r\n"), true);
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " -i\r\n");
+      return true;
     }
     else if (flag == '+' && channel.getInviteOnly() == false) {
       channel.setInviteOnly(true);
       server.getDebug().debugPrint("[MODE] Invite-only mode set on " + channel.getName(), GREEN);
-      return (server.sendMessage(client.getClientFd(), client.getClientNickName() + " sets mode " + flag + "i on " + channel.getName() + "\r\n"), true);
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " +i\r\n");
+      return true;
     }
     return false;
   }
@@ -37,13 +39,13 @@ namespace {
     if (flag == '-' && channel.getRestrictTopic() == true) {
       channel.setRestrictTopic(false);
       server.getDebug().debugPrint("[MODE] Topic restriction removed from " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " -t\r\n");
       return true;
     }
     else if (flag == '+' && channel.getRestrictTopic() == false) {
       channel.setRestrictTopic(true);
       server.getDebug().debugPrint("[MODE] Topic restriction set on " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " sets mode " + flag + "t on " + channel.getName() + "\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " +t\r\n");
       return true;
     }
     return false;
@@ -59,7 +61,7 @@ namespace {
     if (flag == '-' && channel.getKey() == providedKey) {
       channel.setKey("");
       server.getDebug().debugPrint("[MODE] Channel key removed from " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " removes channel keyword" + "\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " -k\r\n");
       return true;
     }
     else if (flag == '-' && channel.getKey() != providedKey) {
@@ -69,8 +71,8 @@ namespace {
     else if (flag == '+' && channel.getKey().length() == 0) {
       channel.setKey(providedKey);
       server.getDebug().debugPrint("[MODE] Channel key set on " + channel.getName() + " to " + providedKey, GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " sets channel keyword\r\n");
-      return (server.sendMessage(client.getClientFd(), channel.getName() + " " + client.getClientNickName() + " sets channel keyword to " + providedKey + "\r\n"), true);
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " +k\r\n");
+      return true;
     }
     server.getDebug().debugPrint("[MODE] No change to channel key for " + channel.getName(), YELLOW);
     return false;
@@ -81,7 +83,7 @@ namespace {
     if (flag == '-' && channel.getUserLimit() > 0) {
       channel.setUserLimit(0);
       server.getDebug().debugPrint("[MODE] User limit removed from " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, client.getClientNickName() + " removes user limit.\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " -l\r\n");
       return true;
     }
     else if (flag == '+') {
@@ -108,7 +110,7 @@ namespace {
         if (limit > 0 && limit != channel.getUserLimit()) {
           channel.setUserLimit(limit);
           server.getDebug().debugPrint("[MODE] User limit set on " + channel.getName() + " to " + numericArg, GREEN);
-          channel.broadcastToAll(server, client.getClientNickName() + " sets channel limit to " + numericArg + "\r\n");
+          channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " +l\r\n");
           return true;
         }
       }
@@ -150,14 +152,14 @@ namespace {
     if (isClientOper && flag == '-') {
       channel.removeOper(clientIdToOper);
       server.getDebug().debugPrint("[MODE] Operator status removed from " + clientToGiveOper + " on " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, clientNick + " removes channel operator status from " + clientToGiveOper +  "\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " -o " + clientToGiveOper + "\r\n");
       return true;
     }
 
     else if (!isClientOper && flag == '+' && clientIdToOper != client.getClientId()) {
       channel.addOper(clientIdToOper);
       server.getDebug().debugPrint("[MODE] Operator status given to " + clientToGiveOper + " on " + channel.getName(), GREEN);
-      channel.broadcastToAll(server, clientNick + " gives channel operator status to " + clientToGiveOper +  "\r\n");
+      channel.broadcastToAll(server, ":" + client.getClientNickName() + "!" + client.getClientUserName() + "@" + client.getClientipAddress() + " MODE " + channel.getName() + " +o " + clientToGiveOper + "\r\n");
       return true;
     }
     server.getDebug().debugPrint("[MODE] No change to operator status for " + clientToGiveOper + " on " + channel.getName(), YELLOW);

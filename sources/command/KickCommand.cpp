@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/01 12:58:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/04 20:09:14 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ namespace {
         return false;
       }
       it->removeClient(clientInstance->getClientId());
-      
+
       if (it->getOperatorsById().find(clientInstance->getClientId()) != it->getOperatorsById().end()) {
         it->removeOper(clientInstance->getClientId());
         server.getDebug().debugPrint("[KICK] Removed operator from " + providedClientToKick + " from " + providedChannel , CYAN);
       }
       server.getDebug().debugPrint("[KICK] Sending kick message to " + providedClientToKick + " from " + providedChannel + " reason" + reasonToKick, CYAN);
       server.sendMessage(clientInstance->getClientFd(),  "You have been kicked from " + providedChannel + " by " + providedOper + "(" + providedChannel + reasonToKick + ")" + "\r\n");
-      it->broadcastToAll(server, providedOper + " has kicked " + providedClientToKick + " from " + providedChannel + "(" + providedChannel + reasonToKick + ")" +"\r\n");
+      it->broadcastToAll(server, ":" + clientInstance->getClientNickName() + " KICK " + providedChannel + " " + providedClientToKick + " :" + reasonToKick + "\r\n");
       return true;
     }
     ++it;
