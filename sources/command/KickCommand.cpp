@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:54:02 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/04 20:09:14 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/05 12:25:58 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,31 @@ namespace {
         return false;
       }
       it->removeClient(clientInstance->getClientId());
-
       if (it->getOperatorsById().find(clientInstance->getClientId()) != it->getOperatorsById().end()) {
         it->removeOper(clientInstance->getClientId());
         server.getDebug().debugPrint("[KICK] Removed operator from " + providedClientToKick + " from " + providedChannel , CYAN);
       }
-      server.getDebug().debugPrint("[KICK] Sending kick message to " + providedClientToKick + " from " + providedChannel + " reason" + reasonToKick, CYAN);
-      server.sendMessage(clientInstance->getClientFd(),  "You have been kicked from " + providedChannel + " by " + providedOper + "(" + providedChannel + reasonToKick + ")" + "\r\n");
-      it->broadcastToAll(server, ":" + clientInstance->getClientNickName() + " KICK " + providedChannel + " " + providedClientToKick + " :" + reasonToKick + "\r\n");
+      std::string kickMsg = ":" + clientInstance->getClientNickName() + "!" + clientInstance->getClientUserName() + "@" + clientInstance->getClientipAddress() + " KICK " + providedChannel + " " + providedClientToKick + " :" + reasonToKick + "\r\n";
+      server.getDebug().debugPrint("[KICK] Sending kick message to " + providedClientToKick + " from " + providedChannel + " reason" + reasonToKick + " by " + providedOper, CYAN);
+      server.sendMessage(clientInstance->getClientFd(),  kickMsg);
+      it->broadcastToAll(server, kickMsg);
+
+      std::string usersList;
+      const std::set<int>& clients = it->getClientsById();
+      for (std::set<int>::const_iterator cit = clients.begin(); cit != clients.end(); ++cit) {
+        const Client* member = server.getClientInstFromId(*cit);
+        if (member)
+          usersList += (it->getOperatorsById().count(member->getClientId()) ? "@" : "") + member->getClientNickName() + " ";
+      }
+      std::string channelName = it->getName();
+      for (std::set<int>::const_iterator cit = clients.begin(); cit != clients.end(); ++cit) {
+        const Client* member = server.getClientInstFromId(*cit);
+        if (member) {
+          server.sendMessage(member->getClientFd(), Messages::RPL_NAMREPLY(member->getClientNickName(), channelName, usersList));
+          server.sendMessage(member->getClientFd(), Messages::RPL_ENDOFNAMES(member->getClientNickName(), channelName));
+        }
+      }
+
       return true;
     }
     ++it;
@@ -116,7 +133,6 @@ void KickCommand::execute(Server& server, Client& client, const std::vector<std:
         continue;
       }
       debug.debugPrint("[KICK] KICK successful for " + providedClientToKick + " on " + providedChannel, GREEN);
-      server.sendMessage(clientFd, "KICK successful for " + providedClientToKick + " on " + providedChannel + "\r\n");
     }
   }
 }
