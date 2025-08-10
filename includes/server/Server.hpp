@@ -53,28 +53,28 @@ class Server {
     static Server*    instance;
 
     Server(char **argv, Debug& debug);
-    ~Server();
+    virtual ~Server();
 
     void setupServer();
 
     // Getters
     int getPort() const;
-    const std::string& getPassword() const;
+    virtual const std::string& getPassword() const;
     int getServerFd() const;
     int getEpollFd() const;
     int getClientCount() const;
     int getServerRunning() const;
     int getServerIdCounter() const;
-    Debug& getDebug();
-    Channel* getChannelByName(const std::string& name);
-    std::vector<Channel>& getChannelsVector();
-    std::vector<Client>& getClientsVector();
-    const std::set<int>& getChannelClients(const std::string & channelName) const;
-    const std::set<int>& getChannelOpers(const std::string & channelName) const;
-    int getClientIdFromNickname(const std::string & clientNickName) const;
-    const Client * getClientInstFromId(int clientId) const;
-    const std::string& getServerName() const;
-    const Client * getClientInstFromNick(const std::string & nickName) const;
+    virtual Debug& getDebug();
+    virtual Channel* getChannelByName(const std::string& name);
+    virtual std::vector<Channel>& getChannelsVector();
+    virtual std::vector<Client>& getClientsVector();
+    virtual const std::set<int>& getChannelClients(const std::string & channelName) const;
+    virtual const std::set<int>& getChannelOpers(const std::string & channelName) const;
+    virtual int getClientIdFromNickname(const std::string & clientNickName) const;
+    virtual const Client * getClientInstFromId(int clientId) const;
+    virtual const std::string& getServerName() const;
+    virtual const Client * getClientInstFromNick(const std::string & nickName) const;
 
     // Setters
     void setServerFd(int serverFd);
@@ -86,13 +86,13 @@ class Server {
     template<typename T>
     void resizeVector(std::size_t currSize, std::vector<T>& vectorToResize);
 
-    bool isClientFullyRegistered(const std::string & clientNickName) const;
-    bool isChannelRegistered(const std::string & channelName) const;
-    bool isClientOnChannel(const std::string & clientNickName, std::string & channelName) const;
-    bool isClientOperOnChannel(const std::string & clientNickName, std::string & channelName) const;
+    virtual bool isClientFullyRegistered(const std::string & clientNickName) const;
+    virtual bool isChannelRegistered(const std::string & channelName) const;
+    virtual bool isClientOnChannel(const std::string & clientNickName, std::string & channelName) const;
+    virtual bool isClientOperOnChannel(const std::string & clientNickName, std::string & channelName) const;
     std::vector<Client>::iterator clientItFromFd(int fd);
-    void createChannel(const std::string& name, Client& client);
-    void sendMessage(int fd, const std::string& message);
+    virtual void createChannel(const std::string& name, Client& client);
+    virtual void sendMessage(int fd, const std::string& message);
 };
 
 #endif
