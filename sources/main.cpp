@@ -18,7 +18,7 @@
 int main(int argc, char **argv) {
 
   Debug debug;
-  debug.enableDebugMode(true);
+  debug.enableDebugMode(false);
 
   try {
     parseArguments(argc, debug);
