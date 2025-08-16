@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:31 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/16 13:47:52 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/16 16:21:16 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void Server::setupEpollEvent() {
     throw std::runtime_error("Error creating epool");
 
   struct epoll_event ev;
+  memset(&ev, 0, sizeof(ev));
   ev.events = EPOLLIN;
   ev.data.fd = getServerFd();
 
