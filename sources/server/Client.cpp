@@ -6,15 +6,15 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:48 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/28 12:07:03 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/16 13:47:15 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/server/Client.hpp"
 #include "../includes/utils/Colors.hpp"
 
-Client::Client(int fd, int id, uint16_t port, std::string ipAddress)
- : _fd(fd), _id(id), _port(port), _isAuthenticated(false), _ipAddress(ipAddress),
+Client::Client(int fd, int id, std::string ipAddress)
+ : _fd(fd), _id(id), _isAuthenticated(false), _ipAddress(ipAddress),
   _hasValidPass(false), _hasValidNick(false), _hasValidUser(false) {}
 
 Client::~Client() {}
