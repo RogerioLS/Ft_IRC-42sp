@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 10:34:31 by pmelo-ca          #+#    #+#             */
-/*   Updated: 2025/08/01 12:34:16 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/16 13:47:52 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,9 @@ void Server::handleNewClient() {
     client_event.events = EPOLLIN | EPOLLET;
     client_event.data.fd = conn_socket;
     std::string clientIp = inet_ntoa(client_addr.sin_addr);
-    uint16_t clientPort = ntohs(client_addr.sin_port);
 
     std::cout << GREEN << "Client connected. " << "fd: " << conn_socket <<  RESET << std::endl;
-    _clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientPort, clientIp));
+    _clientsVector.push_back(Client(conn_socket, getServerIdCounter(), clientIp));
     setServerIdCounter(getServerIdCounter() + 1);
 
     if (epoll_ctl(getEpollFd(), EPOLL_CTL_ADD, conn_socket, &client_event) < 0) {

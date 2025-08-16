@@ -6,7 +6,7 @@
 /*   By: pmelo-ca <pmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:21:28 by codespace         #+#    #+#             */
-/*   Updated: 2025/07/29 09:21:18 by pmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/08/16 13:45:48 by pmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ class Client {
   private:
     int            _fd;
     int            _id;
-    uint16_t       _port;
     bool           _isAuthenticated;
     std::string     _password;
     std::string     _nickName;
@@ -38,7 +37,7 @@ class Client {
     bool            _hasValidUser;
 
   public:
-    Client(int fd, int id, uint16_t port, std::string ipAddress);
+    Client(int fd, int id, std::string ipAddress);
     ~Client();
 
     // Getters
